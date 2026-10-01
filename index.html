@@ -551,6 +551,52 @@ table.signs{border-collapse:collapse;width:100%;font-family:var(--f-display);tex
 .pagesig-name{font-family:"Dancing Script","Itim",cursive;font-weight:700;font-size:1.8rem;line-height:1;background:linear-gradient(100deg,var(--c3),var(--c1));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 10px #FF4D8D55)}
 footer{padding-bottom:90px}
 .pagesig-name{padding:0 8px 4px 4px}
+/* Góc Các cụ độ */
+.altar-wrap{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:18px;align-items:start;border-radius:16px;padding:16px;
+  background:radial-gradient(ellipse at 40% 30%,#3B1410,#14070A 75%);border:1px solid #E8B64A66;box-shadow:0 0 0 1px #E8B64A33,0 0 40px #FFB54722,0 10px 30px #0009}
+@media (max-width:700px){.altar-wrap{grid-template-columns:1fr}}
+.altar-stage{min-width:0;transition:transform .6s}
+.altar-stage.bow{animation:bow 1.2s ease-in-out}
+@keyframes bow{40%{transform:scale(.97) translateY(6px);filter:brightness(1.3)}}
+.altar-svg{width:100%;height:auto;display:block}
+.altar-svg .smoke{animation:smoke 3s ease-in-out infinite;transform-box:fill-box;transform-origin:bottom}
+.altar-svg g:nth-of-type(2) .smoke{animation-delay:-1s}.altar-svg g:nth-of-type(3) .smoke{animation-delay:-2s}
+@keyframes smoke{0%{opacity:0;transform:translateY(8px) scaleX(.6)}30%{opacity:.6}100%{opacity:0;transform:translateY(-14px) scaleX(1.4)}}
+.altar-svg .flame{transform-box:fill-box;transform-origin:bottom center;animation:flick .25s ease-in-out infinite alternate}
+@keyframes flick{to{transform:scale(.9,1.08) skewX(4deg)}}
+.altar-svg .ember{animation:ember 1.2s ease-in-out infinite alternate}@keyframes ember{to{opacity:.55}}
+@media (prefers-reduced-motion:reduce){.altar-svg .smoke,.altar-svg .flame,.altar-svg .ember,.altar-stage.bow{animation:none}}
+.rite{list-style:none;margin:0;padding:0;display:grid;gap:10px;counter-reset:r}
+.rite li{counter-increment:r;position:relative;display:grid;gap:4px;padding:10px 12px 12px 44px;border-radius:12px;background:#1E0D0Bcc;border:1px solid #5A2A1C;color:#F6E7C8}
+.rite li::before{content:counter(r);position:absolute;left:10px;top:10px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:.85rem;background:#5A2A1C;color:#F6CF62}
+.rite li.now{border-color:#F6CF62;box-shadow:0 0 16px #F6CF6244}.rite li.now::before{background:#F6CF62;color:#3B1410}
+.rite li.done::before{content:"✓";background:#2EE6A6;color:#0A2A1E}
+.rite b{font-family:var(--f-display);letter-spacing:.04em;color:#F6CF62}.rite span{font-size:.85rem;color:#D9C3A0}
+.rite .btn{justify-self:start;margin-top:4px;padding:8px 16px;font-size:.85rem}
+.offers{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.ochip{border:1px solid #8A5A2A;background:#2A120E;color:#F6E7C8;border-radius:999px;padding:4px 12px;font-size:.82rem}
+.ochip.on{background:#F6CF62;color:#3B1410;border-color:#F6CF62;font-weight:700}
+.prayer{margin-top:14px;background:linear-gradient(180deg,#FFF6DF,#F8E7BE);color:#4A1A0E;border-radius:12px;border:1px solid #E8B64A;padding:10px 16px}
+.prayer summary{cursor:pointer;font-family:var(--f-display);font-weight:700;color:#8A1F12;letter-spacing:.04em}
+.prayer pre{white-space:pre-wrap;font-family:"Playfair Display",Georgia,serif;font-size:1rem;line-height:1.7;margin:10px 0 4px}
+.bua{display:grid;place-items:center;margin:20px 0}
+.bua-paper{position:relative;width:min(300px,100%);padding:18px 18px 22px;text-align:center;display:grid;gap:8px;justify-items:center;
+  background:linear-gradient(180deg,#FFE680,#F7C935);color:#A3120B;border:3px double #A3120B;border-radius:4px;box-shadow:0 0 0 6px #F7C93533,0 0 40px #FFD44766,0 14px 30px #0008}
+.bua.reveal .bua-paper{animation:unroll .9s cubic-bezier(.2,1.3,.4,1)}
+@keyframes unroll{from{transform:scaleY(.05) rotate(-4deg);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.bua.reveal .bua-paper{animation:none}}
+.bua-top{font-family:var(--f-display);font-weight:700;letter-spacing:.4em;font-size:.8rem;border-bottom:1.5px solid #A3120B;padding-bottom:4px;width:100%}
+.bua-seal{width:70px;height:70px;border-radius:50%;border:2.5px solid #A3120B;background:#FFF3B8;display:grid;place-items:center;overflow:hidden}.bua-seal svg{width:120%;height:120%}
+.bua-title{font-family:"Playfair Display",Georgia,serif;font-weight:700;font-size:1.45rem;line-height:1.15}
+.bua-f{background:#FFF7CC;border:1px dashed #A3120B;border-radius:6px;padding:6px 10px;color:#5A0A06;max-width:100%;overflow-x:auto}
+.bua-m{font-size:.92rem;color:#5A0A06;line-height:1.45}
+.bua-for{font-size:.8rem;color:#7A2A10}
+.bua-stamp{position:absolute;right:10px;bottom:10px;transform:rotate(-12deg);border:2px solid #C8102E;color:#C8102E;font-size:1rem;padding:0 4px;border-radius:3px;opacity:.75;font-family:serif}
+.bag .bagrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.mini-bua{display:grid;gap:0;text-align:center;width:92px;padding:8px 6px;background:linear-gradient(180deg,#FFE680,#F7C935);color:#A3120B;border:1.5px solid #A3120B;border-radius:3px;font-family:var(--f-display);font-weight:700;font-size:.78rem;line-height:1.15}
+.mini-bua small{font-weight:500;color:#7A2A10;font-size:.7rem}
+.mini-bua:hover{filter:brightness(1.08);transform:translateY(-2px)}
+#altarBtn{background:linear-gradient(180deg,#E8463A,#9E1F12);color:#FFE9A8}
 </style>
 </head>
 <body>
@@ -1212,6 +1258,100 @@ function openHelp(focus){let d=document.getElementById('helpDrawer');
   d.querySelectorAll('[data-close]').forEach(b=>b.onclick=close);
   const q=d.querySelector('#dq'),dl=d.querySelector('#dlist');q.oninput=()=>{dl.innerHTML=helpHTML(focus,q.value);typeset(dl)};typeset(d);q.focus()}
 
+/* ---------- Góc Các cụ độ ---------- */
+const BUA=[
+ {t:'Bùa Vững Như Kiềng',f:R`\(\sin^2\alpha+\cos^2\alpha=1\)`,m:'Gốc rễ chắc thì cây không đổ. Thuộc công thức này là làm được nửa bài.'},
+ {t:'Bùa Thông Suốt',f:R`\(\tan\alpha\cdot\cot\alpha=1\)`,m:'Tan với cot nghịch đảo nhau, biết một là ra một.'},
+ {t:'Bùa Cộng Phúc',f:R`\(\sin(a+b)=\sin a\cos b+\cos a\sin b\)`,m:'"Sin cos, cos sin, dấu giữ nguyên". Các cụ phù hộ đọc nhanh như gió.'},
+ {t:'Bùa Nhân Đôi Điểm Số',f:R`\(\sin2a=2\sin a\cos a\)`,m:'Điểm nhân đôi, công sức cũng phải nhân đôi.'},
+ {t:'Bùa Hạ Hoả',f:R`\(\cos^2a=\dfrac{1+\cos2a}{2}\)`,m:'Gặp bài khó thì hạ bậc, gặp chuyện nóng thì hạ hoả.'},
+ {t:'Bùa Thuận Chu Kì',f:R`\(T=\dfrac{2\pi}{|\omega|}\)`,m:'Học đều đặn như hàm sin, lên xuống nhưng không bao giờ bỏ cuộc.'},
+ {t:'Bùa Nhớ Dấu',f:R`\text{Nhất cả, nhì sin, tam tan, tứ cos}`,m:'Góc phần tư nào dương gì, cứ thế mà đọc.'},
+ {t:'Bùa Bù Phụ Bình An',f:R`\(\sin(\pi-\alpha)=\sin\alpha,\ \cos\left(\tfrac\pi2-\alpha\right)=\sin\alpha\)`,m:'"Cos đối, sin bù, phụ chéo, hơn kém π tan cot". Thuộc câu này là yên tâm.'},
+ {t:'Bùa Không Vô Nghiệm',f:R`\(|m|>1\Rightarrow \sin x=m\ \text{vô nghiệm}\)`,m:'Phương trình có thể vô nghiệm, còn cháu thì có nghiệm, là điểm cao.'},
+ {t:'Bùa Tổng Thành Tích',f:R`\(\cos a+\cos b=2\cos\tfrac{a+b}{2}\cos\tfrac{a-b}{2}\)`,m:'Cộng dồn từng ngày học, tổng sẽ thành thành tích.'},
+ {t:'Bùa Đổi Đơn Vị',f:R`\(180^\circ=\pi\ \text{rad}\)`,m:'Đổi độ sang rađian thì nhân π/180. Đổi lười sang chăm thì bắt đầu ngay hôm nay.'},
+ {t:'Bùa Mười Điểm',f:R`\(\cos 0=1,\ \sin\tfrac\pi2=1\)`,m:'Các cụ chứng cho rồi. Phần còn lại là chép công thức vào đầu.'},
+];
+const OFFER=[{k:'qua',n:'Mâm ngũ quả'},{k:'hoa',n:'Bình hoa cúc'},{k:'xoi',n:'Đĩa xôi gấc'},{k:'banh',n:'Bánh chưng'},{k:'tra',n:'Chén trà'}];
+const todayKey=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
+let altar={lit:false,offer:{},prayed:false};
+const loadAltar=()=>{const a=me?LS.get('meo-sc-altar-'+me.id,{}):{};altar=a.day===todayKey()?a:{day:todayKey(),lit:false,offer:{},prayed:false,bua:null};altar.bag=a.bag||[];return altar};
+const saveAltar=()=>{if(me)LS.set('meo-sc-altar-'+me.id,altar)};
+function altarSVG(){const o=altar.offer||{},lit=altar.lit;
+  const stick=(x)=>`<g><line x1="${x}" y1="196" x2="${x}" y2="${lit?132:140}" stroke="#B5462E" stroke-width="2.4"/>${lit?`<circle class="ember" cx="${x}" cy="131" r="2.6" fill="#FF7A2E"/><path class="smoke" d="M${x} 128 q-6 -12 0 -22 t0 -22 t0 -22" stroke="#d9d9e8" stroke-width="2" fill="none" stroke-linecap="round" opacity=".55"/>`:''}</g>`;
+  const flame=(x)=>`<rect x="${x-7}" y="150" width="14" height="44" rx="3" fill="#C8102E" stroke="#6B0A16" stroke-width="1.5"/><rect x="${x-8}" y="192" width="16" height="8" rx="2" fill="#D9A520"/>${lit?`<path class="flame" d="M${x} 132 q8 10 0 18 q-8 -8 0 -18Z" fill="#FFC23A"/><path d="M${x} 140 q3 4 0 8 q-3 -4 0 -8Z" fill="#fff6c9"/>`:''}`;
+  return `<svg class="altar-svg" viewBox="0 0 360 290" role="img" aria-label="Bàn thờ các cụ">
+   <defs><radialGradient id="glowA"><stop offset="0" stop-color="#FFB547" stop-opacity="${lit?'.55':'.12'}"/><stop offset="1" stop-color="#FFB547" stop-opacity="0"/></radialGradient>
+   <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8A2B1D"/><stop offset="1" stop-color="#4E140C"/></linearGradient></defs>
+   <circle cx="180" cy="150" r="170" fill="url(#glowA)"/>
+   <!-- hoành phi -->
+   <rect x="70" y="14" width="220" height="44" rx="6" fill="url(#wood)" stroke="#E8B64A" stroke-width="2.5"/>
+   <text x="180" y="44" text-anchor="middle" font-family="'Playfair Display',Georgia,serif" font-weight="700" font-size="20" fill="#F6CF62" letter-spacing="2">PHÚC ĐỨC</text>
+   <!-- câu đối -->
+   <rect x="22" y="14" width="28" height="200" rx="4" fill="url(#wood)" stroke="#E8B64A" stroke-width="2"/><rect x="310" y="14" width="28" height="200" rx="4" fill="url(#wood)" stroke="#E8B64A" stroke-width="2"/>
+   <text x="36" y="114" text-anchor="middle" dominant-baseline="middle" font-size="11.5" fill="#F6CF62" font-family="'Be Vietnam Pro',sans-serif" font-weight="700" writing-mode="tb" letter-spacing="3">HỌC HÀNH TẤN TỚI</text>
+   <text x="324" y="114" text-anchor="middle" dominant-baseline="middle" font-size="11.5" fill="#F6CF62" font-family="'Be Vietnam Pro',sans-serif" font-weight="700" writing-mode="tb" letter-spacing="3">THI CỬ ĐỖ ĐẠT</text>
+   <!-- khung ảnh các cụ: bóng mèo slime cụ -->
+   <rect x="140" y="66" width="80" height="62" rx="4" fill="#2A1A10" stroke="#E8B64A" stroke-width="2.5"/>
+   <g transform="translate(152,70) scale(.55)" opacity=".92">${slimeSVG(9).replace(/<svg[^>]*>/,'').replace('</svg>','')}</g>
+   <path d="M150 128 l-10 10 M210 128 l10 10" stroke="#E8B64A" stroke-width="2"/>
+   <!-- mặt bàn -->
+   <rect x="14" y="200" width="332" height="16" rx="3" fill="#A33A26" stroke="#4E140C" stroke-width="2"/>
+   <path d="M30 216 h300 l-14 70 h-272Z" fill="url(#wood)" stroke="#4E140C" stroke-width="2"/>
+   <path d="M60 232 h240 M70 254 h220" stroke="#E8B64A" stroke-width="1.2" opacity=".55"/>
+   <circle cx="180" cy="248" r="14" fill="none" stroke="#E8B64A" stroke-width="1.5" opacity=".7"/><text x="180" y="253" text-anchor="middle" font-size="13" fill="#E8B64A" font-family="Georgia,serif">福</text>
+   ${flame(118)}${flame(242)}
+   <!-- bát hương -->
+   ${stick(172)}${stick(180)}${stick(188)}
+   <path d="M156 178 h48 q-2 22 -24 22 q-22 0 -24 -22Z" fill="#2F6FB0" stroke="#173B63" stroke-width="2"/><path d="M162 186 q18 6 36 0" stroke="#F2F4FF" stroke-width="1.5" fill="none"/><ellipse cx="180" cy="178" rx="24" ry="4" fill="#C9B79A" stroke="#173B63" stroke-width="1.5"/>
+   <!-- lễ vật -->
+   ${o.qua?`<g><ellipse cx="72" cy="197" rx="30" ry="5" fill="#D9A520"/><circle cx="58" cy="186" r="9" fill="#FF8A1C"/><circle cx="76" cy="184" r="10" fill="#E8352B"/><circle cx="90" cy="189" r="8" fill="#7BC043"/><path d="M64 178 q14 -20 30 -4 q-14 2 -30 4Z" fill="#FFD21F" stroke="#B8920F"/><circle cx="68" cy="180" r="5" fill="#9B59B6"/></g>`:''}
+   ${o.hoa?`<g><path d="M290 198 l-6 -26 h20 l-6 26Z" fill="#2F6FB0" stroke="#173B63"/><g fill="#FFD21F" stroke="#C9A100" stroke-width=".8"><circle cx="286" cy="162" r="7"/><circle cx="300" cy="158" r="7"/><circle cx="294" cy="150" r="7"/><circle cx="306" cy="168" r="6"/></g><path d="M294 172 v-14 M290 172 l-4 -10 M298 172 l6 -6" stroke="#3E8E2E" stroke-width="1.6"/></g>`:''}
+   ${o.xoi?`<g><ellipse cx="140" cy="197" rx="16" ry="4" fill="#ECECEC" stroke="#999"/><path d="M128 196 q12 -20 24 0Z" fill="#E2412E" stroke="#9E1F12"/></g>`:''}
+   ${o.banh?`<g><rect x="206" y="180" width="20" height="18" rx="2" fill="#4E8F3A" stroke="#24521A"/><path d="M216 180 v18 M206 189 h20" stroke="#F2E6B8" stroke-width="1.6"/></g>`:''}
+   ${o.tra?`<g><path d="M260 190 h16 l-2 8 h-12Z" fill="#F2F4FF" stroke="#7A86B8"/><ellipse cx="268" cy="190" rx="8" ry="2" fill="#B88A2E"/></g>`:''}
+  </svg>`}
+function prayerText(){const n=me?me.name:'con cháu',c=me&&me.cls?' lớp '+me.cls:'';const d=new Date();
+  return `Con kính lạy các cụ tổ tiên nội ngoại.\nCon kính lạy các cụ Sin, cụ Cos, cụ Tan, cụ Cot.\n\nHôm nay ngày ${d.getDate()} tháng ${d.getMonth()+1} năm ${d.getFullYear()}, con là ${n}${c}, thành tâm sắm lễ, thắp nén tâm hương.\nCon xin các cụ phù hộ cho con nhớ hết công thức lượng giác, không nhầm dấu, không quên +k2π, đổi đơn vị không sai,\nlàm bài kiểm tra giữa kì được điểm cao.\n\nCon xin hứa sẽ chăm làm bài tập và không ngủ gật trong giờ Toán.\nCon xin cẩn cáo!`}
+function altarPage(){if(!me){login();return}loadAltar();
+  const lit=altar.lit,nOffer=Object.values(altar.offer||{}).filter(Boolean).length;
+  const step=altar.bua!=null?4:altar.prayed?3:lit?2:1;
+  app.innerHTML=`<div class="topbar"><h2>Góc Các cụ độ</h2><div class="meta"><button class="btn ghost" id="back">Về bản đồ</button></div></div>
+  <section class="altar-wrap">
+    <div class="altar-stage">${altarSVG()}</div>
+    <div class="altar-side">
+      <ol class="rite">
+        <li class="${step>1?'done':step===1?'now':''}"><b>Thắp hương</b><span>Ba nén hương thơm cho các cụ.</span>
+          <button class="btn warm" id="aLit" ${lit?'disabled':''}>${lit?'Đã thắp hương':'Thắp hương'}</button></li>
+        <li class="${nOffer?'done':'now-soft'}"><b>Dâng lễ</b><span>Tuỳ tâm, không bắt buộc.</span>
+          <div class="offers">${OFFER.map(o=>`<button class="ochip ${altar.offer[o.k]?'on':''}" data-o="${o.k}" aria-pressed="${!!altar.offer[o.k]}">${o.n}</button>`).join('')}</div></li>
+        <li class="${step>2?'done':step===2?'now':''}"><b>Khấn</b><span>Đọc thầm lời khấn bên dưới rồi bấm khấn.</span>
+          <button class="btn primary" id="aPray" ${!lit||altar.prayed?'disabled':''}>${altar.prayed?'Đã khấn xong':'Con xin khấn'}</button></li>
+        <li class="${step>3?'done':step===3?'now':''}"><b>Xin bùa học giỏi</b><span>Mỗi ngày được xin một lá.</span>
+          <button class="btn warm" id="aBua" ${!altar.prayed||altar.bua!=null?'disabled':''}>${altar.bua!=null?'Hôm nay đã xin bùa':'Xin bùa'}</button></li>
+      </ol>
+    </div>
+  </section>
+  <details class="prayer" ${altar.prayed?'':'open'}><summary>Văn khấn của ${esc(me.name)}</summary><pre>${esc(prayerText())}</pre></details>
+  <div id="buaZone">${altar.bua!=null?buaHTML(altar.bua):''}</div>
+  ${altar.bag.length?`<section class="bag"><div class="sec-title"><span>TÚI BÙA · ${altar.bag.length} LÁ</span><i></i></div><div class="bagrow">${altar.bag.slice().reverse().map(b=>`<button class="mini-bua" data-b="${b.i}" title="${BUA[b.i].t}"><span>${BUA[b.i].t.replace('Bùa ','')}</span><small>${b.d}</small></button>`).join('')}</div></section>`:''}
+  <p class="hint">Góc này để vui và lấy tinh thần thôi nhé. Các cụ độ người chăm làm bài, nên xin bùa xong nhớ quay lại bản đồ luyện tiếp.</p>`;
+  typeset(app);
+  document.getElementById('back').onclick=home;
+  document.getElementById('aLit').onclick=()=>{altar.lit=true;saveAltar();altarPage()};
+  app.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{altar.offer[b.dataset.o]=!altar.offer[b.dataset.o];saveAltar();altarPage()});
+  document.getElementById('aPray').onclick=()=>{altar.prayed=true;saveAltar();const st=app.querySelector('.altar-stage');st.classList.add('bow');setTimeout(altarPage,1300)};
+  document.getElementById('aBua').onclick=()=>{let i=Math.floor(Math.random()*BUA.length);const last=altar.bag.length?altar.bag[altar.bag.length-1].i:-1;if(i===last)i=(i+1)%BUA.length;
+    altar.bua=i;const d=new Date();altar.bag.push({i,d:d.getDate()+'/'+(d.getMonth()+1)});saveAltar();altarPage();
+    const z=document.querySelector('.bua');if(z){z.classList.add('reveal');z.scrollIntoView({behavior:'smooth',block:'center'})}confetti(30)};
+  app.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{const z=document.getElementById('buaZone');z.innerHTML=buaHTML(+b.dataset.b);typeset(z);z.scrollIntoView({behavior:'smooth',block:'center'})});
+  window.scrollTo({top:0})}
+function buaHTML(i){const b=BUA[i];
+  return `<div class="bua"><div class="bua-paper"><div class="bua-top">CÁC CỤ ĐỘ</div><div class="bua-seal">${slimeSVG(9)}</div>
+    <div class="bua-title">${b.t}</div><div class="bua-f">${b.f.startsWith('\\(')?b.f:'\\('+b.f+'\\)'}</div><div class="bua-m">${b.m}</div>
+    <div class="bua-for">Ban cho: <b>${esc(me.name)}</b>${me.cls?' · '+esc(me.cls):''}</div><div class="bua-stamp">敕令</div></div></div>`}
+
 /* ---------- views ---------- */
 function login(){
   const past=users.list.slice().sort((a,b)=>(b.last||0)-(a.last||0));
@@ -1247,7 +1387,7 @@ function home(){
     h+=`<div class="stop ${c?'done':''}" style="--c:var(--c${i+1})"><button class="stop-main" data-stop="${i}" aria-label="Chơi chặng ${s.n}"><span class="pic">${LM[s.k]()}</span>${c?'<span class="ribbon">Đã tham quan</span>':''}
     <span class="sbody"><span class="num" data-n="${String(i+1).padStart(2,'0')}">${String(i+1).padStart(2,'0')}</span><span class="lvtag">MÀN ${i+1}${c?' · '+'★'.repeat(starsOf(c.score,c.max))+'☆'.repeat(3-starsOf(c.score,c.max)):''}</span><h3>${s.n}</h3><span class="range">Câu ${s.a}–${s.b} · ${s.sub}</span><span class="fact">${s.fact}</span><span class="bar"><i style="width:${ok/ids.length*100}%"></i></span><span class="range">${ok}/${ids.length} câu đúng hết</span></span></button>
     ${c?`<button class="certbtn" data-cert="${i}">Xem giấy chứng nhận · ${'★'.repeat(starsOf(c.score,c.max))}</button>`:''}</div>`});
-  h+='</div><div class="extra"><button class="btn warm" id="mix">Dạo ngẫu nhiên 20 câu</button><button class="btn primary" id="rankBtn">Bảng xếp hạng</button><button class="btn ghost" id="helpBtn">Sổ tay công thức</button><button class="btn" id="redo" '+(wrong?'':'disabled')+'>Ôn lại câu sai</button><button class="btn ghost" id="reset">Xoá tiến độ</button></div>';
+  h+='</div><div class="extra"><button class="btn warm" id="mix">Dạo ngẫu nhiên 20 câu</button><button class="btn primary" id="rankBtn">Bảng xếp hạng</button><button class="btn ghost" id="helpBtn">Sổ tay công thức</button><button class="btn" id="altarBtn">Góc Các cụ độ</button><button class="btn" id="redo" '+(wrong?'':'disabled')+'>Ôn lại câu sai</button><button class="btn ghost" id="reset">Xoá tiến độ</button></div>';
   h+=walletHTML();
   if(nc)h+='<section class="gallery"><h2>Sổ tham quan của bạn</h2><div class="row">'+STOPS.map((s,i)=>certs[s.k]?`<button class="gcard" data-cert="${i}"><span class="thumb">${LM[s.k]()}</span><span>${s.n}<small>${certs[s.k].score}/${certs[s.k].max} cá · ${'★'.repeat(starsOf(certs[s.k].score,certs[s.k].max))}</small></span></button>`:'').join('')+'</div></section>';
   app.innerHTML=h;
@@ -1255,7 +1395,7 @@ function home(){
   app.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>viewTicket(b.dataset.t));
   app.querySelectorAll('[data-stop]').forEach(b=>b.onclick=()=>startStop(+b.dataset.stop));
   app.querySelectorAll('[data-cert]').forEach(b=>b.onclick=()=>viewCert(+b.dataset.cert));
-  document.getElementById('rankBtn').onclick=board;document.getElementById('helpBtn').onclick=helpPage;
+  document.getElementById('rankBtn').onclick=board;document.getElementById('helpBtn').onclick=helpPage;document.getElementById('altarBtn').onclick=altarPage;
   document.getElementById('mix').onclick=()=>start('Dạo ngẫu nhiên',shuffle(Q.map(q=>q.id)).slice(0,20));
   document.getElementById('redo').onclick=()=>start('Ôn lại câu sai',Q.filter(q=>isDone(q.id)&&!isPerfect(q.id)).map(q=>q.id));
   const rs=document.getElementById('reset');rs.onclick=()=>{if(rs.dataset.c){prog={};certs={};saveCerts();save();home()}else{rs.dataset.c=1;rs.textContent='Bấm lần nữa để xoá tiến độ của '+me.name;}};
