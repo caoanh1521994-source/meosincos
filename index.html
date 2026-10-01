@@ -806,7 +806,7 @@ function confetti(n){if(matchMedia('(prefers-reduced-motion: reduce)').matches)r
   document.body.appendChild(box);setTimeout(()=>box.remove(),3600)}
 
 /* ---------- nhạc nền: một bản không lời phát bằng thẻ <audio> ---------- */
-const TRACK={name:'Mèo học bài',sub:'Nhạc không lời · piano lo-fi',src:'meo-hoc-bai.mp3'};
+const TRACK={name:'Mèo được 10 điểm',sub:'Nhạc không lời · piano lo-fi',src:'meo-hoc-bai.mp3'};
 const music=(()=>{const pref=LS.get('meo-sc-music',{vol:.6});const au=new Audio();au.loop=true;au.preload='none';au.src=TRACK.src;au.volume=pref.vol;
   let err='';au.addEventListener('error',()=>{err='Không tải được nhạc.';renderMusic()});
   au.addEventListener('playing',()=>{err='';renderMusic()});au.addEventListener('pause',()=>renderMusic());

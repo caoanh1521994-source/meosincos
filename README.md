@@ -3,7 +3,7 @@
 Web game ôn tập 99 câu lượng giác Toán 11 (đề cương giữa học kì I). Chú mèo đội nón lá dẫn người chơi qua 8 điểm dừng ở Hà Nội; làm xong mỗi chặng nhận giấy chứng nhận tham quan.
 
 - `index.html`: toàn bộ trò chơi (HTML, CSS, JS trong một file; công thức hiển thị bằng MathJax từ cdnjs).
-- `meo-hoc-bai.mp3`: nhạc nền không lời "Mèo học bài".
+- `meo-hoc-bai.mp3`: nhạc nền không lời "Mèo được 10 điểm".
 - `apps-script.gs`: (tuỳ chọn) máy chủ bảng xếp hạng chung cả lớp bằng Google Sheets; hướng dẫn nằm ở đầu file.
 - Tiến độ, tên người chơi và giấy chứng nhận lưu trong trình duyệt (localStorage) của từng máy.
 
