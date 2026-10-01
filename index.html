@@ -430,6 +430,37 @@ h1,h2,h3{font-family:var(--f-display);font-weight:700}
 /* fig colors on dark */
 .tx{fill:var(--ink)}.txs{fill:var(--muted)}
 @media (prefers-reduced-motion:reduce){.opt.wrong{animation:none}}
+/* help / formula book */
+.fsearch{margin:6px 0 14px}.fsearch input{width:100%;font:inherit;padding:11px 14px;border-radius:10px;background:#0F1532;border:1px solid var(--line);color:var(--ink)}
+.fsearch input:focus{outline:none;border-color:var(--c5);box-shadow:0 0 0 1px var(--c5),0 0 14px color-mix(in srgb,var(--c5) 35%,transparent)}
+.fgrid{columns:2 340px;column-gap:16px}
+.fcard{break-inside:avoid;margin:0 0 16px;background:linear-gradient(180deg,var(--panel2),var(--paper));border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:0 8px 24px #0006}
+.fcard.rec{border-color:var(--c3);box-shadow:0 0 0 1px var(--c3),0 0 22px #FFD44733}
+.fcard header{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+.fno{font-family:var(--f-display);font-weight:700;font-size:.8rem;color:#06112E;background:linear-gradient(180deg,#46E3FF,#2B7BFF);border-radius:4px;padding:1px 7px;letter-spacing:.06em}
+.fcard h3{font-size:1.05rem;color:var(--ink);flex:1;min-width:0}
+.rtag{font-family:var(--f-display);font-size:.7rem;font-weight:700;letter-spacing:.1em;color:#2A1600;background:linear-gradient(180deg,#FFE27A,#FF9F1C);padding:1px 8px;border-radius:4px;text-transform:uppercase}
+.fcard ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.fcard ul.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:480px){.fcard ul.two{grid-template-columns:1fr}}
+.fcard li{background:#0F1532;border:1px solid #ffffff0d;border-radius:8px;padding:6px 10px;overflow-x:auto;min-width:0;font-size:.95rem}
+.fcard li.full{grid-column:1/-1;background:none;border:0;padding:0}
+.signwrap{overflow-x:auto}
+table.signs{border-collapse:collapse;width:100%;font-family:var(--f-display);text-align:center}
+.signs th,.signs td{border:1px solid var(--line);padding:6px 10px}
+.signs thead th{color:var(--c5)}.signs tbody th{color:var(--c3);text-align:left}
+.signs td.pos{color:var(--good);font-weight:700}.signs td.neg{color:var(--bad);font-weight:700}
+.helpbtn{font-family:var(--f-display);font-weight:700;letter-spacing:.08em;border:1px solid var(--c3);color:var(--c3);background:#0F1532;border-radius:4px;padding:4px 10px;display:inline-flex;gap:6px;align-items:center}
+.helpbtn:hover{background:#2E2A1C}
+.drawer{position:fixed;inset:0;z-index:20}
+.dback{position:absolute;inset:0;background:#03050Fb3;backdrop-filter:blur(3px)}
+.dpanel{position:absolute;top:0;right:0;bottom:0;width:min(720px,100%);overflow-y:auto;background:var(--bg);border-left:1px solid color-mix(in srgb,var(--c5) 40%,var(--line));box-shadow:-20px 0 40px #0009;
+  padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(24px + env(safe-area-inset-bottom,0px));animation:slidein .22s ease-out}
+@keyframes slidein{from{transform:translateX(40px);opacity:.4}}
+@media (prefers-reduced-motion:reduce){.dpanel{animation:none}}
+.dhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px;position:sticky;top:-16px;background:var(--bg);padding:6px 0;z-index:1}
+.dhead h2{font-size:1.3rem;color:var(--c3);text-transform:uppercase}
+.dpanel .fgrid{columns:1}
 </style>
 </head>
 <body>
@@ -942,6 +973,56 @@ async function board(){
 }
 const initial=n=>(n.trim().split(/\s+/).pop()[0]||'?').toUpperCase();
 
+/* ---------- sổ tay công thức (trợ giúp) ---------- */
+const F=(id,title,items,cols)=>({id,title,items,cols});
+const FORMULAS=[
+ F(1,'Điều kiện có nghĩa & giá trị đặc biệt',[
+  R`\(\sqrt{A}\) có nghĩa khi \(A\ge0\)`,R`\(\dfrac1A\) có nghĩa khi \(A\ne0\)`,R`\(\dfrac{1}{\sqrt A}\) có nghĩa khi \(A>0\)`,
+  R`\(\sin x=1\Leftrightarrow x=\frac\pi2+k2\pi\)`,R`\(\sin x=0\Leftrightarrow x=k\pi\)`,R`\(\sin x=-1\Leftrightarrow x=-\frac\pi2+k2\pi\)`,
+  R`\(\cos x=1\Leftrightarrow x=k2\pi\)`,R`\(\cos x=0\Leftrightarrow x=\frac\pi2+k\pi\)`,R`\(\cos x=-1\Leftrightarrow x=\pi+k2\pi\)`,
+  R`Đồ thị hàm số <b>chẵn</b> đối xứng qua trục tung; đồ thị hàm số <b>lẻ</b> đối xứng qua gốc tọa độ \(O\).`]),
+ F(2,'Công thức lượng giác cơ bản',[R`\(\sin^2\alpha+\cos^2\alpha=1\)`,R`\(1+\tan^2\alpha=\dfrac{1}{\cos^2\alpha}\)`,R`\(1+\cot^2\alpha=\dfrac{1}{\sin^2\alpha}\)`,R`\(\tan\alpha\cdot\cot\alpha=1\)`,R`\(\tan\alpha=\dfrac{\sin\alpha}{\cos\alpha}\)`,R`\(\cot\alpha=\dfrac{\cos\alpha}{\sin\alpha}\)`],2),
+ F(3,'Góc đối: \\(-\\alpha\\)',[R`\(\cos(-\alpha)=\cos\alpha\)`,R`\(\sin(-\alpha)=-\sin\alpha\)`,R`\(\tan(-\alpha)=-\tan\alpha\)`,R`\(\cot(-\alpha)=-\cot\alpha\)`],2),
+ F(4,'Góc bù: \\(\\pi-\\alpha\\)',[R`\(\sin(\pi-\alpha)=\sin\alpha\)`,R`\(\cos(\pi-\alpha)=-\cos\alpha\)`,R`\(\tan(\pi-\alpha)=-\tan\alpha\)`,R`\(\cot(\pi-\alpha)=-\cot\alpha\)`],2),
+ F(5,'Góc phụ: \\(\\frac\\pi2-\\alpha\\)',[R`\(\sin\left(\frac\pi2-\alpha\right)=\cos\alpha\)`,R`\(\cos\left(\frac\pi2-\alpha\right)=\sin\alpha\)`,R`\(\tan\left(\frac\pi2-\alpha\right)=\cot\alpha\)`,R`\(\cot\left(\frac\pi2-\alpha\right)=\tan\alpha\)`],2),
+ F(6,'Hơn kém \\(\\pi\\): \\(\\pi+\\alpha\\)',[R`\(\sin(\pi+\alpha)=-\sin\alpha\)`,R`\(\cos(\pi+\alpha)=-\cos\alpha\)`,R`\(\tan(\pi+\alpha)=\tan\alpha\)`,R`\(\cot(\pi+\alpha)=\cot\alpha\)`],2),
+ F(7,'Công thức cộng',[R`\(\cos(a-b)=\cos a\cos b+\sin a\sin b\)`,R`\(\cos(a+b)=\cos a\cos b-\sin a\sin b\)`,R`\(\sin(a-b)=\sin a\cos b-\cos a\sin b\)`,R`\(\sin(a+b)=\sin a\cos b+\cos a\sin b\)`,R`\(\tan(a+b)=\dfrac{\tan a+\tan b}{1-\tan a\tan b}\)`,R`\(\tan(a-b)=\dfrac{\tan a-\tan b}{1+\tan a\tan b}\)`]),
+ F(8,'Công thức nhân đôi',[R`\(\cos2a=\cos^2a-\sin^2a=2\cos^2a-1=1-2\sin^2a\)`,R`\(\sin2a=2\sin a\cos a\)`,R`\(\tan2a=\dfrac{2\tan a}{1-\tan^2a}\)`]),
+ F(9,'Công thức hạ bậc',[R`\(\cos^2a=\dfrac{1+\cos2a}{2}\)`,R`\(\sin^2a=\dfrac{1-\cos2a}{2}\)`],2),
+ F(10,'Biến đổi tích thành tổng',[R`\(\cos a\cos b=\frac12\left[\cos(a-b)+\cos(a+b)\right]\)`,R`\(\sin a\sin b=\frac12\left[\cos(a-b)-\cos(a+b)\right]\)`,R`\(\sin a\cos b=\frac12\left[\sin(a-b)+\sin(a+b)\right]\)`]),
+ F(11,'Biến đổi tổng thành tích',[R`\(\cos a+\cos b=2\cos\frac{a+b}{2}\cos\frac{a-b}{2}\)`,R`\(\cos a-\cos b=-2\sin\frac{a+b}{2}\sin\frac{a-b}{2}\)`,R`\(\sin a+\sin b=2\sin\frac{a+b}{2}\cos\frac{a-b}{2}\)`,R`\(\sin a-\sin b=2\cos\frac{a+b}{2}\sin\frac{a-b}{2}\)`,R`\(\tan a\pm\tan b=\dfrac{\sin(a\pm b)}{\cos a\cos b}\)`]),
+ F(12,'Chu kì hàm số lượng giác',[R`\(y=a\sin(\omega x+b),\ y=a\cos(\omega x+b)\): chu kì \(T=\dfrac{2\pi}{|\omega|}\)`,R`\(y=a\tan(\omega x+b),\ y=a\cot(\omega x+b)\): chu kì \(T=\dfrac{\pi}{|\omega|}\)`]),
+ F(13,'Phương trình lượng giác cơ bản',[
+  R`<b>\(\sin x=m\)</b>: \(|m|>1\) vô nghiệm. \(|m|\le1\): gọi \(\alpha\in\left[-\frac\pi2;\frac\pi2\right]\), \(\sin\alpha=m\), thì \(\sin x=\sin\alpha\Leftrightarrow\left[\begin{array}{l}x=\alpha+k2\pi\\x=\pi-\alpha+k2\pi\end{array}\right.\)`,
+  R`<b>\(\cos x=m\)</b>: \(|m|>1\) vô nghiệm. \(|m|\le1\): gọi \(\alpha\in[0;\pi]\), \(\cos\alpha=m\), thì \(\cos x=\cos\alpha\Leftrightarrow\left[\begin{array}{l}x=\alpha+k2\pi\\x=-\alpha+k2\pi\end{array}\right.\)`,
+  R`<b>\(\tan x=m\)</b>: gọi \(\alpha\in\left(-\frac\pi2;\frac\pi2\right)\), \(\tan\alpha=m\), thì \(x=\alpha+k\pi\)`,
+  R`<b>\(\cot x=m\)</b>: gọi \(\alpha\in(0;\pi)\), \(\cot\alpha=m\), thì \(x=\alpha+k\pi\)`,
+  R`Đơn vị độ: \(\sin x=\sin\alpha^\circ\Leftrightarrow x=\alpha^\circ+k360^\circ\) hoặc \(x=180^\circ-\alpha^\circ+k360^\circ\); \(\cos x=\cos\alpha^\circ\Leftrightarrow x=\pm\alpha^\circ+k360^\circ\); \(\tan,\cot\): \(x=\alpha^\circ+k180^\circ\)`]),
+ F(14,'Dấu các giá trị lượng giác',['__SIGN__']),
+];
+const SIGN=`<div class="signwrap"><table class="signs"><thead><tr><th></th><th>I</th><th>II</th><th>III</th><th>IV</th></tr></thead><tbody>${[['sin','++--'.replace(/(.)(.)(.)(.)/,'$1$2$3$4'),'+','+','−','−'],['cos','','+','−','−','+'],['tan','','+','−','+','−'],['cot','','+','−','+','−']].map(r=>`<tr><th>${r[0]}</th>${r.slice(2).map(v=>`<td class="${v==='+'?'pos':'neg'}">${v}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+const HELP_FOR={'the-huc':[14,1,2],'hang-ma':[2,3,4,5,6],'van-mieu':[7,8,9,10,11],'long-bien':[1,12],'ho-tay':[12,1,2],'dong-xuan':[13,1,14],'khue-van-cac':[2,7,8,13],'thap-rua':[2,9,8]};
+function helpHTML(focus,filter){const f=(filter||'').trim().toLowerCase();
+  let list=FORMULAS.filter(x=>!f||(x.title+' '+x.items.join(' ')).toLowerCase().includes(f));
+  if(focus&&focus.length&&!f)list=[...focus.map(id=>FORMULAS.find(x=>x.id===id)),...FORMULAS.filter(x=>!focus.includes(x.id))];
+  if(!list.length)return '<p class="hint">Không có công thức nào khớp. Thử gõ "cộng", "nhân đôi", "tan"…</p>';
+  return '<div class="fgrid">'+list.map(x=>`<article class="fcard ${focus&&focus.includes(x.id)&&!f?'rec':''}"><header><span class="fno">${String(x.id).padStart(2,'0')}</span><h3>${x.title}</h3>${focus&&focus.includes(x.id)&&!f?'<span class="rtag">Gợi ý</span>':''}</header>
+    <ul class="${x.cols===2?'two':''}">${x.items.map(it=>it==='__SIGN__'?`<li class="full">${SIGN}</li>`:`<li>${it}</li>`).join('')}</ul></article>`).join('')+'</div>'}
+function helpPage(){app.innerHTML=`<div class="topbar"><h2>Sổ tay công thức</h2><div class="meta"><button class="btn ghost" id="back">${me?'Về bản đồ':'Về đăng nhập'}</button></div></div>
+  <p class="hint" style="margin-top:0">14 nhóm công thức lượng giác lớp 11. Trong lúc làm bài, bấm nút <b>TRỢ GIÚP</b> để mở nhanh mà không mất câu đang làm.</p>
+  <div class="fsearch"><input id="fq" type="search" placeholder="Tìm công thức: cộng, nhân đôi, tan, chu kì…" autocomplete="off"></div><div id="flist">${helpHTML()}</div>`;
+  document.getElementById('back').onclick=()=>me?home():login();
+  const q=document.getElementById('fq'),fl=document.getElementById('flist');q.oninput=()=>{fl.innerHTML=helpHTML(null,q.value);typeset(fl)};typeset(app);window.scrollTo({top:0})}
+function openHelp(focus){let d=document.getElementById('helpDrawer');
+  if(!d){d=document.createElement('div');d.id='helpDrawer';d.className='drawer';document.body.appendChild(d)}
+  d.innerHTML=`<div class="dback" data-close></div><aside class="dpanel" role="dialog" aria-modal="true" aria-label="Sổ tay công thức"><div class="dhead"><h2>Trợ giúp · Công thức</h2><button class="btn ghost" data-close>Đóng</button></div>
+    <div class="fsearch"><input id="dq" type="search" placeholder="Tìm công thức…" autocomplete="off"></div><div id="dlist">${helpHTML(focus)}</div></aside>`;
+  d.hidden=false;document.body.style.overflow='hidden';
+  const close=()=>{d.hidden=true;document.body.style.overflow='';document.removeEventListener('keydown',esc_)};
+  const esc_=e=>{if(e.key==='Escape'){e.stopPropagation();close()}};document.addEventListener('keydown',esc_);
+  d.querySelectorAll('[data-close]').forEach(b=>b.onclick=close);
+  const q=d.querySelector('#dq'),dl=d.querySelector('#dlist');q.oninput=()=>{dl.innerHTML=helpHTML(focus,q.value);typeset(dl)};typeset(d);q.focus()}
+
 /* ---------- views ---------- */
 function login(){
   const past=users.list.slice().sort((a,b)=>(b.last||0)-(a.last||0));
@@ -957,8 +1038,8 @@ function login(){
   const tr=document.getElementById('toRank');if(tr)tr.onclick=board;
   renderUser();document.getElementById('lname').focus()}
 function renderUser(){const el=document.getElementById('userbar');if(!me){el.innerHTML='';return}
-  el.innerHTML=`<span class="ava">${esc(me.name.trim().split(/\s+/).pop()[0]||'?').toUpperCase()}</span><span>Xin chào <b>${esc(me.name)}</b>${me.cls?' · Lớp '+esc(me.cls):''}</span><button class="linkbtn" id="rankLink">Xếp hạng</button><button class="linkbtn" id="logout">Đổi người chơi</button>`;
-  document.getElementById('rankLink').onclick=board;
+  el.innerHTML=`<span class="ava">${esc(me.name.trim().split(/\s+/).pop()[0]||'?').toUpperCase()}</span><span>Xin chào <b>${esc(me.name)}</b>${me.cls?' · Lớp '+esc(me.cls):''}</span><button class="linkbtn" id="rankLink">Xếp hạng</button><button class="linkbtn" id="helpLink">Công thức</button><button class="linkbtn" id="logout">Đổi người chơi</button>`;
+  document.getElementById('rankLink').onclick=board;document.getElementById('helpLink').onclick=()=>openHelp(null);
   document.getElementById('logout').onclick=()=>{users.cur=null;LS.set('meo-sc-users',users);me=null;prog={};certs={};S0=null;login()}}
 function home(){
   if(!me){login();return}
@@ -977,12 +1058,12 @@ function home(){
     h+=`<div class="stop ${c?'done':''}" style="--c:var(--c${i+1})"><button class="stop-main" data-stop="${i}" aria-label="Chơi chặng ${s.n}"><span class="pic">${LM[s.k]()}</span>${c?'<span class="ribbon">Đã tham quan</span>':''}
     <span class="sbody"><span class="num" data-n="${String(i+1).padStart(2,'0')}">${String(i+1).padStart(2,'0')}</span><span class="lvtag">MÀN ${i+1}${c?' · '+'★'.repeat(starsOf(c.score,c.max))+'☆'.repeat(3-starsOf(c.score,c.max)):''}</span><h3>${s.n}</h3><span class="range">Câu ${s.a}–${s.b} · ${s.sub}</span><span class="fact">${s.fact}</span><span class="bar"><i style="width:${ok/ids.length*100}%"></i></span><span class="range">${ok}/${ids.length} câu đúng hết</span></span></button>
     ${c?`<button class="certbtn" data-cert="${i}">Xem giấy chứng nhận · ${'★'.repeat(starsOf(c.score,c.max))}</button>`:''}</div>`});
-  h+='</div><div class="extra"><button class="btn warm" id="mix">Dạo ngẫu nhiên 20 câu</button><button class="btn primary" id="rankBtn">Bảng xếp hạng</button><button class="btn" id="redo" '+(wrong?'':'disabled')+'>Ôn lại câu sai</button><button class="btn ghost" id="reset">Xoá tiến độ</button></div>';
+  h+='</div><div class="extra"><button class="btn warm" id="mix">Dạo ngẫu nhiên 20 câu</button><button class="btn primary" id="rankBtn">Bảng xếp hạng</button><button class="btn ghost" id="helpBtn">Sổ tay công thức</button><button class="btn" id="redo" '+(wrong?'':'disabled')+'>Ôn lại câu sai</button><button class="btn ghost" id="reset">Xoá tiến độ</button></div>';
   if(nc)h+='<section class="gallery"><h2>Sổ tham quan của bạn</h2><div class="row">'+STOPS.map((s,i)=>certs[s.k]?`<button class="gcard" data-cert="${i}"><span class="thumb">${LM[s.k]()}</span><span>${s.n}<small>${certs[s.k].score}/${certs[s.k].max} cá · ${'★'.repeat(starsOf(certs[s.k].score,certs[s.k].max))}</small></span></button>`:'').join('')+'</div></section>';
   app.innerHTML=h;
   app.querySelectorAll('[data-stop]').forEach(b=>b.onclick=()=>startStop(+b.dataset.stop));
   app.querySelectorAll('[data-cert]').forEach(b=>b.onclick=()=>viewCert(+b.dataset.cert));
-  document.getElementById('rankBtn').onclick=board;
+  document.getElementById('rankBtn').onclick=board;document.getElementById('helpBtn').onclick=helpPage;
   document.getElementById('mix').onclick=()=>start('Dạo ngẫu nhiên',shuffle(Q.map(q=>q.id)).slice(0,20));
   document.getElementById('redo').onclick=()=>start('Ôn lại câu sai',Q.filter(q=>isDone(q.id)&&!isPerfect(q.id)).map(q=>q.id));
   const rs=document.getElementById('reset');rs.onclick=()=>{if(rs.dataset.c){prog={};certs={};saveCerts();save();home()}else{rs.dataset.c=1;rs.textContent='Bấm lần nữa để xoá tiến độ của '+me.name;}};
@@ -992,7 +1073,7 @@ function start(name,ids,stop){S0={name,ids,stop,i:0,streak:0,score:0,max:ids.red
 function show(){
   const s=S0,q=QM[s.ids[s.i]];
   const kind={mc:'Trắc nghiệm 4 lựa chọn',tf:'Đúng / Sai',sa:'Trả lời ngắn'}[q.t];
-  let h=`<div class="topbar"><div style="display:flex;gap:12px;align-items:center">${s.stop!==undefined?`<span class="thumb">${LM[STOPS[s.stop].k]()}</span>`:""}<h2>${s.name}</h2></div><div class="meta"><span>${s.i+1}/${s.ids.length}</span><span class="fish">${fishSVG}${s.score}</span><span class="streak ${s.streak>=3?'hot':''}" id="stk">COMBO x${s.streak}</span><button class="btn ghost" id="back">Về bản đồ</button></div></div>
+  let h=`<div class="topbar"><div style="display:flex;gap:12px;align-items:center">${s.stop!==undefined?`<span class="thumb">${LM[STOPS[s.stop].k]()}</span>`:""}<h2>${s.name}</h2></div><div class="meta"><span>${s.i+1}/${s.ids.length}</span><span class="fish">${fishSVG}${s.score}</span><button class="helpbtn" id="qhelp" title="Mở sổ tay công thức">? TRỢ GIÚP</button><span class="streak ${s.streak>=3?'hot':''}" id="stk">COMBO x${s.streak}</span><button class="btn ghost" id="back">Về bản đồ</button></div></div>
   <div class="prog"><i style="width:${s.i/s.ids.length*100}%"></i></div>
   <article class="qcard" style="--c:var(--c${s.stop!==undefined?s.stop+1:(q.id%8)+1})"><div class="qhead"><span class="tag">Câu ${q.id}</span><span class="kind">${kind}</span></div><div class="qtext">${q.q}</div>`;
   if(FIG[q.id])h+=`<div class="fig">${FIG[q.id]()}</div>`;
@@ -1003,7 +1084,7 @@ function show(){
   <div class="actions"><span></span><span style="display:flex;gap:10px">${q.t!=='mc'?'<button class="btn warm" id="check" '+(q.t==='tf'?'disabled':'')+'>Kiểm tra</button>':''}<button class="btn primary" id="next" hidden>${s.i+1<s.ids.length?'Câu tiếp':'Xem kết quả'}</button></span></div></article>
   <p class="hint">Mỗi câu đúng được 1 con cá; câu đúng–sai có 4 ý, đúng ý nào được cá ý đó.</p>`;
   app.innerHTML=h;typeset(app);
-  document.getElementById('back').onclick=home;
+  document.getElementById('back').onclick=home;document.getElementById('qhelp').onclick=()=>openHelp(s.stop!==undefined?HELP_FOR[STOPS[s.stop].k]:null);
   const next=document.getElementById('next');next.onclick=()=>{s.i++;s.i<s.ids.length?show():summary();window.scrollTo({top:0})};
   const cat=app.querySelector('.cat'),say=app.querySelector('.say'),exEl=app.querySelector('.bubble .ex');
   const finish=(got,exHTML)=>{s.score+=got;prog[q.id]=got;save();pushScore();if(got<full(q))s.wrong.push(q.id);
@@ -1028,7 +1109,7 @@ function show(){
       chk.hidden=true;inp.disabled=true;const ok=Math.abs(v-q.a)<1e-9;inp.classList.add(ok?'right':'wrong');finish(ok?1:0,`<b>Đáp số: ${q.a}.</b> ${q.ex}`)};
     chk.onclick=go;inp.onkeydown=e=>{if(e.key==='Enter'&&!inp.disabled){e.preventDefault();go()}};inp.focus();}
 }
-document.addEventListener('keydown',e=>{if(!S0||!app.querySelector('.qcard'))return;const n=document.getElementById('next');
+document.addEventListener('keydown',e=>{const hd=document.getElementById('helpDrawer');if(hd&&!hd.hidden)return;if(!S0||!app.querySelector('.qcard'))return;const n=document.getElementById('next');
   if(e.key==='Enter'&&n&&!n.hidden&&document.activeElement!==n){n.click();return}if(S0.key)S0.key(e)});
 function summary(){
   const s=S0,pct=Math.round(s.score/s.max*100);
