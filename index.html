@@ -586,6 +586,16 @@ table.signs{border-collapse:collapse;width:100%;font-family:var(--f-display);tex
 .kseal{width:56px;height:56px;flex:none;border-radius:50%;background:#ffffffb3;border:2px solid var(--ki);display:grid;place-items:center;overflow:hidden}.kseal svg{width:118%;height:118%}
 .ktxt{display:grid;gap:1px;min-width:0}.ktxt b{font-family:var(--f-display);font-size:1.05rem;letter-spacing:.02em}.ktxt small{font-size:.8rem;opacity:.85}
 .ktxt em{font-style:normal;font-family:var(--f-display);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;margin-top:3px;font-weight:700}
+
+.spiritstop .pic{background:#2A1B5E}
+.spiritstop .ribbon{background:linear-gradient(180deg,#C59BFF,#7B45F0);color:#fff;box-shadow:0 0 14px #A66BFF88}
+.spirit-wallet{display:flex;gap:6px;align-items:center;margin-top:6px;color:var(--c3)!important;font-size:.85rem!important}.spirit-wallet b{color:var(--c3)}
+.wallet-fish{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;background:#0F1532;border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.wallet-fish .fish b{font-family:var(--f-display);font-size:1.5rem}.wallet-fish>span:nth-child(2){color:var(--muted)}
+.wallet-fish small{flex-basis:100%;color:var(--muted);font-size:.78rem}
+.spirit-msg{color:#FF9DB5!important;font-weight:600}
+.kind[aria-disabled="true"]{filter:grayscale(.6) brightness(.8)}
+.ktxt em{display:inline-flex;align-items:center;gap:4px}
 </style>
 </head>
 <body>
@@ -1293,31 +1303,44 @@ const BUA_MORE=[
 ];
 BUA.forEach(b=>b.k='hg');BUA.push(...BUA_MORE);
 const kindOf=k=>KINDS.find(x=>x.k===k)||KINDS[0];
-const todayKey=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
-let altar={today:{},bag:[]};
-const loadAltar=()=>{const a=me?LS.get('meo-sc-altar-'+me.id,{}):{};let today={};
-  if(a.day===todayKey()){today=a.today||{};if(a.bua!=null&&!a.today)today.hg=a.bua}
-  altar={day:todayKey(),today,bag:(a.bag||[]).map(b=>({...b,k:b.k||BUA[b.i]?.k||'hg'}))};return altar};
+const BUA_COST=5;
+const spentOf=()=>me?LS.get('meo-sc-spent-'+me.id,0):0;
+const fishAvail=()=>Math.max(0,fishOf(prog)-spentOf());
+const spendFish=n=>{if(!me)return false;if(fishAvail()<n)return false;LS.set('meo-sc-spent-'+me.id,spentOf()+n);return true};
+LM['tam-linh']=()=>{let st='';for(let i=0;i<26;i++){const x=(i*53)%240,y=(i*37)%86+4,r=i%4?0.9:1.6;st+=`<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" opacity="${.4+(i%3)*.2}"/>`}
+  const bua=(x,y,r,c1,c2,ink)=>`<g transform="translate(${x},${y}) rotate(${r})"><rect x="-11" y="-18" width="22" height="36" rx="2" fill="${c1}" stroke="${ink}" stroke-width="1.2"/><rect x="-7" y="-13" width="14" height="2" fill="${ink}" opacity=".7"/><path d="M-5 -6 h10 M0 -9 v14 M-4 9 h8" stroke="${ink}" stroke-width="1.4"/><rect x="-11" y="10" width="22" height="8" fill="${c2}" opacity=".6"/></g>`;
+  return `<svg viewBox="0 0 240 140"><defs><linearGradient id="tlsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A1B5E"/><stop offset="1" stop-color="#5B2A86"/></linearGradient>
+   <radialGradient id="tlglow"><stop offset="0" stop-color="#FFE27A" stop-opacity=".7"/><stop offset="1" stop-color="#FFE27A" stop-opacity="0"/></radialGradient></defs>
+   <rect width="240" height="140" fill="url(#tlsky)"/>${st}
+   <path d="M196 26 a16 16 0 1 0 14 22 a12 12 0 1 1 -14 -22Z" fill="#FFE9A8"/>
+   <path d="M0 118 Q60 104 120 114 T240 108 V140 H0Z" fill="#1B1240"/><path d="M0 126 Q70 116 140 124 T240 120 V140 H0Z" fill="#120B30"/>
+   <circle cx="120" cy="78" r="46" fill="url(#tlglow)"/>
+   ${bua(58,58,-14,'#FFE680','#F7C935','#A3120B')}${bua(86,40,8,'#D9F7C8','#9BE07C','#1F5E18')}${bua(160,42,-8,'#D6ECFF','#8CC4FF','#123E7A')}${bua(186,72,14,'#FFE0EE','#FF9DCB','#8A1450')}${bua(42,92,10,'#EBDDFF','#C3A2FF','#43198A')}${bua(200,104,-12,'#FFE8CC','#FFB35C','#7A3A00')}
+   <g transform="translate(92,52) scale(.56)">${slimeSVG(10).replace(/<svg[^>]*>/,'').replace('</svg>','')}</g>
+   <path d="M30 30 l1.5 4 4 1.5 -4 1.5 -1.5 4 -1.5 -4 -4 -1.5 4 -1.5Z M220 88 l1.2 3 3 1.2 -3 1.2 -1.2 3 -1.2 -3 -3 -1.2 3 -1.2Z M140 20 l1 2.5 2.5 1 -2.5 1 -1 2.5 -1 -2.5 -2.5 -1 2.5 -1Z" fill="#FFE27A"/></svg>`};
+let altar={bag:[],last:null};
+const loadAltar=()=>{const a=me?LS.get('meo-sc-altar-'+me.id,{}):{};altar={bag:(a.bag||[]).map(b=>({...b,k:b.k||BUA[b.i]?.k||'hg'})),last:a.last??null};return altar};
 const saveAltar=()=>{if(me)LS.set('meo-sc-altar-'+me.id,altar)};
-function altarPage(showK){if(!me){login();return}loadAltar();
-  const cur=showK||Object.keys(altar.today).slice(-1)[0];
-  app.innerHTML=`<div class="topbar"><h2>Góc tâm linh</h2><div class="meta"><button class="btn ghost" id="back">Về bản đồ</button></div></div>
+function altarPage(msg){if(!me){login();return}loadAltar();const av=fishAvail(),earned=fishOf(prog),spent=spentOf();
+  app.innerHTML=`<div class="topbar"><div style="display:flex;gap:12px;align-items:center"><span class="thumb">${LM['tam-linh']()}</span><h2>Góc tâm linh</h2></div><div class="meta"><button class="btn ghost" id="back">Về bản đồ</button></div></div>
   <section class="spirit">
     <div class="spirit-art" aria-hidden="true">${slimeSVG(10,{mood:'happy'})}<span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span></div>
     <div class="spirit-text"><h3>Xin bùa</h3>
-      <p>Có ${KINDS.length} loại bùa. Mỗi ngày mỗi loại được xin một lá. Mỗi lá là một công thức hoặc một mẹo nhỏ kèm lời dặn.</p></div>
+      <p>Có ${KINDS.length} loại bùa, mỗi lần xin tốn <b>${BUA_COST} cá</b>. Mỗi lá là một công thức hoặc một mẹo nhỏ kèm lời dặn.</p>
+      <div class="wallet-fish"><span class="fish">${fishSVG}<b>${av}</b></span><span>cá đang có</span><small>Đã câu ${earned} · đã dùng ${spent}. Tiêu cá không làm giảm cấp độ hay thứ hạng.</small></div>
+      ${msg?`<p class="spirit-msg">${msg}</p>`:''}</div>
   </section>
-  <div class="kinds">${KINDS.map(K=>{const got=altar.today[K.k]!=null;return `<button class="kind ${got?'got':''}" data-k="${K.k}" style="--kb1:${K.bg[0]};--kb2:${K.bg[1]};--ki:${K.ink}">
-    <span class="kseal">${slimeSVG(K.lv)}</span><span class="ktxt"><b>${K.n}</b><small>${K.d}</small><em>${got?'Đã xin hôm nay · Xem lại':'Bấm để xin'}</em></span></button>`}).join('')}</div>
-  <div id="buaZone">${cur&&altar.today[cur]!=null?buaHTML(altar.today[cur]):''}</div>
+  <div class="kinds">${KINDS.map(K=>`<button class="kind" data-k="${K.k}" style="--kb1:${K.bg[0]};--kb2:${K.bg[1]};--ki:${K.ink}" ${av<BUA_COST?'aria-disabled="true"':''}>
+    <span class="kseal">${slimeSVG(K.lv)}</span><span class="ktxt"><b>${K.n}</b><small>${K.d}</small><em>${fishSVG} Xin · ${BUA_COST} cá</em></span></button>`).join('')}</div>
+  <div id="buaZone">${altar.last!=null?buaHTML(altar.last):''}</div>
   ${altar.bag.length?`<section class="bag"><div class="sec-title"><span>TÚI BÙA · ${altar.bag.length} LÁ</span><i></i></div><div class="bagrow">${altar.bag.slice().reverse().map(b=>{const K=kindOf(BUA[b.i].k);return `<button class="mini-bua" data-b="${b.i}" title="${BUA[b.i].t}" style="--kb1:${K.bg[0]};--kb2:${K.bg[1]};--ki:${K.ink}"><span>${BUA[b.i].t.replace('Bùa ','')}</span><small>${b.d}</small></button>`}).join('')}</div></section>`:''}
-  <p class="hint">Bùa để lấy tinh thần thôi nhé. Muốn học giỏi thật thì quay lại bản đồ luyện tiếp.</p>`;
+  <p class="hint">Bùa để lấy tinh thần thôi nhé. Hết cá thì quay lại bản đồ câu thêm.</p>`;
   document.getElementById('back').onclick=home;
   app.querySelectorAll('[data-k]').forEach(btn=>btn.onclick=()=>{const k=btn.dataset.k;
-    if(altar.today[k]!=null){const z=document.getElementById('buaZone');z.innerHTML=buaHTML(altar.today[k]);z.scrollIntoView({behavior:'smooth',block:'center'});return}
+    if(!spendFish(BUA_COST)){altarPage(`Chưa đủ cá rồi. Cần ${BUA_COST} cá, bạn đang có ${fishAvail()}. Làm thêm vài câu ở bản đồ nhé!`);return}
     const pool=BUA.map((b,i)=>b.k===k?i:-1).filter(i=>i>=0);const lastSame=[...altar.bag].reverse().find(b=>BUA[b.i].k===k);
     let i=pool[Math.floor(Math.random()*pool.length)];if(lastSame&&i===lastSame.i&&pool.length>1)i=pool[(pool.indexOf(i)+1)%pool.length];
-    altar.today[k]=i;const d=new Date();altar.bag.push({i,k,d:d.getDate()+'/'+(d.getMonth()+1)});saveAltar();altarPage(k);
+    const d=new Date();altar.bag.push({i,k,d:d.getDate()+'/'+(d.getMonth()+1)});altar.last=i;saveAltar();pushScore();altarPage();renderUser();
     const z=document.querySelector('.bua');if(z){z.classList.add('reveal');z.scrollIntoView({behavior:'smooth',block:'center'})}confetti(30)});
   app.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{const z=document.getElementById('buaZone');z.innerHTML=buaHTML(+b.dataset.b);z.scrollIntoView({behavior:'smooth',block:'center'})});
   window.scrollTo({top:0})}
@@ -1361,7 +1384,9 @@ function home(){
     h+=`<div class="stop ${c?'done':''}" style="--c:var(--c${i+1})"><button class="stop-main" data-stop="${i}" aria-label="Chơi chặng ${s.n}"><span class="pic">${LM[s.k]()}</span>${c?'<span class="ribbon">Đã tham quan</span>':''}
     <span class="sbody"><span class="num" data-n="${String(i+1).padStart(2,'0')}">${String(i+1).padStart(2,'0')}</span><span class="lvtag">MÀN ${i+1}${c?' · '+'★'.repeat(starsOf(c.score,c.max))+'☆'.repeat(3-starsOf(c.score,c.max)):''}</span><h3>${s.n}</h3><span class="range">Câu ${s.a}–${s.b} · ${s.sub}</span><span class="fact">${s.fact}</span><span class="bar"><i style="width:${ok/ids.length*100}%"></i></span><span class="range">${ok}/${ids.length} câu đúng hết</span></span></button>
     ${c?`<button class="certbtn" data-cert="${i}">Xem giấy chứng nhận · ${'★'.repeat(starsOf(c.score,c.max))}</button>`:''}</div>`});
-  h+='</div><div class="extra"><button class="btn warm" id="mix">Dạo ngẫu nhiên 20 câu</button><button class="btn primary" id="rankBtn">Bảng xếp hạng</button><button class="btn ghost" id="helpBtn">Sổ tay công thức</button><button class="btn" id="altarBtn">Góc tâm linh</button><button class="btn" id="redo" '+(wrong?'':'disabled')+'>Ôn lại câu sai</button><button class="btn ghost" id="reset">Xoá tiến độ</button></div>';
+  h+=`<div class="stop spiritstop" style="--c:var(--c7)"><button class="stop-main" id="spiritCard" aria-label="Vào Góc tâm linh"><span class="pic">${LM['tam-linh']()}</span><span class="ribbon">${BUA_COST} cá / lá</span>
+    <span class="sbody"><span class="num" data-n="✦">✦</span><span class="lvtag">GÓC ĐẶC BIỆT</span><h3>Góc tâm linh</h3><span class="range">${KINDS.length} loại bùa · ${BUA.length} lá để sưu tầm</span><span class="fact">Đổi cá lấy bùa học giỏi, bùa tỉnh táo, bùa may mắn…</span><span class="range spirit-wallet">${fishSVG}<span>Đang có <b>${fishAvail()}</b> cá để xin bùa</span></span></span></button></div>`;
+  h+='</div><div class="extra"><button class="btn warm" id="mix">Dạo ngẫu nhiên 20 câu</button><button class="btn primary" id="rankBtn">Bảng xếp hạng</button><button class="btn ghost" id="helpBtn">Sổ tay công thức</button><button class="btn" id="redo" '+(wrong?'':'disabled')+'>Ôn lại câu sai</button><button class="btn ghost" id="reset">Xoá tiến độ</button></div>';
   h+=walletHTML();
   if(nc)h+='<section class="gallery"><h2>Sổ tham quan của bạn</h2><div class="row">'+STOPS.map((s,i)=>certs[s.k]?`<button class="gcard" data-cert="${i}"><span class="thumb">${LM[s.k]()}</span><span>${s.n}<small>${certs[s.k].score}/${certs[s.k].max} cá · ${'★'.repeat(starsOf(certs[s.k].score,certs[s.k].max))}</small></span></button>`:'').join('')+'</div></section>';
   app.innerHTML=h;
@@ -1369,7 +1394,7 @@ function home(){
   app.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>viewTicket(b.dataset.t));
   app.querySelectorAll('[data-stop]').forEach(b=>b.onclick=()=>startStop(+b.dataset.stop));
   app.querySelectorAll('[data-cert]').forEach(b=>b.onclick=()=>viewCert(+b.dataset.cert));
-  document.getElementById('rankBtn').onclick=board;document.getElementById('helpBtn').onclick=helpPage;document.getElementById('altarBtn').onclick=altarPage;
+  document.getElementById('rankBtn').onclick=board;document.getElementById('helpBtn').onclick=helpPage;document.getElementById('spiritCard').onclick=()=>altarPage();
   document.getElementById('mix').onclick=()=>start('Dạo ngẫu nhiên',shuffle(Q.map(q=>q.id)).slice(0,20));
   document.getElementById('redo').onclick=()=>start('Ôn lại câu sai',Q.filter(q=>isDone(q.id)&&!isPerfect(q.id)).map(q=>q.id));
   const rs=document.getElementById('reset');rs.onclick=()=>{if(rs.dataset.c){prog={};certs={};saveCerts();save();home()}else{rs.dataset.c=1;rs.textContent='Bấm lần nữa để xoá tiến độ của '+me.name;}};
