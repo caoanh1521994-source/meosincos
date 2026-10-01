@@ -582,6 +582,10 @@ footer{padding-bottom:90px}
 .mini-bua small{font-weight:500;color:#7A2A10;font-size:.7rem}
 .mini-bua:hover{filter:brightness(1.08);transform:translateY(-2px)}
 #altarBtn{background:linear-gradient(180deg,#C59BFF,#6A3BD6);color:#FFF6D0}
+.mf{font-family:"Times New Roman",Times,"Noto Serif",serif;font-size:1.2rem;line-height:1.5;white-space:normal}
+.mf i{font-style:italic}.mf sup{font-size:.65em}
+.mf .fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.92em;margin:0 2px}
+.mf .fr>span:first-child{border-bottom:1.2px solid currentColor;padding:0 3px}
 </style>
 </head>
 <body>
@@ -1245,18 +1249,18 @@ function openHelp(focus){let d=document.getElementById('helpDrawer');
 
 /* ---------- Góc tâm linh: xin bùa học giỏi ---------- */
 const BUA=[
- {t:'Bùa Vững Như Kiềng',f:R`\(\sin^2\alpha+\cos^2\alpha=1\)`,m:'Gốc rễ chắc thì cây không đổ. Thuộc công thức này là làm được nửa bài.'},
- {t:'Bùa Thông Suốt',f:R`\(\tan\alpha\cdot\cot\alpha=1\)`,m:'Tan với cot nghịch đảo nhau, biết một là ra một.'},
- {t:'Bùa Cộng Phúc',f:R`\(\sin(a+b)=\sin a\cos b+\cos a\sin b\)`,m:'"Sin cos, cos sin, dấu giữ nguyên". Đọc thuộc ba lần là nhớ.'},
- {t:'Bùa Nhân Đôi Điểm Số',f:R`\(\sin2a=2\sin a\cos a\)`,m:'Điểm nhân đôi, công sức cũng phải nhân đôi.'},
- {t:'Bùa Hạ Hoả',f:R`\(\cos^2a=\dfrac{1+\cos2a}{2}\)`,m:'Gặp bài khó thì hạ bậc, gặp chuyện nóng thì hạ hoả.'},
- {t:'Bùa Thuận Chu Kì',f:R`\(T=\dfrac{2\pi}{|\omega|}\)`,m:'Học đều đặn như hàm sin, lên xuống nhưng không bao giờ bỏ cuộc.'},
- {t:'Bùa Nhớ Dấu',f:R`\text{Nhất cả, nhì sin, tam tan, tứ cos}`,m:'Góc phần tư nào dương gì, cứ thế mà đọc.'},
- {t:'Bùa Bù Phụ Bình An',f:R`\(\sin(\pi-\alpha)=\sin\alpha,\ \cos\left(\tfrac\pi2-\alpha\right)=\sin\alpha\)`,m:'"Cos đối, sin bù, phụ chéo, hơn kém π tan cot". Thuộc câu này là yên tâm.'},
- {t:'Bùa Không Vô Nghiệm',f:R`\(|m|>1\Rightarrow \sin x=m\ \text{vô nghiệm}\)`,m:'Phương trình có thể vô nghiệm, còn cháu thì có nghiệm, là điểm cao.'},
- {t:'Bùa Tổng Thành Tích',f:R`\(\cos a+\cos b=2\cos\tfrac{a+b}{2}\cos\tfrac{a-b}{2}\)`,m:'Cộng dồn từng ngày học, tổng sẽ thành thành tích.'},
- {t:'Bùa Đổi Đơn Vị',f:R`\(180^\circ=\pi\ \text{rad}\)`,m:'Đổi độ sang rađian thì nhân π/180. Đổi lười sang chăm thì bắt đầu ngay hôm nay.'},
- {t:'Bùa Mười Điểm',f:R`\(\cos 0=1,\ \sin\tfrac\pi2=1\)`,m:'Một cộng một là mười điểm. Phần còn lại là chép công thức vào đầu.'},
+ {t:'Bùa Vững Như Kiềng',f:`sin<sup>2</sup><i>α</i> + cos<sup>2</sup><i>α</i> = 1`,m:'Gốc rễ chắc thì cây không đổ. Thuộc công thức này là làm được nửa bài.'},
+ {t:'Bùa Thông Suốt',f:`tan <i>α</i> · cot <i>α</i> = 1`,m:'Tan với cot nghịch đảo nhau, biết một là ra một.'},
+ {t:'Bùa Cộng Phúc',f:`sin(<i>a</i> + <i>b</i>) = sin <i>a</i> cos <i>b</i> + cos <i>a</i> sin <i>b</i>`,m:'"Sin cos, cos sin, dấu giữ nguyên". Đọc thuộc ba lần là nhớ.'},
+ {t:'Bùa Nhân Đôi Điểm Số',f:`sin 2<i>a</i> = 2 sin <i>a</i> cos <i>a</i>`,m:'Điểm nhân đôi, công sức cũng phải nhân đôi.'},
+ {t:'Bùa Hạ Hoả',f:`cos<sup>2</sup><i>a</i> = <span class="fr"><span>1 + cos 2<i>a</i></span><span>2</span></span>`,m:'Gặp bài khó thì hạ bậc, gặp chuyện nóng thì hạ hoả.'},
+ {t:'Bùa Thuận Chu Kì',f:`<i>T</i> = <span class="fr"><span>2π</span><span>|<i>ω</i>|</span></span>`,m:'Học đều đặn như hàm sin, lên xuống nhưng không bao giờ bỏ cuộc.'},
+ {t:'Bùa Nhớ Dấu',f:`Nhất cả, nhì sin, tam tan, tứ cos`,m:'Góc phần tư nào dương gì, cứ thế mà đọc.'},
+ {t:'Bùa Bù Phụ Bình An',f:`sin(π − <i>α</i>) = sin <i>α</i><br>cos(<span class="fr"><span>π</span><span>2</span></span> − <i>α</i>) = sin <i>α</i>`,m:'"Cos đối, sin bù, phụ chéo, hơn kém π tan cot". Thuộc câu này là yên tâm.'},
+ {t:'Bùa Không Vô Nghiệm',f:`|<i>m</i>| &gt; 1 ⇒ sin <i>x</i> = <i>m</i> vô nghiệm`,m:'Phương trình có thể vô nghiệm, còn cháu thì có nghiệm, là điểm cao.'},
+ {t:'Bùa Tổng Thành Tích',f:`cos <i>a</i> + cos <i>b</i> = 2 cos <span class="fr"><span><i>a</i> + <i>b</i></span><span>2</span></span> cos <span class="fr"><span><i>a</i> − <i>b</i></span><span>2</span></span>`,m:'Cộng dồn từng ngày học, tổng sẽ thành thành tích.'},
+ {t:'Bùa Đổi Đơn Vị',f:`180° = π rad`,m:'Đổi độ sang rađian thì nhân π/180. Đổi lười sang chăm thì bắt đầu ngay hôm nay.'},
+ {t:'Bùa Mười Điểm',f:`cos 0 = 1, &nbsp;sin <span class="fr"><span>π</span><span>2</span></span> = 1`,m:'Một cộng một là mười điểm. Phần còn lại là chép công thức vào đầu.'},
 ];
 const todayKey=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
 let altar={bua:null,bag:[]};
@@ -1282,7 +1286,7 @@ function altarPage(){if(!me){login();return}loadAltar();const got=altar.bua!=nul
   window.scrollTo({top:0})}
 function buaHTML(i){const b=BUA[i];
   return `<div class="bua"><div class="bua-paper"><div class="bua-top">BÙA HỌC GIỎI</div><div class="bua-seal">${slimeSVG(9)}</div>
-    <div class="bua-title">${b.t}</div><div class="bua-f">${b.f.startsWith('\\(')?b.f:'\\('+b.f+'\\)'}</div><div class="bua-m">${b.m}</div>
+    <div class="bua-title">${b.t}</div><div class="bua-f mf">${b.f}</div><div class="bua-m">${b.m}</div>
     <div class="bua-for">Ban cho: <b>${esc(me.name)}</b>${me.cls?' · '+esc(me.cls):''}</div><div class="bua-stamp">10đ</div></div></div>`}
 
 /* ---------- views ---------- */
