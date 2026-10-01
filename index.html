@@ -635,6 +635,24 @@ table.signs{border-collapse:collapse;width:100%;font-family:var(--f-display);tex
 .cgroup .bagrow,.gmini{display:flex;flex-wrap:wrap;gap:8px}
 .mini-bua.lockb small{color:var(--muted)!important;opacity:1}
 .mini-bua.lockb.r-rare small{color:#5BD3FF!important}.mini-bua.lockb.r-sp small{color:#FFD447!important}
+/* bài ca */
+.songs{display:grid;grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:16px}
+@media (max-width:480px){.songs{grid-template-columns:1fr}}
+.song{background:linear-gradient(180deg,color-mix(in srgb,var(--c) 14%,var(--panel2)),var(--paper) 120px);border:1px solid color-mix(in srgb,var(--c) 45%,var(--line));border-radius:14px;padding:14px 16px;box-shadow:0 8px 24px #0006;min-width:0}
+.song header{display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+.sno{font-family:var(--f-display);font-weight:700;font-size:.78rem;color:#fff;background:var(--c);padding:2px 8px;border-radius:4px;letter-spacing:.06em}
+.song h3{flex:1;font-size:1.15rem;color:var(--ink);min-width:0}
+.karabtn{font-family:var(--f-display);font-weight:700;font-size:.78rem;letter-spacing:.06em;color:var(--c);background:#0F1532;border:1px solid var(--c);border-radius:999px;padding:3px 12px}
+.karabtn:hover{background:color-mix(in srgb,var(--c) 20%,#0F1532)}
+.sbody2{display:grid;gap:10px}
+.lyrics{list-style:none;margin:0;padding:12px 14px;background:#0F1532;border-radius:10px;border-left:3px solid var(--c);display:grid;gap:4px}
+.lyrics li{font-family:"Playfair Display",Georgia,serif;font-style:italic;font-size:1.12rem;color:var(--ink);transition:color .25s,transform .25s,text-shadow .25s}
+.lyrics li.on{color:var(--c);transform:translateX(6px) scale(1.04);text-shadow:0 0 14px color-mix(in srgb,var(--c) 70%,transparent);font-weight:700}
+.lyrics li.past{color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.lyrics li{transition:none}.lyrics li.on{transform:none}}
+.sform{display:grid;gap:6px}.sform>div{background:#0B1130;border:1px solid #ffffff0d;border-radius:8px;padding:6px 10px;overflow-x:auto;font-size:.95rem}
+.snote{margin:10px 0 0;font-size:.85rem;color:var(--muted)}
+#songBtn{background:linear-gradient(180deg,#FF7AA8,#E0306E);color:#fff}
 </style>
 </head>
 <body>
@@ -1292,10 +1310,10 @@ function helpHTML(focus,filter){const f=(filter||'').trim().toLowerCase();
   if(!list.length)return '<p class="hint">Không có công thức nào khớp. Thử gõ "cộng", "nhân đôi", "tan"…</p>';
   return '<div class="fgrid">'+list.map(x=>`<article class="fcard ${focus&&focus.includes(x.id)&&!f?'rec':''}"><header><span class="fno">${String(x.id).padStart(2,'0')}</span><h3>${x.title}</h3>${focus&&focus.includes(x.id)&&!f?'<span class="rtag">Gợi ý</span>':''}</header>
     <ul class="${x.cols===2?'two':''}">${x.items.map(it=>it==='__SIGN__'?`<li class="full">${SIGN}</li>`:`<li>${it}</li>`).join('')}</ul></article>`).join('')+'</div>'}
-function helpPage(){app.innerHTML=`<div class="topbar"><h2>Sổ tay công thức</h2><div class="meta"><button class="btn ghost" id="back">${me?'Về bản đồ':'Về đăng nhập'}</button></div></div>
+function helpPage(){clearInterval(karaokeT);app.innerHTML=`<div class="topbar"><h2>Sổ tay công thức</h2><div class="meta"><button class="btn ghost" id="toSong">Bài ca sin cos</button><button class="btn ghost" id="back">${me?'Về bản đồ':'Về đăng nhập'}</button></div></div>
   <p class="hint" style="margin-top:0">14 nhóm công thức lượng giác lớp 11. Trong lúc làm bài, bấm nút <b>TRỢ GIÚP</b> để mở nhanh mà không mất câu đang làm.</p>
   <div class="fsearch"><input id="fq" type="search" placeholder="Tìm công thức: cộng, nhân đôi, tan, chu kì…" autocomplete="off"></div><div id="flist">${helpHTML()}</div>`;
-  document.getElementById('back').onclick=()=>me?home():login();
+  document.getElementById('back').onclick=()=>me?home():login();document.getElementById('toSong').onclick=songPage;
   const q=document.getElementById('fq'),fl=document.getElementById('flist');q.oninput=()=>{fl.innerHTML=helpHTML(null,q.value);typeset(fl)};typeset(app);window.scrollTo({top:0})}
 function openHelp(focus){let d=document.getElementById('helpDrawer');
   if(!d){d=document.createElement('div');d.id='helpDrawer';d.className='drawer';document.body.appendChild(d)}
@@ -1431,6 +1449,42 @@ function buaHTML(i){const b=BUA[i],K=kindOf(b.k);
     <div class="bua-title">${b.t}</div><div class="bua-f mf">${b.f}</div><div class="bua-m">${b.m}</div>
     <div class="bua-for">Ban cho: <b>${esc(me.name)}</b>${me.cls?' · '+esc(me.cls):''}</div><div class="bua-stamp">${K.stamp}</div></div></div>`}
 
+/* ---------- bài ca sin cos ---------- */
+const SONGS_SC=[
+ {t:'Tổng thành tích',lines:['Cos cộng cos bằng hai cos cos','Cos trừ cos bằng trừ hai sin sin','Sin cộng sin bằng hai sin cos','Sin trừ sin bằng hai cos sin'],
+  f:[R`\(\cos a+\cos b=2\cos\frac{a+b}{2}\cos\frac{a-b}{2}\)`,R`\(\cos a-\cos b=-2\sin\frac{a+b}{2}\sin\frac{a-b}{2}\)`,R`\(\sin a+\sin b=2\sin\frac{a+b}{2}\cos\frac{a-b}{2}\)`,R`\(\sin a-\sin b=2\cos\frac{a+b}{2}\sin\frac{a-b}{2}\)`]},
+ {t:'Công thức cộng',lines:['Cos thì cos cos, sin sin','Sin thì sin cos, cos sin rõ ràng','Cos thì đổi dấu hỡi nàng','Sin thì giữ dấu xin chàng nhớ cho'],
+  f:[R`\(\cos(a\pm b)=\cos a\cos b\mp\sin a\sin b\)`,R`\(\sin(a\pm b)=\sin a\cos b\pm\cos a\sin b\)`]},
+ {t:'Tan của tổng',lines:['Tan tổng thì lấy tổng tan','Chia một trừ với tích tan, dễ òm'],
+  f:[R`\(\tan(a+b)=\dfrac{\tan a+\tan b}{1-\tan a\tan b}\)`]},
+ {t:'Tích thành tổng',lines:['Cos cos nửa cos trừ, cộng cos cộng','Sin sin nửa cos trừ, trừ cos cộng','Sin cos nửa sin trừ, cộng sin cộng'],
+  f:[R`\(\cos a\cos b=\frac12[\cos(a-b)+\cos(a+b)]\)`,R`\(\sin a\sin b=\frac12[\cos(a-b)-\cos(a+b)]\)`,R`\(\sin a\cos b=\frac12[\sin(a-b)+\sin(a+b)]\)`]},
+ {t:'Nhân đôi',lines:['Sin gấp đôi bằng hai sin cos','Cos gấp đôi bằng bình cos trừ bình sin','Hoặc hai bình cos trừ một','Hoặc một trừ hai bình sin, chẳng khó gì'],
+  f:[R`\(\sin2a=2\sin a\cos a\)`,R`\(\cos2a=\cos^2a-\sin^2a\)`,R`\(\cos2a=2\cos^2a-1=1-2\sin^2a\)`]},
+ {t:'Góc liên quan đặc biệt',lines:['Cos đối, sin bù, phụ chéo','Hơn kém π thì tan cot'],
+  f:[R`\(\cos(-\alpha)=\cos\alpha\quad\sin(\pi-\alpha)=\sin\alpha\)`,R`\(\sin\left(\tfrac\pi2-\alpha\right)=\cos\alpha\quad\tan(\pi+\alpha)=\tan\alpha\)`],
+  note:'"Cos đối": góc đối nhau thì cos bằng nhau. "Sin bù": góc bù nhau thì sin bằng nhau. "Phụ chéo": góc phụ nhau thì sin góc này bằng cos góc kia. "Hơn kém π tan cot": tan, cot bằng nhau.'},
+ {t:'Dấu theo góc phần tư',lines:['Nhất cả, nhì sin','Tam tan, tứ cos'],
+  f:[R`\(\text{I: tất cả dương}\quad\text{II: sin dương}\)`,R`\(\text{III: tan, cot dương}\quad\text{IV: cos dương}\)`]},
+ {t:'Tỉ số trong tam giác vuông',lines:['Sin đi học','Cos không hư','Tan đoàn kết','Cot kết đoàn'],
+  f:[R`\(\sin=\dfrac{\text{đối}}{\text{huyền}}\quad\cos=\dfrac{\text{kề}}{\text{huyền}}\)`,R`\(\tan=\dfrac{\text{đối}}{\text{kề}}\quad\cot=\dfrac{\text{kề}}{\text{đối}}\)`],
+  note:'Chữ cái đầu là gợi ý: Đi Học = Đối/Huyền, Không Hư = Kề/Huyền, Đoàn Kết = Đối/Kề, Kết Đoàn = Kề/Đối.'},
+];
+let karaokeT=null;
+function songPage(){clearInterval(karaokeT);
+  app.innerHTML=`<div class="topbar"><h2>Bài ca sin cos</h2><div class="meta"><button class="btn ghost" id="toHelp">Sổ tay công thức</button><button class="btn ghost" id="back">${me?'Về bản đồ':'Về đăng nhập'}</button></div></div>
+  <p class="hint" style="margin-top:0">${SONGS_SC.length} câu vè giúp nhớ công thức lượng giác. Bấm <b>Hát theo</b> để từng dòng sáng lên lần lượt, đọc to theo nhịp là thuộc.</p>
+  <div class="songs">${SONGS_SC.map((g,i)=>`<article class="song" style="--c:var(--c${i%8+1})"><header><span class="sno">♪ ${String(i+1).padStart(2,'0')}</span><h3>${g.t}</h3><button class="karabtn" data-s="${i}">▶ Hát theo</button></header>
+    <div class="sbody2"><ol class="lyrics">${g.lines.map(l=>`<li>${l}</li>`).join('')}</ol><div class="sform">${g.f.map(x=>`<div>${x}</div>`).join('')}</div></div>${g.note?`<p class="snote">${g.note}</p>`:''}</article>`).join('')}</div>`;
+  typeset(app);
+  document.getElementById('back').onclick=()=>{clearInterval(karaokeT);me?home():login()};
+  document.getElementById('toHelp').onclick=()=>{clearInterval(karaokeT);helpPage()};
+  app.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{clearInterval(karaokeT);app.querySelectorAll('.lyrics li').forEach(li=>li.classList.remove('on','past'));app.querySelectorAll('.karabtn').forEach(x=>x.textContent='▶ Hát theo');
+    const lis=[...b.closest('.song').querySelectorAll('.lyrics li')];let k=0;b.textContent='♪ Đang hát…';
+    const step=()=>{lis.forEach((li,j)=>{li.classList.toggle('on',j===k);li.classList.toggle('past',j<k)});k++;if(k>lis.length){clearInterval(karaokeT);lis.forEach(li=>li.classList.remove('on','past'));b.textContent='↻ Hát lại'}};
+    step();karaokeT=setInterval(step,1800)});
+  window.scrollTo({top:0})}
+
 /* ---------- views ---------- */
 function login(){
   const past=users.list.slice().sort((a,b)=>(b.last||0)-(a.last||0));
@@ -1446,8 +1500,8 @@ function login(){
   const tr=document.getElementById('toRank');if(tr)tr.onclick=board;
   renderUser();document.getElementById('lname').focus()}
 function renderUser(){const el=document.getElementById('userbar');if(!me){el.innerHTML='';return}
-  el.innerHTML=`${avatarFor(fishOf(prog))}<span>Xin chào <b>${esc(me.name)}</b>${me.cls?' · Lớp '+esc(me.cls):''}</span><button class="linkbtn" id="rankLink">Xếp hạng</button><button class="linkbtn" id="helpLink">Công thức</button><button class="linkbtn" id="logout">Đổi người chơi</button>`;
-  document.getElementById('rankLink').onclick=board;document.getElementById('helpLink').onclick=()=>openHelp(null);
+  el.innerHTML=`${avatarFor(fishOf(prog))}<span>Xin chào <b>${esc(me.name)}</b>${me.cls?' · Lớp '+esc(me.cls):''}</span><button class="linkbtn" id="rankLink">Xếp hạng</button><button class="linkbtn" id="helpLink">Công thức</button><button class="linkbtn" id="songLink">Bài ca</button><button class="linkbtn" id="logout">Đổi người chơi</button>`;
+  document.getElementById('rankLink').onclick=board;document.getElementById('helpLink').onclick=()=>openHelp(null);document.getElementById('songLink').onclick=songPage;
   document.getElementById('logout').onclick=()=>{users.cur=null;LS.set('meo-sc-users',users);me=null;prog={};certs={};S0=null;login()}}
 function home(){
   if(!me){login();return}
@@ -1468,7 +1522,7 @@ function home(){
     ${c?`<button class="certbtn" data-cert="${i}">Xem giấy chứng nhận · ${'★'.repeat(starsOf(c.score,c.max))}</button>`:''}</div>`});
   h+=`<div class="stop spiritstop" style="--c:var(--c7)"><button class="stop-main" id="spiritCard" aria-label="Vào Góc tâm linh"><span class="pic">${LM['tam-linh']()}</span><span class="ribbon">${BUA_COST} cá / lá</span>
     <span class="sbody"><span class="num" data-n="✦">✦</span><span class="lvtag">GÓC ĐẶC BIỆT</span><h3>Góc tâm linh</h3><span class="range">Quay gacha · ${BUA.length} lá để sưu tầm</span><span class="fact">Có lá đặc biệt "Được 10 Điểm". Đủ bộ nhận Phiếu KFC!</span><span class="range spirit-wallet">${fishSVG}<span>Đang có <b>${fishAvail()}</b> cá để xin bùa</span></span></span></button></div>`;
-  h+='</div><div class="extra"><button class="btn warm" id="mix">Dạo ngẫu nhiên 20 câu</button><button class="btn primary" id="rankBtn">Bảng xếp hạng</button><button class="btn ghost" id="helpBtn">Sổ tay công thức</button><button class="btn" id="redo" '+(wrong?'':'disabled')+'>Ôn lại câu sai</button><button class="btn ghost" id="reset">Xoá tiến độ</button></div>';
+  h+='</div><div class="extra"><button class="btn warm" id="mix">Dạo ngẫu nhiên 20 câu</button><button class="btn primary" id="rankBtn">Bảng xếp hạng</button><button class="btn ghost" id="helpBtn">Sổ tay công thức</button><button class="btn" id="songBtn">Bài ca sin cos</button><button class="btn" id="redo" '+(wrong?'':'disabled')+'>Ôn lại câu sai</button><button class="btn ghost" id="reset">Xoá tiến độ</button></div>';
   h+=walletHTML();
   if(nc)h+='<section class="gallery"><h2>Sổ tham quan của bạn</h2><div class="row">'+STOPS.map((s,i)=>certs[s.k]?`<button class="gcard" data-cert="${i}"><span class="thumb">${LM[s.k]()}</span><span>${s.n}<small>${certs[s.k].score}/${certs[s.k].max} cá · ${'★'.repeat(starsOf(certs[s.k].score,certs[s.k].max))}</small></span></button>`:'').join('')+'</div></section>';
   app.innerHTML=h;
@@ -1476,7 +1530,7 @@ function home(){
   app.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>viewTicket(b.dataset.t));
   app.querySelectorAll('[data-stop]').forEach(b=>b.onclick=()=>startStop(+b.dataset.stop));
   app.querySelectorAll('[data-cert]').forEach(b=>b.onclick=()=>viewCert(+b.dataset.cert));
-  document.getElementById('rankBtn').onclick=board;document.getElementById('helpBtn').onclick=helpPage;document.getElementById('spiritCard').onclick=()=>altarPage();
+  document.getElementById('rankBtn').onclick=board;document.getElementById('helpBtn').onclick=helpPage;document.getElementById('songBtn').onclick=songPage;document.getElementById('spiritCard').onclick=()=>altarPage();
   document.getElementById('mix').onclick=()=>start('Dạo ngẫu nhiên',shuffle(Q.map(q=>q.id)).slice(0,20));
   document.getElementById('redo').onclick=()=>start('Ôn lại câu sai',Q.filter(q=>isDone(q.id)&&!isPerfect(q.id)).map(q=>q.id));
   const rs=document.getElementById('reset');rs.onclick=()=>{if(rs.dataset.c){prog={};certs={};saveCerts();save();home()}else{rs.dataset.c=1;rs.textContent='Bấm lần nữa để xoá tiến độ của '+me.name;}};
