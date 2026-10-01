@@ -664,6 +664,28 @@ table.signs{border-collapse:collapse;width:100%;font-family:var(--f-display);tex
 .stop .mnote:nth-of-type(2){animation-delay:-.8s}.stop .mnote:nth-of-type(3){animation-delay:-1.6s}
 @keyframes noteUp{50%{translate:0 -5px;opacity:.7}}
 @media (prefers-reduced-motion:reduce){.stop .mnote{animation:none}}
+
+/* nhắm mắt đọc lại + thưởng */
+.lyrics{transition:filter .4s}
+.lyrics.hidden-lyrics{filter:blur(7px);user-select:none}
+.recall{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:12px;align-items:center;position:relative;background:#0F1532;border:1px solid var(--c);border-radius:12px;padding:10px 12px;box-shadow:0 0 18px color-mix(in srgb,var(--c) 35%,transparent)}
+@media (max-width:480px){.recall{grid-template-columns:64px minmax(0,1fr)}.rskip{grid-column:1/-1}}
+.recall svg{width:64px;height:64px;transform:rotate(-90deg)}
+.recall .rbg{fill:none;stroke:#ffffff1a;stroke-width:6}.recall .rfg{fill:none;stroke:var(--c);stroke-width:6;stroke-linecap:round}
+.rnum{position:absolute;left:12px;top:50%;width:64px;transform:translateY(-50%);text-align:center;font-family:var(--f-display);font-size:1.6rem;color:var(--ink)}
+.rtxt{display:grid;gap:2px}.rtxt strong{font-family:var(--f-display);color:var(--c)}.rtxt span{font-size:.85rem;color:var(--muted)}
+.rskip{font-family:var(--f-display);font-weight:700;font-size:.78rem;background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:4px 12px}
+.learned{font-family:var(--f-display);font-weight:700;font-size:.72rem;letter-spacing:.06em;color:#0A2A1E;background:#2EE6A6;border-radius:999px;padding:2px 10px}
+.karabtn:disabled{opacity:.7;cursor:default}
+.hearts{position:fixed;inset:0;pointer-events:none;z-index:40;overflow:hidden}
+.hearts i{position:fixed;width:26px;height:24px;margin:-12px 0 0 -13px;animation:heartFly 2.2s cubic-bezier(.15,.7,.3,1) forwards;opacity:0}
+.hearts i svg{width:100%;height:100%;filter:drop-shadow(0 0 6px currentColor)}
+@keyframes heartFly{0%{transform:translate(0,0) scale(.2) rotate(0);opacity:0}12%{opacity:1}75%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(var(--s)) rotate(var(--r));opacity:0}}
+.bravo{position:fixed;transform:translate(-50%,-50%);display:grid;justify-items:center;gap:2px;background:#0A0F24e6;border:1px solid #FF4D8D88;border-radius:18px;padding:10px 26px 8px;box-shadow:0 0 30px #FF4D8D55;animation:bravo 2.4s ease-out forwards;text-align:center}
+.bravo b{font-family:var(--f-display);font-size:2.4rem;background:linear-gradient(100deg,var(--c3),var(--c1));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 14px #FF4D8D99)}
+.bravo span{font-size:1.8rem}
+@keyframes bravo{0%{opacity:0;transform:translate(-50%,-50%) scale(.4)}15%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}25%{transform:translate(-50%,-50%) scale(1)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-70%)}}
+@media (prefers-reduced-motion:reduce){.hearts i{animation-duration:1.2s}.bravo{animation:none}}
 </style>
 </head>
 <body>
@@ -1504,18 +1526,49 @@ const SONGS_SC=[
   f:[R`\(\sin=\dfrac{\text{đối}}{\text{huyền}}\quad\cos=\dfrac{\text{kề}}{\text{huyền}}\)`,R`\(\tan=\dfrac{\text{đối}}{\text{kề}}\quad\cot=\dfrac{\text{kề}}{\text{đối}}\)`],
   note:'Chữ cái đầu là gợi ý: Đi Học = Đối/Huyền, Không Hư = Kề/Huyền, Đoàn Kết = Đối/Kề, Kết Đoàn = Kề/Đối.'},
 ];
-let karaokeT=null;
-function songPage(){clearInterval(karaokeT);
+let karaokeT=null,recallT=null;
+const learnedSongs=()=>me?LS.get('meo-sc-songs-'+me.id,{}):{};
+function recallPhase(card,idx,btn){clearInterval(recallT);const box=card.querySelector('.lyrics');card.querySelector('.recall')?.remove();
+  box.classList.add('hidden-lyrics');btn.textContent='🙈 Nhắm mắt…';btn.disabled=true;
+  const r=document.createElement('div');r.className='recall';r.setAttribute('role','status');
+  let n=5;const C=2*Math.PI*26;
+  r.innerHTML=`<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="26" class="rbg"/><circle cx="32" cy="32" r="26" class="rfg" style="stroke-dasharray:${C};stroke-dashoffset:0"/></svg><b class="rnum">${n}</b>
+    <div class="rtxt"><strong>Nhắm mắt đọc thầm lại</strong><span>Đọc lại cả bài trong đầu, hết 5 giây sẽ mở mắt.</span></div><button class="rskip">Đọc xong rồi</button>`;
+  box.after(r);const fg=r.querySelector('.rfg'),num=r.querySelector('.rnum');
+  requestAnimationFrame(()=>{fg.style.transition='stroke-dashoffset 5s linear';fg.style.strokeDashoffset=C});
+  const finish=()=>{clearInterval(recallT);r.remove();box.classList.remove('hidden-lyrics');btn.disabled=false;btn.textContent='↻ Hát lại';
+    if(me){const L=learnedSongs();L[idx]=(L[idx]||0)+1;LS.set('meo-sc-songs-'+me.id,L)}
+    const tag=card.querySelector('.learned');if(tag)tag.hidden=false;
+    cheer(card)};
+  recallT=setInterval(()=>{n--;num.textContent=n;if(n<=0)finish()},1000);
+  r.querySelector('.rskip').onclick=finish}
+function clapSound(){try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;const ctx=new AC();const t0=ctx.currentTime;
+  const len=Math.floor(ctx.sampleRate*.06),buf=ctx.createBuffer(1,len,ctx.sampleRate),d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3);
+  for(let i=0;i<70;i++){const s=ctx.createBufferSource();s.buffer=buf;const f=ctx.createBiquadFilter();f.type='bandpass';f.frequency.value=900+Math.random()*1600;f.Q.value=.8;
+    const g=ctx.createGain();const at=t0+Math.random()*2.2*Math.pow(Math.random(),.5);g.gain.value=(.25+Math.random()*.35)*(1-(at-t0)/2.6);
+    s.connect(f);f.connect(g);g.connect(ctx.destination);s.start(at)}
+  setTimeout(()=>ctx.close(),3200)}catch(e){}}
+function cheer(card){clapSound();
+  const rect=card.getBoundingClientRect(),cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;
+  const lay=document.createElement('div');lay.className='hearts';lay.setAttribute('aria-hidden','true');
+  const cols=['#FF4D8D','#FF5ED1','#FF9DCB','#FFD447','#A66BFF','#FF7AA8'];const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  for(let i=0;i<(reduce?8:42);i++){const h=document.createElement('i');const a=Math.random()*Math.PI*2,dist=120+Math.random()*260;
+    h.style.left=cx+'px';h.style.top=cy+'px';h.style.setProperty('--dx',Math.cos(a)*dist+'px');h.style.setProperty('--dy',(Math.sin(a)*dist-140)+'px');
+    h.style.setProperty('--s',(.6+Math.random()*1.1).toFixed(2));h.style.setProperty('--r',(Math.random()*60-30)+'deg');h.style.color=cols[i%cols.length];h.style.animationDelay=(Math.random()*.35)+'s';
+    h.innerHTML='<svg viewBox="0 0 24 22"><path d="M12 21 C5 15 1 11 1 6.5 A5.5 5.5 0 0 1 12 4 A5.5 5.5 0 0 1 23 6.5 C23 11 19 15 12 21Z" fill="currentColor"/></svg>';lay.appendChild(h)}
+  const msg=document.createElement('div');msg.className='bravo';msg.innerHTML='<b>Giỏi quá!</b><span>👏 👏 👏</span>';msg.style.left=cx+'px';msg.style.top=cy+'px';lay.appendChild(msg);
+  document.body.appendChild(lay);setTimeout(()=>lay.remove(),2800)}
+function songPage(){clearInterval(karaokeT);clearInterval(recallT);
   app.innerHTML=`<div class="topbar"><div style="display:flex;gap:12px;align-items:center"><span class="thumb">${LM['bai-ca']()}</span><h2>Bài ca sin cos</h2></div><div class="meta"><button class="btn ghost" id="toHelp">Sổ tay công thức</button><button class="btn ghost" id="back">${me?'Về bản đồ':'Về đăng nhập'}</button></div></div>
-  <p class="hint" style="margin-top:0">${SONGS_SC.length} câu vè giúp nhớ công thức lượng giác. Bấm <b>Hát theo</b> để từng dòng sáng lên lần lượt, đọc to theo nhịp là thuộc.</p>
-  <div class="songs">${SONGS_SC.map((g,i)=>`<article class="song" style="--c:var(--c${i%8+1})"><header><span class="sno">♪ ${String(i+1).padStart(2,'0')}</span><h3>${g.t}</h3><button class="karabtn" data-s="${i}">▶ Hát theo</button></header>
+  <p class="hint" style="margin-top:0">${SONGS_SC.length} câu vè giúp nhớ công thức lượng giác. Bấm <b>Hát theo</b> để từng dòng sáng lên lần lượt. Hát xong nhắm mắt đọc lại 5 giây để nhận một tràng pháo tay nhé!</p>
+  <div class="songs">${SONGS_SC.map((g,i)=>`<article class="song" style="--c:var(--c${i%8+1})"><header><span class="sno">♪ ${String(i+1).padStart(2,'0')}</span><h3>${g.t}</h3><span class="learned" ${learnedSongs()[i]?'':'hidden'}>✓ Đã thuộc</span><button class="karabtn" data-s="${i}">▶ Hát theo</button></header>
     <div class="sbody2"><ol class="lyrics">${g.lines.map(l=>`<li>${l}</li>`).join('')}</ol><div class="sform">${g.f.map(x=>`<div>${x}</div>`).join('')}</div></div>${g.note?`<p class="snote">${g.note}</p>`:''}</article>`).join('')}</div>`;
   typeset(app);
   document.getElementById('back').onclick=()=>{clearInterval(karaokeT);me?home():login()};
   document.getElementById('toHelp').onclick=()=>{clearInterval(karaokeT);helpPage()};
-  app.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{clearInterval(karaokeT);app.querySelectorAll('.lyrics li').forEach(li=>li.classList.remove('on','past'));app.querySelectorAll('.karabtn').forEach(x=>x.textContent='▶ Hát theo');
+  app.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{clearInterval(karaokeT);clearInterval(recallT);app.querySelectorAll('.recall').forEach(x=>x.remove());app.querySelectorAll('.hidden-lyrics').forEach(x=>x.classList.remove('hidden-lyrics'));app.querySelectorAll('.karabtn').forEach(x=>x.disabled=false);app.querySelectorAll('.lyrics li').forEach(li=>li.classList.remove('on','past'));app.querySelectorAll('.karabtn').forEach(x=>x.textContent='▶ Hát theo');
     const lis=[...b.closest('.song').querySelectorAll('.lyrics li')];let k=0;b.textContent='♪ Đang hát…';
-    const step=()=>{lis.forEach((li,j)=>{li.classList.toggle('on',j===k);li.classList.toggle('past',j<k)});k++;if(k>lis.length){clearInterval(karaokeT);lis.forEach(li=>li.classList.remove('on','past'));b.textContent='↻ Hát lại'}};
+    const step=()=>{lis.forEach((li,j)=>{li.classList.toggle('on',j===k);li.classList.toggle('past',j<k)});k++;if(k>lis.length){clearInterval(karaokeT);lis.forEach(li=>li.classList.remove('on','past'));recallPhase(b.closest('.song'),+b.dataset.s,b)}};
     step();karaokeT=setInterval(step,1800)});
   window.scrollTo({top:0})}
 
