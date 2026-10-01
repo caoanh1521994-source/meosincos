@@ -496,6 +496,46 @@ table.signs{border-collapse:collapse;width:100%;font-family:var(--f-display);tex
 .form.lock b{color:var(--muted)}
 .slime.shadowed{filter:brightness(0) opacity(.35)}
 .avabtn{all:unset;cursor:pointer;border-radius:50%;display:inline-flex}.avabtn:focus-visible{outline:3px solid var(--c3);outline-offset:3px}
+/* vouchers */
+.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:10px}
+.wslot{display:flex;gap:10px;align-items:center;text-align:left;border-radius:12px;padding:8px;background:#0F1532;border:1px dashed var(--line);color:var(--ink);min-width:0}
+.wslot.got{border:1px solid color-mix(in srgb,var(--c) 70%,transparent);background:linear-gradient(90deg,color-mix(in srgb,var(--c) 22%,#0F1532),#0F1532);cursor:pointer;box-shadow:0 0 14px color-mix(in srgb,var(--c) 25%,transparent)}
+.wslot.got:hover{filter:brightness(1.15)}
+.wslot.used{opacity:.55}
+.wslot.party{grid-column:1/-1;--c:var(--c3)}
+.wslot.party.got{background:linear-gradient(90deg,#3A2F0E,#0F1532);border-color:var(--c3)}
+.wpic{width:62px;height:40px;flex:none;border-radius:6px;overflow:hidden;background:var(--sky)}.wpic svg{width:100%;height:100%;display:block}
+.wslot.party .wpic{background:radial-gradient(circle,#2A3570,#0F1532)}
+.wq{width:62px;height:40px;flex:none;border-radius:6px;display:grid;place-items:center;background:#0B1130;color:var(--muted);font-family:var(--f-display);font-size:1.3rem}
+.wtxt{min-width:0}.wtxt b{display:block;font-family:var(--f-display);font-size:.92rem;letter-spacing:.03em}.wtxt small{display:block;color:var(--muted);font-size:.76rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ticket{position:relative;display:grid;grid-template-columns:110px minmax(0,1fr);text-align:left;color:#22183A;border-radius:14px;overflow:hidden;width:100%;
+  background:linear-gradient(135deg,#FFF7E0,#FFE9F2);box-shadow:0 0 0 2px var(--c),0 0 30px color-mix(in srgb,var(--c) 40%,transparent);
+  -webkit-mask:radial-gradient(circle 11px at 110px 0,#0000 98%,#000) top/100% 51% no-repeat,radial-gradient(circle 11px at 110px 100%,#0000 98%,#000) bottom/100% 51% no-repeat;
+  mask:radial-gradient(circle 11px at 110px 0,#0000 98%,#000) top/100% 51% no-repeat,radial-gradient(circle 11px at 110px 100%,#0000 98%,#000) bottom/100% 51% no-repeat}
+.ticket .stub{position:relative;background:var(--c);display:grid;place-items:center;padding:10px;border-right:3px dashed #22183A55}
+.ticket .tpic{width:90px;aspect-ratio:12/7;border-radius:8px;overflow:hidden;border:2px solid #fff8;background:#FFF2D6}.ticket .tpic svg{width:100%;height:100%;display:block}
+.ticket .stub>svg{width:96px;height:96px}
+.tno{position:absolute;bottom:6px;left:8px;font-family:var(--f-display);font-weight:700;font-size:1.3rem;color:#fff;text-shadow:0 2px 0 #0004}
+.tbody{padding:14px 16px 12px 20px;display:grid;gap:3px}
+.tkick{font-family:var(--f-display);font-weight:700;font-size:.7rem;letter-spacing:.2em;color:#8A4FD8}
+.ttitle{font-family:var(--f-display);font-weight:700;font-size:clamp(1.05rem,3.6vw,1.45rem);line-height:1.15;color:#E0306E}
+.tline{font-size:.9rem}
+.tmeta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 14px;margin-top:4px;font-size:.82rem;font-variant-numeric:tabular-nums}
+.tcode{font-family:var(--f-display);letter-spacing:.12em;background:#22183A;color:#FFD447;padding:1px 8px;border-radius:4px}
+.tnote{font-size:.72rem;color:#6B5E80;margin-top:2px}
+.ticket.party{background:linear-gradient(135deg,#FFE27A,#FFB35C 45%,#FF8FC7);}
+.ticket.party .stub{background:#22183A}
+.ticket.party .ttitle{color:#22183A;font-size:clamp(1.4rem,5vw,2rem)}
+.ticket.party .tkick{color:#7A2E00}
+.tstamp{position:absolute;right:18px;top:50%;transform:translateY(-50%) rotate(-14deg);border:4px solid #D7263D;color:#D7263D;font-family:var(--f-display);font-weight:700;font-size:1.6rem;letter-spacing:.12em;padding:2px 12px;border-radius:8px;opacity:.85;background:#fff6}
+.ticket.big{margin:4px 0 8px}
+.tbox{gap:12px}
+.newprize{display:grid;gap:10px;margin-top:4px}
+.newprize h3{font-family:var(--f-display);color:var(--c3);letter-spacing:.14em;font-size:.95rem}
+@media (max-width:480px){.ticket{grid-template-columns:78px minmax(0,1fr);
+  -webkit-mask:radial-gradient(circle 9px at 78px 0,#0000 98%,#000) top/100% 51% no-repeat,radial-gradient(circle 9px at 78px 100%,#0000 98%,#000) bottom/100% 51% no-repeat;
+  mask:radial-gradient(circle 9px at 78px 0,#0000 98%,#000) top/100% 51% no-repeat,radial-gradient(circle 9px at 78px 100%,#0000 98%,#000) bottom/100% 51% no-repeat}.ticket .tpic{width:62px}.ticket .stub>svg{width:66px;height:66px}}
+.ticket .tline,.ticket .tmeta,.ticket .tline b,.ticket .tmeta span{color:#22183A!important}
 </style>
 </head>
 <body>
@@ -1012,6 +1052,44 @@ function showForms(fish){const cur=lvOf(fish);
   document.body.appendChild(o);const close=()=>{o.remove();document.removeEventListener('keydown',k,true)};const k=e=>{if(e.key==='Escape'){e.stopPropagation();close()}};
   document.addEventListener('keydown',k,true);o.querySelector('#evoOk').onclick=close;o.onclick=e=>{if(e.target===o)close()}}
 
+/* ---------- phiếu thưởng ---------- */
+let vouchers={};
+const loadVou=()=>{vouchers=me?LS.get('meo-sc-vou-'+me.id,{}):{}};
+const saveVou=()=>{if(me)LS.set('meo-sc-vou-'+me.id,vouchers)};
+const hashCode=t=>{let h=2166136261;for(const ch of t){h^=ch.codePointAt(0);h=Math.imul(h,16777619)}return (h>>>0).toString(36).toUpperCase().padStart(6,'0').slice(-4)};
+const vouCode=k=>{const i=STOPS.findIndex(s=>s.k===k);return 'MSC-'+(k==='party'?'LH':String(i+1).padStart(2,'0'))+'-'+hashCode(me.id+'|'+k)};
+// cấp phiếu cho mọi màn đã hoàn thành; trả về danh sách phiếu mới
+function syncVouchers(){if(!me)return[];loadVou();const fresh=[];
+  STOPS.forEach(s=>{if(certs[s.k]&&!vouchers[s.k]){vouchers[s.k]={code:vouCode(s.k),date:certs[s.k].date||Date.now(),used:false};fresh.push(s.k)}});
+  if(STOPS.every(s=>certs[s.k])&&!vouchers.party){vouchers.party={code:vouCode('party'),date:Date.now(),used:false};fresh.push('party')}
+  if(fresh.length)saveVou();return fresh}
+function ticketHTML(k,big){const v=vouchers[k],party=k==='party',s=party?null:STOPS.find(x=>x.k===k),i=party?-1:STOPS.indexOf(s);
+  if(!v)return '';
+  return `<div class="ticket ${party?'party':''} ${v.used?'used':''} ${big?'big':''}" style="--c:var(--c${party?3:i+1})">
+    <div class="stub">${party?slimeSVG(10):`<span class="tpic">${LM[k]()}</span>`}<span class="tno">${party?'★':String(i+1).padStart(2,'0')}</span></div>
+    <div class="tbody"><div class="tkick">${party?'PHẦN THƯỞNG TỐI THƯỢNG':'PHẦN THƯỞNG MÀN '+(i+1)}</div>
+      <div class="ttitle">${party?'PHIẾU LIÊN HOAN':'PHIẾU MIỄN 1 BÀI TẬP VỀ NHÀ'}</div>
+      <div class="tline">Cấp cho <b>${esc(me.name)}</b>${me.cls?' · Lớp '+esc(me.cls):''}</div>
+      <div class="tline">${party?'Đã hoàn thành cả 8 màn Mèo Sin Cos':'Hoàn thành màn <b>'+s.n+'</b>'}</div>
+      <div class="tmeta"><span>Mã: <b class="tcode">${v.code}</b></span><span>${new Date(v.date).toLocaleDateString('vi-VN')}</span></div>
+      <div class="tnote">Có giá trị khi được thầy cô xác nhận · Mỗi phiếu dùng một lần</div></div>
+    ${v.used?'<div class="tstamp">ĐÃ DÙNG</div>':''}</div>`}
+function viewTicket(k){const o=document.createElement('div');o.className='evolve';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');
+  const render=()=>{const v=vouchers[k];o.innerHTML=`<div class="evo-box wide tbox">${ticketHTML(k,true)}
+    <p class="evo-note">Đưa phiếu này cho thầy cô xem. Thầy cô kiểm tra mã rồi bấm đánh dấu đã dùng.</p>
+    <div class="extra" style="margin:0;justify-content:center">${v.used?'<button class="btn ghost" id="tUndo">Bỏ đánh dấu</button>':'<button class="btn warm" id="tUse">Đánh dấu đã dùng</button>'}<button class="btn primary" id="tClose">Đóng</button></div></div>`;
+    const u=o.querySelector('#tUse');if(u)u.onclick=()=>{if(!u.dataset.c){u.dataset.c=1;u.textContent='Bấm lần nữa để xác nhận';return}v.used=true;v.usedAt=Date.now();saveVou();render()};
+    const un=o.querySelector('#tUndo');if(un)un.onclick=()=>{v.used=false;saveVou();render()};
+    o.querySelector('#tClose').onclick=close};
+  const close=()=>{o.remove();document.removeEventListener('keydown',kd,true);if(app.querySelector('.wallet'))home()};const kd=e=>{if(e.key==='Escape'){e.stopPropagation();close()}};
+  document.addEventListener('keydown',kd,true);o.onclick=e=>{if(e.target===o)close()};render();document.body.appendChild(o)}
+function walletHTML(){const got=STOPS.filter(s=>vouchers[s.k]).length;
+  return `<section class="wallet"><div class="sec-title"><span>TÚI PHẦN THƯỞNG · ${got}/8 PHIẾU${vouchers.party?' · 1 PHIẾU LIÊN HOAN':''}</span><i></i></div>
+  <div class="wgrid">${STOPS.map((s,i)=>vouchers[s.k]?`<button class="wslot got ${vouchers[s.k].used?'used':''}" data-t="${s.k}" style="--c:var(--c${i+1})"><span class="wpic">${LM[s.k]()}</span><span class="wtxt"><b>Miễn 1 BTVN</b><small>${s.n}${vouchers[s.k].used?' · đã dùng':''}</small></span></button>`
+     :`<div class="wslot lock"><span class="wq">?</span><span class="wtxt"><b>Phiếu màn ${i+1}</b><small>Hoàn thành ${s.n}</small></span></div>`).join('')}
+   ${vouchers.party?`<button class="wslot got party ${vouchers.party.used?'used':''}" data-t="party"><span class="wpic">${slimeSVG(10)}</span><span class="wtxt"><b>PHIẾU LIÊN HOAN</b><small>${vouchers.party.used?'đã dùng':'Bấm để xem'}</small></span></button>`
+     :`<div class="wslot lock party"><span class="wq">★</span><span class="wtxt"><b>Phiếu liên hoan</b><small>Hoàn thành cả 8 màn (${got}/8)</small></span></div>`}</div></section>`}
+
 /* ---------- bảng xếp hạng ---------- */
 // Dán URL Web App của Google Apps Script vào đây để có bảng xếp hạng chung cả lớp (xem apps-script.gs). Để trống = chỉ xếp hạng trên máy này.
 const SCORE_API='';
@@ -1134,6 +1212,7 @@ function home(){
   const total=Q.length, done=Q.filter(q=>isDone(q.id)).length;
   const fish=Q.reduce((s,q)=>s+(prog[q.id]||0),0), maxFish=Q.reduce((s,q)=>s+full(q),0);
   const wrong=Q.filter(q=>isDone(q.id)&&!isPerfect(q.id)).length;
+  syncVouchers();
   const nc=STOPS.filter(s=>certs[s.k]).length;
   const lv=lvOf(fish),lvIn=lv>=10?15:fish-(lv-1)*15;
   let h=`<section class="hud"><div class="hud-id"><button class="avabtn" id="formsBtn" aria-label="Xem các hình dạng mèo slime">${avatarFor(fish,'big')}</button><div><div class="hud-name">${esc(me.name)}</div><div class="hud-title"><span class="lv">CẤP ${lv}</span>${TITLES[lv-1]}${me.cls?' · '+esc(me.cls):''}</div>
@@ -1146,9 +1225,11 @@ function home(){
     <span class="sbody"><span class="num" data-n="${String(i+1).padStart(2,'0')}">${String(i+1).padStart(2,'0')}</span><span class="lvtag">MÀN ${i+1}${c?' · '+'★'.repeat(starsOf(c.score,c.max))+'☆'.repeat(3-starsOf(c.score,c.max)):''}</span><h3>${s.n}</h3><span class="range">Câu ${s.a}–${s.b} · ${s.sub}</span><span class="fact">${s.fact}</span><span class="bar"><i style="width:${ok/ids.length*100}%"></i></span><span class="range">${ok}/${ids.length} câu đúng hết</span></span></button>
     ${c?`<button class="certbtn" data-cert="${i}">Xem giấy chứng nhận · ${'★'.repeat(starsOf(c.score,c.max))}</button>`:''}</div>`});
   h+='</div><div class="extra"><button class="btn warm" id="mix">Dạo ngẫu nhiên 20 câu</button><button class="btn primary" id="rankBtn">Bảng xếp hạng</button><button class="btn ghost" id="helpBtn">Sổ tay công thức</button><button class="btn" id="redo" '+(wrong?'':'disabled')+'>Ôn lại câu sai</button><button class="btn ghost" id="reset">Xoá tiến độ</button></div>';
+  h+=walletHTML();
   if(nc)h+='<section class="gallery"><h2>Sổ tham quan của bạn</h2><div class="row">'+STOPS.map((s,i)=>certs[s.k]?`<button class="gcard" data-cert="${i}"><span class="thumb">${LM[s.k]()}</span><span>${s.n}<small>${certs[s.k].score}/${certs[s.k].max} cá · ${'★'.repeat(starsOf(certs[s.k].score,certs[s.k].max))}</small></span></button>`:'').join('')+'</div></section>';
   app.innerHTML=h;
   document.getElementById('formsBtn').onclick=()=>showForms(fish);
+  app.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>viewTicket(b.dataset.t));
   app.querySelectorAll('[data-stop]').forEach(b=>b.onclick=()=>startStop(+b.dataset.stop));
   app.querySelectorAll('[data-cert]').forEach(b=>b.onclick=()=>viewCert(+b.dataset.cert));
   document.getElementById('rankBtn').onclick=board;document.getElementById('helpBtn').onclick=helpPage;
@@ -1205,11 +1286,13 @@ function summary(){
   let cert='',isNew=false;
   if(s.stop!==undefined){const k=STOPS[s.stop].k,old=certs[k];isNew=!old;
     if(!old||s.score>=old.score)certs[k]={score:s.score,max:s.max,date:Date.now()};saveCerts();cert=certHTML(s.stop)}
+  const fresh=syncVouchers();
+  const prize=fresh.length?`<section class="sum newprize"><h3>PHẦN THƯỞNG MỚI</h3>${fresh.map(k=>ticketHTML(k,true)).join('')}<p class="hint" style="margin:0">Phiếu được cất trong Túi phần thưởng ở bản đồ. Đưa thầy cô xem mã phiếu khi muốn dùng.</p></section>`:'';
   app.innerHTML=`<div class="sum"><div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">${catSVG(pct>=50?'happy':'sad')}<div><h2>${s.name}</h2><div class="big">${s.score}<span style="font-size:1.4rem;color:var(--muted)">/${s.max} cá</span></div></div></div>
   <p style="margin:0">${msg}${s.stop!==undefined?(isNew?' Bạn vừa nhận giấy chứng nhận đã tham quan '+STOPS[s.stop].n+'!':' Giấy chứng nhận giữ kết quả tốt nhất của bạn.'):''}</p>${s.wrong.length?'<div><b>Câu chưa trọn điểm:</b><div class="chips" style="margin-top:6px">'+s.wrong.map(id=>`<span class="chip">Câu ${id}</span>`).join('')+'</div></div>':''}
-  <div class="extra" style="margin:0">${s.wrong.length?'<button class="btn warm" id="rw">Làm lại câu sai</button>':''}${s.stop!==undefined&&s.stop+1<STOPS.length?`<button class="btn" id="nx">Đi tiếp: ${STOPS[s.stop+1].n}</button>`:''}<button class="btn primary" id="hm">Về bản đồ</button></div></div>${cert}`;
+  <div class="extra" style="margin:0">${s.wrong.length?'<button class="btn warm" id="rw">Làm lại câu sai</button>':''}${s.stop!==undefined&&s.stop+1<STOPS.length?`<button class="btn" id="nx">Đi tiếp: ${STOPS[s.stop+1].n}</button>`:''}<button class="btn primary" id="hm">Về bản đồ</button></div></div>${prize}${cert}`;
   document.getElementById('hm').onclick=home;const rw=document.getElementById('rw');if(rw)rw.onclick=()=>start('Làm lại câu sai',s.wrong.slice());
-  const nx=document.getElementById('nx');if(nx)nx.onclick=()=>startStop(s.stop+1);bindCert();if(s.stop!==undefined)confetti(isNew?60:30);
+  const nx=document.getElementById('nx');if(nx)nx.onclick=()=>startStop(s.stop+1);bindCert();if(s.stop!==undefined)confetti(fresh.includes('party')?120:isNew?60:30);
 }
 if(users.cur)loadPlayer(users.cur);renderUser();renderMusic();home();
 </script>
