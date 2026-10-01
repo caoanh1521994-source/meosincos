@@ -152,6 +152,38 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--wall);outline-o
 .past h3{font-size:1.15rem;color:var(--lake);margin-bottom:8px}.past .row{display:flex;flex-wrap:wrap;gap:8px}
 .pchip{display:flex;gap:8px;align-items:center;text-align:left;background:var(--bg);border:1.5px solid var(--line);border-radius:999px;padding:5px 14px 5px 5px;font-weight:600}
 .pchip:hover{border-color:var(--wall)}.pchip small{display:block;font-weight:400;color:var(--muted);font-size:.78rem}
+/* leaderboard */
+.btools{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.seg.big button{padding:8px 14px}
+.clsf{display:flex;gap:6px;align-items:center;font-weight:600;font-size:.9rem}
+.clsf select{font:inherit;padding:6px 10px;border-radius:10px;border:2px solid var(--line);background:var(--paper);color:var(--ink)}
+.bsum{display:flex;flex-wrap:wrap;gap:8px 22px;color:var(--muted);font-variant-numeric:tabular-nums;margin-bottom:6px}.bsum b{color:var(--ink)}
+.podium{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:end;max-width:560px;margin:18px auto 20px}
+.pod{display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;min-width:0}
+.pod b{font-family:var(--f-display);font-weight:400;font-size:1.1rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pod small{color:var(--muted);font-size:.78rem}
+.pod .block{width:100%;margin-top:6px;border-radius:12px 12px 0 0;border:2px solid var(--ink);border-bottom-width:4px;font-family:var(--f-display);font-size:1.1rem;padding:8px 4px;line-height:1.15}
+.pod .block small{color:inherit;opacity:.8}
+.pod.p1 .block{background:var(--wall);color:#1C2A25;height:118px}.pod.p2 .block{background:var(--lake-soft);height:86px}.pod.p3 .block{background:var(--fur);color:#1C2A25;height:66px}
+.pod .crown{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:700;background:var(--paper);border:2px solid var(--ink)}
+.pod.p1 .crown{background:var(--wall)}
+.pod.mine b{color:var(--lacquer)}
+.ava.big{width:48px;height:48px;font-size:1.4rem}
+.tablewrap{overflow-x:auto;background:var(--paper);border:1.5px solid var(--line);border-radius:14px}
+table.rank{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:.93rem}
+.rank th{text-align:left;font-size:.72rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:10px 12px;border-bottom:1.5px solid var(--line);white-space:nowrap}
+.rank td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+.rank tr:last-child td{border-bottom:0}
+.rank .n{text-align:right}.rank small{display:block;color:var(--muted);font-size:.76rem}.rank td.n small{display:inline}
+.rank tr.mine td{background:var(--wall-soft)}
+.rank em{font-style:normal;color:var(--lacquer);font-size:.8rem}
+.rk{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;font-weight:700;border:1.5px solid var(--line)}
+.rk.r1{background:var(--wall);border-color:var(--wall);color:#1C2A25}.rk.r2{background:var(--lake-soft);border-color:var(--lake)}.rk.r3{background:var(--fur);border-color:var(--fur-dark);color:#1C2A25}
+.pl{display:flex;gap:8px;align-items:center;min-width:0}.pl>span:last-child{min-width:0}
+.mini{width:90px;height:6px;border-radius:4px;background:var(--lake-soft);overflow:hidden}.mini i{display:block;height:100%;background:var(--lake)}
+.dots{display:flex;gap:3px}.dots i{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--lacquer);opacity:.45}.dots i.on{background:var(--lacquer);opacity:1}
+.empty{display:flex;gap:14px;align-items:center;background:var(--paper);border:1.5px dashed var(--line);border-radius:14px;padding:16px}
+@media (max-width:560px){.hide-s{display:none}.rank td,.rank th{padding:8px 8px}}
 .namebox{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;margin-top:14px}
 .namebox input{font:inherit;padding:8px 12px;border-radius:10px;border:2px solid var(--line);background:var(--paper);color:var(--ink);width:220px;max-width:100%}
 .gallery{margin-top:26px}
@@ -664,6 +696,55 @@ function viewCert(i){app.innerHTML=`<div class="topbar"><h2>Chứng nhận đã 
   <div class="extra" style="justify-content:center"><button class="btn warm" id="again">Chơi lại chặng này</button></div>`;
   document.getElementById('back').onclick=home;document.getElementById('again').onclick=()=>startStop(i);bindCert();window.scrollTo({top:0})}
 
+/* ---------- bảng xếp hạng ---------- */
+// Dán URL Web App của Google Apps Script vào đây để có bảng xếp hạng chung cả lớp (xem apps-script.gs). Để trống = chỉ xếp hạng trên máy này.
+const SCORE_API='';
+const MAXFISH=Q.reduce((s,q)=>s+full(q),0);
+function statsOf(u){const pg=LS.get('meo-sc-prog-'+u.id,{}),ct=LS.get('meo-sc-cert-'+u.id,{});
+  let fish=0,done=0,tried=0;for(const id in pg){const q=QM[id];if(!q)continue;fish+=pg[id];done++;tried+=full(q)}
+  return {id:u.id,name:u.name,cls:u.cls||'',fish,done,acc:tried?Math.round(fish/tried*100):0,certs:Object.keys(ct),stars:Object.values(ct).reduce((s,c)=>s+starsOf(c.score,c.max),0),last:u.last||u.created||0}}
+const rankSort=(a,b)=>b.fish-a.fish||b.certs.length-a.certs.length||b.acc-a.acc||a.last-b.last;
+let pushT=null;
+function pushScore(){if(!SCORE_API||!me)return;clearTimeout(pushT);pushT=setTimeout(()=>{const st=statsOf(me);
+  fetch(SCORE_API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({...st,certs:st.certs.join(',')})}).catch(()=>{})},1500)}
+async function fetchOnline(){const r=await fetch(SCORE_API+'?t='+Date.now());const j=await r.json();
+  return (j.rows||[]).map(x=>({...x,fish:+x.fish||0,done:+x.done||0,acc:+x.acc||0,stars:+x.stars||0,last:+x.last||0,certs:String(x.certs||'').split(',').filter(Boolean)}))}
+const ago=t=>{if(!t)return '—';const m=Math.round((Date.now()-t)/60000);if(m<1)return 'vừa xong';if(m<60)return m+' phút trước';const h=Math.round(m/60);if(h<24)return h+' giờ trước';const d=new Date(t);return d.getDate()+'/'+(d.getMonth()+1)};
+let boardMode=SCORE_API?'online':'local',boardCls='';
+async function board(){
+  app.innerHTML=`<div class="topbar"><h2>Bảng xếp hạng</h2><div class="meta"><button class="btn ghost" id="back">${me?'Về bản đồ':'Về đăng nhập'}</button></div></div><div id="bwrap"><p class="hint">Đang tải…</p></div>`;
+  document.getElementById('back').onclick=()=>me?home():login();
+  let rows,note='';
+  if(boardMode==='online'){try{rows=await fetchOnline()}catch(e){rows=null;note='Chưa tải được bảng cả lớp, đang hiện người chơi trên máy này.'}}
+  if(!rows){rows=users.list.map(statsOf);if(boardMode==='online'&&!note)note=''}
+  rows=rows.filter(r=>r.done>0||(me&&r.id===me.id)).sort(rankSort);
+  const classes=[...new Set(rows.map(r=>r.cls).filter(Boolean))].sort();
+  const view=boardCls?rows.filter(r=>r.cls===boardCls):rows;
+  const top=view.slice(0,3),medal=['vàng','bạc','đồng'];
+  const tot={n:view.length,fish:view.reduce((s,r)=>s+r.fish,0),certs:view.reduce((s,r)=>s+r.certs.length,0)};
+  let h=`<div class="btools">${SCORE_API?`<div class="seg big"><button data-m="online" class="${boardMode==='online'?'on':''}">Cả lớp (trực tuyến)</button><button data-m="local" class="${boardMode==='local'?'on':''}">Trên máy này</button></div>`:'<span class="hint" style="margin:0">Xếp hạng những người đã chơi trên máy này</span>'}
+    ${classes.length>1?`<label class="clsf">Lớp <select id="clsSel"><option value="">Tất cả</option>${classes.map(c=>`<option ${c===boardCls?'selected':''}>${esc(c)}</option>`).join('')}</select></label>`:''}</div>`;
+  if(note)h+=`<p class="hint">${note}</p>`;
+  if(!view.length){h+=`<div class="empty">${catSVG('sad')}<p>Chưa có ai làm câu nào. ${me?'Chơi một chặng để ghi tên lên bảng nhé!':'Đăng nhập và chơi một chặng để ghi tên lên bảng nhé!'}</p></div>`}
+  else{
+    h+=`<div class="bsum"><span><b>${tot.n}</b> người chơi</span><span class="fish">${fishSVG}<b>${tot.fish}</b> cá đã câu</span><span><b>${tot.certs}</b> giấy chứng nhận</span></div>`;
+    h+='<div class="podium">'+[1,0,2].filter(i=>top[i]).map(i=>{const r=top[i];return `<div class="pod p${i+1} ${me&&r.id===me.id?'mine':''}"><div class="crown">${i+1}</div><span class="ava big">${esc(initial(r.name))}</span><b>${esc(r.name)}</b><small>${r.cls?'Lớp '+esc(r.cls):'&nbsp;'}</small><span class="fish">${fishSVG}${r.fish}</span><div class="block">Hạng ${i+1}<br><small>Huy chương ${medal[i]}</small></div></div>`}).join('')+'</div>';
+    h+=`<div class="tablewrap"><table class="rank"><thead><tr><th>Hạng</th><th>Người chơi</th><th class="n">Cá</th><th class="hide-s">Tiến độ</th><th class="n hide-s">Chính xác</th><th>Chứng nhận</th><th class="hide-s">Gần nhất</th></tr></thead><tbody>`+
+      view.map((r,i)=>`<tr class="${me&&r.id===me.id?'mine':''}"><td><span class="rk r${i<3?i+1:''}">${i+1}</span></td>
+      <td><div class="pl"><span class="ava">${esc(initial(r.name))}</span><span>${esc(r.name)}${me&&r.id===me.id?' <em>(bạn)</em>':''}<small>${r.cls?'Lớp '+esc(r.cls):''}</small></span></div></td>
+      <td class="n"><b>${r.fish}</b><small>/${MAXFISH}</small></td>
+      <td class="hide-s"><div class="mini"><i style="width:${r.done/Q.length*100}%"></i></div><small>${r.done}/${Q.length} câu</small></td>
+      <td class="n hide-s">${r.acc}%</td>
+      <td><div class="dots" title="${r.certs.length}/8 chứng nhận">${STOPS.map(s=>`<i class="${r.certs.includes(s.k)?'on':''}" title="${s.n}"></i>`).join('')}</div><small>${r.certs.length}/8 · ${r.stars}★</small></td>
+      <td class="hide-s"><small>${ago(r.last)}</small></td></tr>`).join('')+'</tbody></table></div>';
+    h+='<p class="hint">Xếp theo số cá; bằng nhau thì xét số giấy chứng nhận, rồi tỉ lệ đúng.</p>';
+  }
+  document.getElementById('bwrap').innerHTML=h;
+  app.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{boardMode=b.dataset.m;board()});
+  const cs=document.getElementById('clsSel');if(cs)cs.onchange=()=>{boardCls=cs.value;board()};
+}
+const initial=n=>(n.trim().split(/\s+/).pop()[0]||'?').toUpperCase();
+
 /* ---------- views ---------- */
 function login(){
   const past=users.list.slice().sort((a,b)=>(b.last||0)-(a.last||0));
@@ -672,13 +753,15 @@ function login(){
   <div class="field"><label for="lcls">Lớp</label><input id="lcls" maxlength="12" placeholder="Ví dụ: 11C2"></div>
   <p class="lerr" id="lerr" hidden>Bạn nhập họ tên trước đã nhé.</p><button class="btn primary" type="submit">Vào chơi</button></form>
   ${past.length?`<div class="past"><h3>Đã từng chơi trên máy này</h3><div class="row">${past.map(u=>`<button class="pchip" data-u="${u.id}"><span class="ava">${esc(u.name.trim().split(/\s+/).pop()[0]||'?').toUpperCase()}</span><span>${esc(u.name)}<small>${u.cls?'Lớp '+esc(u.cls)+' · ':''}${Object.keys(LS.get('meo-sc-cert-'+u.id,{})).length}/8 chứng nhận</small></span></button>`).join('')}</div></div>`:''}
-  <p class="hint">Tên và tiến độ được lưu trên trình duyệt của máy này. Mỗi bạn dùng chung máy có thể đăng nhập bằng tên riêng.</p></section>`;
+  ${past.length?'<button class="linkbtn" id="toRank" type="button">Xem bảng xếp hạng</button>':''}<p class="hint">Tên và tiến độ được lưu trên trình duyệt của máy này. Mỗi bạn dùng chung máy có thể đăng nhập bằng tên riêng.</p></section>`;
   document.getElementById('lf').onsubmit=e=>{e.preventDefault();const n=document.getElementById('lname').value.trim().replace(/\s+/g,' '),c=document.getElementById('lcls').value.trim().toUpperCase();
-    if(!n){document.getElementById('lerr').hidden=false;document.getElementById('lname').focus();return}addPlayer(n,c);renderUser();home()};
+    if(!n){document.getElementById('lerr').hidden=false;document.getElementById('lname').focus();return}addPlayer(n,c);pushScore();renderUser();home()};
   app.querySelectorAll('[data-u]').forEach(b=>b.onclick=()=>{const u=users.list.find(x=>x.id===b.dataset.u);u.last=Date.now();loadPlayer(u.id);renderUser();home()});
+  const tr=document.getElementById('toRank');if(tr)tr.onclick=board;
   renderUser();document.getElementById('lname').focus()}
 function renderUser(){const el=document.getElementById('userbar');if(!me){el.innerHTML='';return}
-  el.innerHTML=`<span class="ava">${esc(me.name.trim().split(/\s+/).pop()[0]||'?').toUpperCase()}</span><span>Xin chào <b>${esc(me.name)}</b>${me.cls?' · Lớp '+esc(me.cls):''}</span><button class="linkbtn" id="logout">Đổi người chơi</button>`;
+  el.innerHTML=`<span class="ava">${esc(me.name.trim().split(/\s+/).pop()[0]||'?').toUpperCase()}</span><span>Xin chào <b>${esc(me.name)}</b>${me.cls?' · Lớp '+esc(me.cls):''}</span><button class="linkbtn" id="rankLink">Xếp hạng</button><button class="linkbtn" id="logout">Đổi người chơi</button>`;
+  document.getElementById('rankLink').onclick=board;
   document.getElementById('logout').onclick=()=>{users.cur=null;LS.set('meo-sc-users',users);me=null;prog={};certs={};S0=null;login()}}
 function home(){
   if(!me){login();return}
@@ -692,11 +775,12 @@ function home(){
     h+=`<div class="stop ${c?'done':''}"><button class="stop-main" data-stop="${i}" aria-label="Chơi chặng ${s.n}"><span class="pic">${LM[s.k]()}</span>${c?'<span class="ribbon">Đã tham quan</span>':''}
     <span class="sbody"><span class="num">${i+1}</span><h3>${s.n}</h3><span class="range">Câu ${s.a}–${s.b} · ${s.sub}</span><span class="fact">${s.fact}</span><span class="bar"><i style="width:${ok/ids.length*100}%"></i></span><span class="range">${ok}/${ids.length} câu đúng hết</span></span></button>
     ${c?`<button class="certbtn" data-cert="${i}">Xem giấy chứng nhận · ${'★'.repeat(starsOf(c.score,c.max))}</button>`:''}</div>`});
-  h+='</div><div class="extra"><button class="btn warm" id="mix">Dạo ngẫu nhiên 20 câu</button><button class="btn" id="redo" '+(wrong?'':'disabled')+'>Ôn lại câu sai</button><button class="btn ghost" id="reset">Xoá tiến độ</button></div>';
+  h+='</div><div class="extra"><button class="btn warm" id="mix">Dạo ngẫu nhiên 20 câu</button><button class="btn primary" id="rankBtn">Bảng xếp hạng</button><button class="btn" id="redo" '+(wrong?'':'disabled')+'>Ôn lại câu sai</button><button class="btn ghost" id="reset">Xoá tiến độ</button></div>';
   if(nc)h+='<section class="gallery"><h2>Sổ tham quan của bạn</h2><div class="row">'+STOPS.map((s,i)=>certs[s.k]?`<button class="gcard" data-cert="${i}"><span class="thumb">${LM[s.k]()}</span><span>${s.n}<small>${certs[s.k].score}/${certs[s.k].max} cá · ${'★'.repeat(starsOf(certs[s.k].score,certs[s.k].max))}</small></span></button>`:'').join('')+'</div></section>';
   app.innerHTML=h;
   app.querySelectorAll('[data-stop]').forEach(b=>b.onclick=()=>startStop(+b.dataset.stop));
   app.querySelectorAll('[data-cert]').forEach(b=>b.onclick=()=>viewCert(+b.dataset.cert));
+  document.getElementById('rankBtn').onclick=board;
   document.getElementById('mix').onclick=()=>start('Dạo ngẫu nhiên',shuffle(Q.map(q=>q.id)).slice(0,20));
   document.getElementById('redo').onclick=()=>start('Ôn lại câu sai',Q.filter(q=>isDone(q.id)&&!isPerfect(q.id)).map(q=>q.id));
   const rs=document.getElementById('reset');rs.onclick=()=>{if(rs.dataset.c){prog={};certs={};saveCerts();save();home()}else{rs.dataset.c=1;rs.textContent='Bấm lần nữa để xoá tiến độ của '+me.name;}};
@@ -720,7 +804,7 @@ function show(){
   document.getElementById('back').onclick=home;
   const next=document.getElementById('next');next.onclick=()=>{s.i++;s.i<s.ids.length?show():summary();window.scrollTo({top:0})};
   const cat=app.querySelector('.cat'),say=app.querySelector('.say'),exEl=app.querySelector('.bubble .ex');
-  const finish=(got,exHTML)=>{s.score+=got;prog[q.id]=got;save();if(got<full(q))s.wrong.push(q.id);
+  const finish=(got,exHTML)=>{s.score+=got;prog[q.id]=got;save();pushScore();if(got<full(q))s.wrong.push(q.id);
     const ok=got===full(q);cat.classList.add(ok?'happy':'sad');
     s.streak=ok?s.streak+1:0;const stk=document.getElementById('stk');stk.textContent='Chuỗi đúng '+s.streak;stk.classList.toggle('hot',s.streak>=3);
     const milestone={3:'Ba câu liền! Mèo bắt đầu thấy nóng tay.',5:'Năm câu liền! Mèo xoay vòng như đường tròn lượng giác.',10:'Mười câu liền! Bậc thầy sin cos đây rồi.',15:'Mười lăm câu liền, mèo xin bái phục!'}[s.streak];
