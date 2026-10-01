@@ -11,7 +11,7 @@
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Mèo Sin Cos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Itim&family=Dancing+Script:wght@600;700&family=Chakra+Petch:wght@500;600;700&family=Playfair+Display:wght@600;700&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Itim&family=Chakra+Petch:wght@500;600;700&family=Playfair+Display:wght@600;700&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
 <script>
 window.MathJax = { tex: { inlineMath: [['\\(', '\\)']] }, svg: { fontCache: 'global' }, startup: { typeset: false } };
 </script>
@@ -537,20 +537,6 @@ table.signs{border-collapse:collapse;width:100%;font-family:var(--f-display);tex
   mask:radial-gradient(circle 9px at 78px 0,#0000 98%,#000) top/100% 51% no-repeat,radial-gradient(circle 9px at 78px 100%,#0000 98%,#000) bottom/100% 51% no-repeat}.ticket .tpic{width:62px}.ticket .stub>svg{width:66px;height:66px}}
 .ticket .tline,.ticket .tmeta,.ticket .tline b,.ticket .tmeta span{color:#22183A!important}
 
-/* signature: Cô Linh giấu tên */
-.sigblock{display:grid;justify-items:center;gap:0;line-height:1.1;text-align:center}
-.sigrole{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;opacity:.75}
-.sigsvg{width:120px;height:38px;color:#1F3B8F}
-.signame{font-family:"Dancing Script","Itim",cursive;font-weight:700;font-size:1.05rem}
-.cert .foot{align-items:center}
-.cert .sigblock{color:var(--ink)}
-.tfoot{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap;margin-top:2px}
-.ticket .sigblock{color:#22183A}.ticket .sigsvg{width:92px;height:28px;color:#3A2A9E}.ticket .signame{font-size:.9rem}.ticket .sigrole{font-size:.62rem}
-.pagesig{display:flex;flex-direction:column;align-items:flex-end;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);gap:2px}
-.pagesig span:first-child{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-.pagesig-name{font-family:"Dancing Script","Itim",cursive;font-weight:700;font-size:1.8rem;line-height:1;background:linear-gradient(100deg,var(--c3),var(--c1));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 10px #FF4D8D55)}
-footer{padding-bottom:90px}
-.pagesig-name{padding:0 8px 4px 4px}
 /* Góc tâm linh */
 .spirit{display:grid;grid-template-columns:auto minmax(0,1fr);gap:20px;align-items:center;border-radius:16px;padding:20px;
   background:radial-gradient(ellipse at 20% 40%,#3A2A6E,#141B3B 70%);border:1px solid #C59BFF66;box-shadow:0 0 0 1px #C59BFF33,0 0 40px #A66BFF33,0 10px 30px #0009}
@@ -566,7 +552,7 @@ footer{padding-bottom:90px}
 .spirit-text p{margin:0;color:var(--muted);max-width:46ch}
 .bua{display:grid;place-items:center;margin:20px 0}
 .bua-paper{position:relative;width:min(300px,100%);padding:18px 18px 22px;text-align:center;display:grid;gap:8px;justify-items:center;
-  background:linear-gradient(180deg,#FFE680,#F7C935);color:#A3120B;border:3px double #A3120B;border-radius:4px;box-shadow:0 0 0 6px #F7C93533,0 0 40px #FFD44766,0 14px 30px #0008}
+  background:linear-gradient(180deg,var(--kb1,#FFE680),var(--kb2,#F7C935));color:var(--ki,#A3120B);border:3px double var(--ki,#A3120B);border-radius:4px;box-shadow:0 0 0 6px #F7C93533,0 0 40px #FFD44766,0 14px 30px #0008}
 .bua.reveal .bua-paper{animation:unroll .9s cubic-bezier(.2,1.3,.4,1)}
 @keyframes unroll{from{transform:scaleY(.05) rotate(-4deg);opacity:0}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){.bua.reveal .bua-paper{animation:none}}
@@ -586,6 +572,20 @@ footer{padding-bottom:90px}
 .mf i{font-style:italic}.mf sup{font-size:.65em}
 .mf .fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.92em;margin:0 2px}
 .mf .fr>span:first-child{border-bottom:1.2px solid currentColor;padding:0 3px}
+
+.bua-top{border-bottom-color:var(--ki,#A3120B)!important}.bua-seal{border-color:var(--ki,#A3120B)!important;background:#ffffffaa!important}
+.bua-f{color:var(--ki,#5A0A06)!important;border-color:var(--ki,#A3120B)!important;background:#ffffffb3!important}
+.bua-m,.bua-for{color:var(--ki,#5A0A06)!important}
+.bua-stamp{border-color:var(--ki,#C8102E)!important;color:var(--ki,#C8102E)!important;font-size:1.05rem}
+.mini-bua{background:linear-gradient(180deg,var(--kb1,#FFE680),var(--kb2,#F7C935))!important;color:var(--ki,#A3120B)!important;border-color:var(--ki,#A3120B)!important}
+.mini-bua small{color:var(--ki,#7A2A10)!important;opacity:.8}
+.kinds{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin:16px 0 6px}
+.kind{display:flex;gap:12px;align-items:center;text-align:left;padding:10px 12px;border-radius:14px;border:2px solid var(--ki);background:linear-gradient(135deg,var(--kb1),var(--kb2));color:var(--ki);box-shadow:0 6px 18px #0006;transition:transform .15s,box-shadow .15s}
+.kind:hover{transform:translateY(-3px);box-shadow:0 10px 24px #0008,0 0 18px color-mix(in srgb,var(--kb2) 60%,transparent)}
+.kind.got{opacity:.8}
+.kseal{width:56px;height:56px;flex:none;border-radius:50%;background:#ffffffb3;border:2px solid var(--ki);display:grid;place-items:center;overflow:hidden}.kseal svg{width:118%;height:118%}
+.ktxt{display:grid;gap:1px;min-width:0}.ktxt b{font-family:var(--f-display);font-size:1.05rem;letter-spacing:.02em}.ktxt small{font-size:.8rem;opacity:.85}
+.ktxt em{font-style:normal;font-family:var(--f-display);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;margin-top:3px;font-weight:700}
 </style>
 </head>
 <body>
@@ -663,7 +663,7 @@ footer{padding-bottom:90px}
   <div class="userbar" id="userbar"></div>
   <main id="app"></main>
   <div class="musicbox" id="musicbox" role="region" aria-label="Nhạc nền"></div>
-  <footer>Đề cương ôn tập giữa học kì I · Toán 11 · Chủ đề 1: Hàm số lượng giác và phương trình lượng giác. Tiến độ được lưu trên trình duyệt này.<div class="pagesig"><span>Biên soạn &amp; thiết kế</span><span class="pagesig-name">Cô Linh giấu tên</span></div></footer>
+  <footer>Đề cương ôn tập giữa học kì I · Toán 11 · Chủ đề 1: Hàm số lượng giác và phương trình lượng giác. Tiến độ được lưu trên trình duyệt này.</footer>
 </div>
 
 <script>
@@ -1048,7 +1048,7 @@ function certHTML(i){const s=STOPS[i],c=certs[s.k],st=starsOf(c.score,c.max);
   <p>đã hoàn thành chặng <b>${s.n}</b> (câu ${s.a}–${s.b}: ${s.sub.toLowerCase()}), câu cá được <b>${c.score}/${c.max}</b> con.</p>
   <div class="stars" aria-label="${st} trên 3 sao">${'★'.repeat(st)}${'☆'.repeat(3-st)}</div>
   <p style="font-size:.88rem;color:var(--muted)">${s.fact}</p>
-  <div class="foot"><div>${fmtDate(c.date)}<br>Hướng dẫn viên<div class="sign">Mèo Sin Cos</div></div>${sealSVG}${signBlock('Giáo viên xác nhận')}</div></div>
+  <div class="foot"><div>${fmtDate(c.date)}<br>Hướng dẫn viên<div class="sign">Mèo Sin Cos</div></div>${sealSVG}</div></div>
   <p class="hint" style="text-align:center">Muốn giữ lại thì chụp màn hình giấy chứng nhận nhé.</p>`}
 function bindCert(){}
 function viewCert(i){app.innerHTML=`<div class="topbar"><h2>Chứng nhận đã nhận</h2><div class="meta"><button class="btn ghost" id="back">Về bản đồ</button></div></div>${certHTML(i)}
@@ -1108,8 +1108,6 @@ function showForms(fish){const cur=lvOf(fish);
   document.body.appendChild(o);const close=()=>{o.remove();document.removeEventListener('keydown',k,true)};const k=e=>{if(e.key==='Escape'){e.stopPropagation();close()}};
   document.addEventListener('keydown',k,true);o.querySelector('#evoOk').onclick=close;o.onclick=e=>{if(e.target===o)close()}}
 
-const SIGN_SVG=`<svg class="sigsvg" viewBox="0 0 150 46" aria-hidden="true"><text x="6" y="32" font-family="'Dancing Script',cursive" font-size="32" font-weight="700" fill="currentColor">Linh</text><path d="M4 38 Q50 30 92 37 T146 30" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M96 14 q10 -8 16 2 q4 8 -8 12" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>`;
-const signBlock=(role)=>`<div class="sigblock"><span class="sigrole">${role}</span>${SIGN_SVG}<span class="signame">Cô Linh giấu tên</span></div>`;
 /* ---------- phiếu thưởng ---------- */
 let vouchers={};
 const loadVou=()=>{vouchers=me?LS.get('meo-sc-vou-'+me.id,{}):{}};
@@ -1130,7 +1128,7 @@ function ticketHTML(k,big){const v=vouchers[k],party=k==='party',s=party?null:ST
       <div class="tline">Cấp cho <b>${esc(me.name)}</b>${me.cls?' · Lớp '+esc(me.cls):''}</div>
       <div class="tline">${party?'Đã hoàn thành cả 8 màn Mèo Sin Cos':'Hoàn thành màn <b>'+s.n+'</b>'}</div>
       <div class="tmeta"><span>Mã: <b class="tcode">${v.code}</b></span><span>${new Date(v.date).toLocaleDateString('vi-VN')}</span></div>
-      <div class="tfoot"><div class="tnote">Có giá trị khi được cô xác nhận · Mỗi phiếu dùng một lần</div>${signBlock('Người cấp phiếu')}</div></div>
+      <div class="tnote">Có giá trị khi được thầy cô xác nhận · Mỗi phiếu dùng một lần</div></div>
     ${v.used?'<div class="tstamp">ĐÃ DÙNG</div>':''}</div>`}
 function viewTicket(k){const o=document.createElement('div');o.className='evolve';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');
   const render=()=>{const v=vouchers[k];o.innerHTML=`<div class="evo-box wide tbox">${ticketHTML(k,true)}
@@ -1262,32 +1260,71 @@ const BUA=[
  {t:'Bùa Đổi Đơn Vị',f:`180° = π rad`,m:'Đổi độ sang rađian thì nhân π/180. Đổi lười sang chăm thì bắt đầu ngay hôm nay.'},
  {t:'Bùa Mười Điểm',f:`cos 0 = 1, &nbsp;sin <span class="fr"><span>π</span><span>2</span></span> = 1`,m:'Một cộng một là mười điểm. Phần còn lại là chép công thức vào đầu.'},
 ];
+const KINDS=[
+ {k:'hg',n:'Bùa học giỏi',d:'Nhớ công thức, làm bài trôi chảy',lv:9,stamp:'10đ',bg:['#FFE680','#F7C935'],ink:'#A3120B'},
+ {k:'tt',n:'Bùa tỉnh táo',d:'Không ngủ gật giờ Toán',lv:4,stamp:'☕',bg:['#D9F7C8','#9BE07C'],ink:'#1F5E18'},
+ {k:'nl',n:'Bùa nhớ lâu',d:'Học một lần, nhớ tới lúc thi',lv:3,stamp:'∞',bg:['#D6ECFF','#8CC4FF'],ink:'#123E7A'},
+ {k:'bt',n:'Bùa bình tĩnh',d:'Vào phòng thi không run tay',lv:5,stamp:'✓',bg:['#EBDDFF','#C3A2FF'],ink:'#43198A'},
+ {k:'nd',n:'Bùa không nhầm dấu',d:'Âm dương phân minh, cộng trừ rõ ràng',lv:6,stamp:'±',bg:['#FFE0EE','#FF9DCB'],ink:'#8A1450'},
+ {k:'mm',n:'Bùa may mắn',d:'Phân vân hai đáp án thì chọn đúng',lv:8,stamp:'★',bg:['#FFE8CC','#FFB35C'],ink:'#7A3A00'},
+];
+const fr2=(n,d)=>`<span class="fr"><span>${n}</span><span>${d}</span></span>`;
+const BUA_MORE=[
+ {k:'tt',t:'Bùa Mắt Sáng Như Sao',f:`sin <span class="fr"><span>π</span><span>2</span></span> = 1`,m:'Đỉnh cao của hàm sin là 1. Đỉnh cao của buổi sáng là ngồi thẳng lưng, mắt mở to.'},
+ {k:'tt',t:'Bùa Đi Ngủ Sớm',f:`<i>T</i> = 24 giờ`,m:'Ngày nào cũng là một chu kì. Ngủ đủ 8 tiếng thì chu kì sau mới chạy đều.'},
+ {k:'tt',t:'Bùa Nước Lọc',f:`1 cốc nước = 1 lần tỉnh`,m:'Buồn ngủ thì đứng dậy uống nước, đừng gục xuống bàn.'},
+ {k:'tt',t:'Bùa Không Ngáp',f:`cos 0 = 1`,m:'Góc bằng 0, mồm cũng khép lại. Ngáp ít thì nghe giảng được nhiều.'},
+ {k:'nl',t:'Bùa Chép Ba Lần',f:`1 + tan<sup>2</sup><i>α</i> = ${fr2('1','cos<sup>2</sup><i>α</i>')}`,m:'Chép tay ba lần vào vở nháp, công thức tự nằm lại trong đầu.'},
+ {k:'nl',t:'Bùa Câu Thần Chú',f:`Cos đối, sin bù, phụ chéo, hơn kém π tan cot`,m:'Đọc to mỗi sáng trước khi đi học, một tuần là thuộc.'},
+ {k:'nl',t:'Bùa Đường Tròn Trong Tim',f:`<i>M</i>(cos <i>α</i>; sin <i>α</i>)`,m:'Hoành độ là cos, tung độ là sin. Vẽ đường tròn lượng giác ra là nhớ hết.'},
+ {k:'nl',t:'Bùa Ôn Cách Ngày',f:`Hôm nay → Ngày mai → Tuần sau`,m:'Ôn lại sau 1 ngày, 3 ngày, 7 ngày. Não nhớ lâu hơn hẳn học dồn một đêm.'},
+ {k:'bt',t:'Bùa Hít Thở Sâu',f:`sin<sup>2</sup> + cos<sup>2</sup> = 1`,m:'Hít vào đếm 4, thở ra đếm 4. Dù đề khó cỡ nào, tổng vẫn bằng 1.'},
+ {k:'bt',t:'Bùa Đọc Kĩ Đề',f:`π &lt; <i>x</i> &lt; ${fr2('3π','2')}`,m:'Gạch chân điều kiện của góc trước khi làm. Góc phần tư nào quyết định dấu nấy.'},
+ {k:'bt',t:'Bùa Làm Câu Dễ Trước',f:`Dễ → Vừa → Khó`,m:'Câu nào chắc ăn làm trước, câu khó để sau. Không ai trừ điểm vì làm không theo thứ tự.'},
+ {k:'bt',t:'Bùa Không Hoảng',f:`|sin <i>x</i>| ≤ 1`,m:'Sin không bao giờ vượt quá 1, lo lắng cũng vậy. Giữ trong khoảng cho phép thôi.'},
+ {k:'nd',t:'Bùa Âm Dương Phân Minh',f:`cos(π − <i>α</i>) = −cos <i>α</i>`,m:'Góc bù: sin giữ nguyên, cos đổi dấu. Nhớ dấu trừ là ăn trọn điểm.'},
+ {k:'nd',t:'Bùa Góc Phần Tư',f:`II: sin &gt; 0, cos &lt; 0`,m:'Góc phần tư thứ hai chỉ có sin dương. Xét góc trước rồi mới lấy căn.'},
+ {k:'nd',t:'Bùa Cos Trừ Đổi Dấu',f:`cos(<i>a</i> − <i>b</i>) = cos <i>a</i> cos <i>b</i> + sin <i>a</i> sin <i>b</i>`,m:'Cos thì "cos cos, sin sin, dấu ngược lại". Trừ ra cộng, cộng ra trừ.'},
+ {k:'nd',t:'Bùa Kiểm Tra Lại',f:`Thử lại = An toàn`,m:'Làm xong thay một góc đặc biệt vào thử. Sai dấu là lộ ngay.'},
+ {k:'mm',t:'Bùa Khoanh Trúng',f:`<i>P</i>(đúng) = 100%`,m:'Muốn may mắn chắc chắn thì phải học. Học rồi thì khoanh đâu trúng đó.'},
+ {k:'mm',t:'Bùa Không Quên k2π',f:`<i>x</i> = <i>α</i> + <i>k</i>2π, <i>k</i> ∈ ℤ`,m:'Viết nghiệm nhớ thêm +k2π. Quên một chút là mất nửa câu.'},
+ {k:'mm',t:'Bùa Giờ Vàng',f:`20 phút học + 5 phút nghỉ`,m:'Học từng đợt ngắn, đầu óc lúc nào cũng tươi. May mắn đến từ sự đều đặn.'},
+ {k:'mm',t:'Bùa Bút Không Hết Mực',f:`Mang 2 bút + 1 thước + 1 tẩy`,m:'Chuẩn bị kĩ trước giờ thi là cách gặp may chắc chắn nhất.'},
+];
+BUA.forEach(b=>b.k='hg');BUA.push(...BUA_MORE);
+const kindOf=k=>KINDS.find(x=>x.k===k)||KINDS[0];
 const todayKey=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
-let altar={bua:null,bag:[]};
-const loadAltar=()=>{const a=me?LS.get('meo-sc-altar-'+me.id,{}):{};altar={day:todayKey(),bua:a.day===todayKey()?a.bua:null,bag:a.bag||[]};return altar};
+let altar={today:{},bag:[]};
+const loadAltar=()=>{const a=me?LS.get('meo-sc-altar-'+me.id,{}):{};let today={};
+  if(a.day===todayKey()){today=a.today||{};if(a.bua!=null&&!a.today)today.hg=a.bua}
+  altar={day:todayKey(),today,bag:(a.bag||[]).map(b=>({...b,k:b.k||BUA[b.i]?.k||'hg'}))};return altar};
 const saveAltar=()=>{if(me)LS.set('meo-sc-altar-'+me.id,altar)};
-function altarPage(){if(!me){login();return}loadAltar();const got=altar.bua!=null;
+function altarPage(showK){if(!me){login();return}loadAltar();
+  const cur=showK||Object.keys(altar.today).slice(-1)[0];
   app.innerHTML=`<div class="topbar"><h2>Góc tâm linh</h2><div class="meta"><button class="btn ghost" id="back">Về bản đồ</button></div></div>
   <section class="spirit">
     <div class="spirit-art" aria-hidden="true">${slimeSVG(10,{mood:'happy'})}<span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span></div>
-    <div class="spirit-text"><h3>Xin bùa học giỏi</h3>
-      <p>Mỗi ngày được xin một lá bùa. Mỗi lá là một công thức kèm lời dặn để lấy tinh thần trước khi luyện đề.</p>
-      <button class="btn warm" id="aBua" ${got?'disabled':''}>${got?'Hôm nay đã xin bùa, mai quay lại nhé':'Xin bùa học giỏi'}</button></div>
+    <div class="spirit-text"><h3>Xin bùa</h3>
+      <p>Có ${KINDS.length} loại bùa. Mỗi ngày mỗi loại được xin một lá. Mỗi lá là một công thức hoặc một mẹo nhỏ kèm lời dặn.</p></div>
   </section>
-  <div id="buaZone">${got?buaHTML(altar.bua):''}</div>
-  ${altar.bag.length?`<section class="bag"><div class="sec-title"><span>TÚI BÙA · ${altar.bag.length} LÁ</span><i></i></div><div class="bagrow">${altar.bag.slice().reverse().map(b=>`<button class="mini-bua" data-b="${b.i}" title="${BUA[b.i].t}"><span>${BUA[b.i].t.replace('Bùa ','')}</span><small>${b.d}</small></button>`).join('')}</div></section>`:''}
+  <div class="kinds">${KINDS.map(K=>{const got=altar.today[K.k]!=null;return `<button class="kind ${got?'got':''}" data-k="${K.k}" style="--kb1:${K.bg[0]};--kb2:${K.bg[1]};--ki:${K.ink}">
+    <span class="kseal">${slimeSVG(K.lv)}</span><span class="ktxt"><b>${K.n}</b><small>${K.d}</small><em>${got?'Đã xin hôm nay · Xem lại':'Bấm để xin'}</em></span></button>`}).join('')}</div>
+  <div id="buaZone">${cur&&altar.today[cur]!=null?buaHTML(altar.today[cur]):''}</div>
+  ${altar.bag.length?`<section class="bag"><div class="sec-title"><span>TÚI BÙA · ${altar.bag.length} LÁ</span><i></i></div><div class="bagrow">${altar.bag.slice().reverse().map(b=>{const K=kindOf(BUA[b.i].k);return `<button class="mini-bua" data-b="${b.i}" title="${BUA[b.i].t}" style="--kb1:${K.bg[0]};--kb2:${K.bg[1]};--ki:${K.ink}"><span>${BUA[b.i].t.replace('Bùa ','')}</span><small>${b.d}</small></button>`}).join('')}</div></section>`:''}
   <p class="hint">Bùa để lấy tinh thần thôi nhé. Muốn học giỏi thật thì quay lại bản đồ luyện tiếp.</p>`;
-  typeset(app);
   document.getElementById('back').onclick=home;
-  document.getElementById('aBua').onclick=()=>{let i=Math.floor(Math.random()*BUA.length);const last=altar.bag.length?altar.bag[altar.bag.length-1].i:-1;if(i===last)i=(i+1)%BUA.length;
-    altar.bua=i;const d=new Date();altar.bag.push({i,d:d.getDate()+'/'+(d.getMonth()+1)});saveAltar();altarPage();
-    const z=document.querySelector('.bua');if(z){z.classList.add('reveal');z.scrollIntoView({behavior:'smooth',block:'center'})}confetti(30)};
-  app.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{const z=document.getElementById('buaZone');z.innerHTML=buaHTML(+b.dataset.b);typeset(z);z.scrollIntoView({behavior:'smooth',block:'center'})});
+  app.querySelectorAll('[data-k]').forEach(btn=>btn.onclick=()=>{const k=btn.dataset.k;
+    if(altar.today[k]!=null){const z=document.getElementById('buaZone');z.innerHTML=buaHTML(altar.today[k]);z.scrollIntoView({behavior:'smooth',block:'center'});return}
+    const pool=BUA.map((b,i)=>b.k===k?i:-1).filter(i=>i>=0);const lastSame=[...altar.bag].reverse().find(b=>BUA[b.i].k===k);
+    let i=pool[Math.floor(Math.random()*pool.length)];if(lastSame&&i===lastSame.i&&pool.length>1)i=pool[(pool.indexOf(i)+1)%pool.length];
+    altar.today[k]=i;const d=new Date();altar.bag.push({i,k,d:d.getDate()+'/'+(d.getMonth()+1)});saveAltar();altarPage(k);
+    const z=document.querySelector('.bua');if(z){z.classList.add('reveal');z.scrollIntoView({behavior:'smooth',block:'center'})}confetti(30)});
+  app.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{const z=document.getElementById('buaZone');z.innerHTML=buaHTML(+b.dataset.b);z.scrollIntoView({behavior:'smooth',block:'center'})});
   window.scrollTo({top:0})}
-function buaHTML(i){const b=BUA[i];
-  return `<div class="bua"><div class="bua-paper"><div class="bua-top">BÙA HỌC GIỎI</div><div class="bua-seal">${slimeSVG(9)}</div>
+function buaHTML(i){const b=BUA[i],K=kindOf(b.k);
+  return `<div class="bua"><div class="bua-paper" style="--kb1:${K.bg[0]};--kb2:${K.bg[1]};--ki:${K.ink}"><div class="bua-top">${K.n.toUpperCase()}</div><div class="bua-seal">${slimeSVG(K.lv)}</div>
     <div class="bua-title">${b.t}</div><div class="bua-f mf">${b.f}</div><div class="bua-m">${b.m}</div>
-    <div class="bua-for">Ban cho: <b>${esc(me.name)}</b>${me.cls?' · '+esc(me.cls):''}</div><div class="bua-stamp">10đ</div></div></div>`}
+    <div class="bua-for">Ban cho: <b>${esc(me.name)}</b>${me.cls?' · '+esc(me.cls):''}</div><div class="bua-stamp">${K.stamp}</div></div></div>`}
 
 /* ---------- views ---------- */
 function login(){
