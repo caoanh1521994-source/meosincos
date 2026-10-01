@@ -11,7 +11,7 @@
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Mèo Sin Cos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Itim&family=Chakra+Petch:wght@500;600;700&family=Playfair+Display:wght@600;700&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Itim&family=Dancing+Script:wght@600;700&family=Chakra+Petch:wght@500;600;700&family=Playfair+Display:wght@600;700&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
 <script>
 window.MathJax = { tex: { inlineMath: [['\\(', '\\)']] }, svg: { fontCache: 'global' }, startup: { typeset: false } };
 </script>
@@ -536,6 +536,20 @@ table.signs{border-collapse:collapse;width:100%;font-family:var(--f-display);tex
   -webkit-mask:radial-gradient(circle 9px at 78px 0,#0000 98%,#000) top/100% 51% no-repeat,radial-gradient(circle 9px at 78px 100%,#0000 98%,#000) bottom/100% 51% no-repeat;
   mask:radial-gradient(circle 9px at 78px 0,#0000 98%,#000) top/100% 51% no-repeat,radial-gradient(circle 9px at 78px 100%,#0000 98%,#000) bottom/100% 51% no-repeat}.ticket .tpic{width:62px}.ticket .stub>svg{width:66px;height:66px}}
 .ticket .tline,.ticket .tmeta,.ticket .tline b,.ticket .tmeta span{color:#22183A!important}
+
+/* signature: Cô Linh giấu tên */
+.sigblock{display:grid;justify-items:center;gap:0;line-height:1.1;text-align:center}
+.sigrole{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;opacity:.75}
+.sigsvg{width:120px;height:38px;color:#1F3B8F}
+.signame{font-family:"Dancing Script","Itim",cursive;font-weight:700;font-size:1.05rem}
+.cert .foot{align-items:center}
+.cert .sigblock{color:var(--ink)}
+.tfoot{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap;margin-top:2px}
+.ticket .sigblock{color:#22183A}.ticket .sigsvg{width:92px;height:28px;color:#3A2A9E}.ticket .signame{font-size:.9rem}.ticket .sigrole{font-size:.62rem}
+.pagesig{display:flex;flex-direction:column;align-items:flex-end;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);gap:2px}
+.pagesig span:first-child{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.pagesig-name{font-family:"Dancing Script","Itim",cursive;font-weight:700;font-size:1.8rem;line-height:1;background:linear-gradient(100deg,var(--c3),var(--c1));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 10px #FF4D8D55)}
+footer{padding-bottom:90px}
 </style>
 </head>
 <body>
@@ -613,7 +627,7 @@ table.signs{border-collapse:collapse;width:100%;font-family:var(--f-display);tex
   <div class="userbar" id="userbar"></div>
   <main id="app"></main>
   <div class="musicbox" id="musicbox" role="region" aria-label="Nhạc nền"></div>
-  <footer>Đề cương ôn tập giữa học kì I · Toán 11 · Chủ đề 1: Hàm số lượng giác và phương trình lượng giác. Tiến độ được lưu trên trình duyệt này.</footer>
+  <footer>Đề cương ôn tập giữa học kì I · Toán 11 · Chủ đề 1: Hàm số lượng giác và phương trình lượng giác. Tiến độ được lưu trên trình duyệt này.<div class="pagesig"><span>Biên soạn &amp; thiết kế</span><span class="pagesig-name">Cô Linh giấu tên</span></div></footer>
 </div>
 
 <script>
@@ -998,7 +1012,7 @@ function certHTML(i){const s=STOPS[i],c=certs[s.k],st=starsOf(c.score,c.max);
   <p>đã hoàn thành chặng <b>${s.n}</b> (câu ${s.a}–${s.b}: ${s.sub.toLowerCase()}), câu cá được <b>${c.score}/${c.max}</b> con.</p>
   <div class="stars" aria-label="${st} trên 3 sao">${'★'.repeat(st)}${'☆'.repeat(3-st)}</div>
   <p style="font-size:.88rem;color:var(--muted)">${s.fact}</p>
-  <div class="foot"><div>${fmtDate(c.date)}<br>Hướng dẫn viên<div class="sign">Mèo Sin Cos</div></div>${sealSVG}</div></div>
+  <div class="foot"><div>${fmtDate(c.date)}<br>Hướng dẫn viên<div class="sign">Mèo Sin Cos</div></div>${sealSVG}${signBlock('Giáo viên xác nhận')}</div></div>
   <p class="hint" style="text-align:center">Muốn giữ lại thì chụp màn hình giấy chứng nhận nhé.</p>`}
 function bindCert(){}
 function viewCert(i){app.innerHTML=`<div class="topbar"><h2>Chứng nhận đã nhận</h2><div class="meta"><button class="btn ghost" id="back">Về bản đồ</button></div></div>${certHTML(i)}
@@ -1058,6 +1072,8 @@ function showForms(fish){const cur=lvOf(fish);
   document.body.appendChild(o);const close=()=>{o.remove();document.removeEventListener('keydown',k,true)};const k=e=>{if(e.key==='Escape'){e.stopPropagation();close()}};
   document.addEventListener('keydown',k,true);o.querySelector('#evoOk').onclick=close;o.onclick=e=>{if(e.target===o)close()}}
 
+const SIGN_SVG=`<svg class="sigsvg" viewBox="0 0 150 46" aria-hidden="true"><text x="6" y="32" font-family="'Dancing Script',cursive" font-size="32" font-weight="700" fill="currentColor">Linh</text><path d="M4 38 Q50 30 92 37 T146 30" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M96 14 q10 -8 16 2 q4 8 -8 12" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>`;
+const signBlock=(role)=>`<div class="sigblock"><span class="sigrole">${role}</span>${SIGN_SVG}<span class="signame">Cô Linh giấu tên</span></div>`;
 /* ---------- phiếu thưởng ---------- */
 let vouchers={};
 const loadVou=()=>{vouchers=me?LS.get('meo-sc-vou-'+me.id,{}):{}};
@@ -1078,7 +1094,7 @@ function ticketHTML(k,big){const v=vouchers[k],party=k==='party',s=party?null:ST
       <div class="tline">Cấp cho <b>${esc(me.name)}</b>${me.cls?' · Lớp '+esc(me.cls):''}</div>
       <div class="tline">${party?'Đã hoàn thành cả 8 màn Mèo Sin Cos':'Hoàn thành màn <b>'+s.n+'</b>'}</div>
       <div class="tmeta"><span>Mã: <b class="tcode">${v.code}</b></span><span>${new Date(v.date).toLocaleDateString('vi-VN')}</span></div>
-      <div class="tnote">Có giá trị khi được thầy cô xác nhận · Mỗi phiếu dùng một lần</div></div>
+      <div class="tfoot"><div class="tnote">Có giá trị khi được cô xác nhận · Mỗi phiếu dùng một lần</div>${signBlock('Người cấp phiếu')}</div></div>
     ${v.used?'<div class="tstamp">ĐÃ DÙNG</div>':''}</div>`}
 function viewTicket(k){const o=document.createElement('div');o.className='evolve';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');
   const render=()=>{const v=vouchers[k];o.innerHTML=`<div class="evo-box wide tbox">${ticketHTML(k,true)}
