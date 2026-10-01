@@ -596,6 +596,43 @@ table.signs{border-collapse:collapse;width:100%;font-family:var(--f-display);tex
 .spirit-msg{color:#FF9DB5!important;font-weight:600}
 .kind[aria-disabled="true"]{filter:grayscale(.6) brightness(.8)}
 .ktxt em{display:inline-flex;align-items:center;gap:4px}
+
+/* gacha */
+.gacha{display:grid;grid-template-columns:auto minmax(0,1fr);gap:22px;align-items:center;border-radius:16px;padding:20px;background:radial-gradient(ellipse at 20% 40%,#3A2A6E,#141B3B 70%);border:1px solid #C59BFF66;box-shadow:0 0 0 1px #C59BFF33,0 0 40px #A66BFF33,0 10px 30px #0009}
+@media (max-width:600px){.gacha{grid-template-columns:1fr;justify-items:center}}
+.machine{width:170px;height:auto;display:block;filter:drop-shadow(0 0 18px #A66BFF66)}
+.gm-wrap.spinning .machine{animation:shakeM .14s linear infinite}
+.gm-wrap.spinning .knob{transform-box:fill-box;transform-origin:center;animation:spin .5s linear infinite}
+.gm-wrap.spinning .cap{animation:tumble .3s var(--d) ease-in-out infinite alternate}
+@keyframes shakeM{25%{transform:translate(-2px,1px) rotate(-1deg)}75%{transform:translate(2px,-1px) rotate(1deg)}}
+@keyframes tumble{to{transform:translate(4px,-6px)}}
+@media (prefers-reduced-motion:reduce){.gm-wrap.spinning *{animation:none!important}}
+.odds{display:flex;flex-wrap:wrap;gap:8px}.odds span{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;color:var(--muted);background:#0F1532;border:1px solid var(--line);border-radius:999px;padding:2px 10px}
+.odds i{width:9px;height:9px;border-radius:50%;background:var(--rc);box-shadow:0 0 8px var(--rc)}
+.spinbtns{display:flex;flex-wrap:wrap;gap:10px}
+.btn[aria-disabled="true"]{filter:grayscale(.7) brightness(.75)}
+.gres{display:grid;justify-items:center;gap:6px;margin:18px 0}
+.rbanner{font-family:var(--f-display);font-weight:700;letter-spacing:.2em;color:#0A0F24;background:var(--rc);padding:4px 16px;border-radius:4px;box-shadow:0 0 20px var(--rc)}
+.gres.reveal .bua-paper{animation:unroll .9s cubic-bezier(.2,1.3,.4,1)}
+.gres.r-sp .bua-paper{box-shadow:0 0 0 6px #FFD44755,0 0 60px #FFD447,0 0 120px #FF5ED188}
+.gres.r-sp .bua-paper::before{content:"";position:absolute;inset:-3px;border-radius:6px;background:conic-gradient(from 0deg,#FF4D8D,#FFD447,#2EE6A6,#22D3EE,#A66BFF,#FF4D8D);z-index:-1;filter:blur(8px);animation:hueglow 3s linear infinite}
+@keyframes hueglow{to{filter:blur(8px) hue-rotate(360deg)}}
+.gres.r-rare .bua-paper{box-shadow:0 0 0 4px #5BD3FF55,0 0 40px #5BD3FFaa}
+.gmini{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:6px}
+.collect{margin-top:10px}
+.cprog{position:relative;height:22px;border-radius:999px;background:#0B1130;box-shadow:inset 0 0 0 1px var(--line);overflow:hidden;margin:10px 0 14px}
+.cprog i{display:block;height:100%;background:linear-gradient(90deg,#FF4D8D,#FFD447,#2EE6A6,#22D3EE,#A66BFF)}
+.cprog span{position:absolute;inset:0;display:grid;place-items:center;font-size:.78rem;font-weight:700;letter-spacing:.04em;text-shadow:0 1px 2px #000}
+.cgroup{margin-bottom:12px}.cghead{display:flex;gap:8px;align-items:baseline;margin-bottom:6px}.cghead b{font-family:var(--f-display);color:var(--kb2)}.cghead small{color:var(--muted)}
+.mini-bua.lockb{background:#0F1532!important;border:1px dashed var(--line)!important;color:var(--muted)!important;display:grid;place-items:center;font-size:1.1rem;cursor:default}
+.mini-bua.r-rare{box-shadow:0 0 10px #5BD3FF88}.mini-bua.r-sp{box-shadow:0 0 14px #FFD447}
+.mini-bua.lockb.r-sp{border-color:#FFD447!important}
+.ticket.kfc{background:linear-gradient(135deg,#FFF3E0,#FFE1E1)}
+.ticket.kfc .stub{background:#2A1B5E}.ticket.kfc .stub>svg{width:84px;height:84px}
+.ticket.kfc .ttitle{color:#C8102E;font-size:clamp(1.4rem,5vw,2rem)}
+.kfcslot{--c:#FF5470!important;background:linear-gradient(90deg,#3A1527,#0F1532)!important;border-color:#FF5470!important}
+.kfcslot .wpic{background:#2A1B5E!important}
+.cgroup .bagrow,.gmini{display:flex;flex-wrap:wrap;gap:8px}
 </style>
 </head>
 <body>
@@ -1123,13 +1160,24 @@ let vouchers={};
 const loadVou=()=>{vouchers=me?LS.get('meo-sc-vou-'+me.id,{}):{}};
 const saveVou=()=>{if(me)LS.set('meo-sc-vou-'+me.id,vouchers)};
 const hashCode=t=>{let h=2166136261;for(const ch of t){h^=ch.codePointAt(0);h=Math.imul(h,16777619)}return (h>>>0).toString(36).toUpperCase().padStart(6,'0').slice(-4)};
-const vouCode=k=>{const i=STOPS.findIndex(s=>s.k===k);return 'MSC-'+(k==='party'?'LH':String(i+1).padStart(2,'0'))+'-'+hashCode(me.id+'|'+k)};
+const vouCode=k=>{const i=STOPS.findIndex(s=>s.k===k);return 'MSC-'+(k==='party'?'LH':k==='kfc'?'KFC':String(i+1).padStart(2,'0'))+'-'+hashCode(me.id+'|'+k)};
 // cấp phiếu cho mọi màn đã hoàn thành; trả về danh sách phiếu mới
 function syncVouchers(){if(!me)return[];loadVou();const fresh=[];
   STOPS.forEach(s=>{if(certs[s.k]&&!vouchers[s.k]){vouchers[s.k]={code:vouCode(s.k),date:certs[s.k].date||Date.now(),used:false};fresh.push(s.k)}});
   if(STOPS.every(s=>certs[s.k])&&!vouchers.party){vouchers.party={code:vouCode('party'),date:Date.now(),used:false};fresh.push('party')}
   if(fresh.length)saveVou();return fresh}
-function ticketHTML(k,big){const v=vouchers[k],party=k==='party',s=party?null:STOPS.find(x=>x.k===k),i=party?-1:STOPS.indexOf(s);
+const drumSVG=`<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M30 70 Q14 46 30 28 Q48 10 70 22 Q90 36 80 58 Q72 74 52 74Z" fill="#E59A3A" stroke="#7A3E0C" stroke-width="3"/><path d="M36 40 q6 -8 14 -6 M52 30 q8 -2 12 4 M40 56 q6 2 12 -2 M60 48 q6 -2 8 4" stroke="#B4661E" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M32 70 L18 86" stroke="#F4E6CF" stroke-width="9" stroke-linecap="round"/><circle cx="14" cy="84" r="6" fill="#F4E6CF"/><circle cx="20" cy="92" r="6" fill="#F4E6CF"/></svg>`;
+function kfcTicketHTML(big){const v=vouchers.kfc;if(!v)return '';
+  return `<div class="ticket kfc ${v.used?'used':''} ${big?'big':''}" style="--c:#FF5470">
+    <div class="stub">${drumSVG}<span class="tno">🏆</span></div>
+    <div class="tbody"><div class="tkick">PHẦN THƯỞNG SƯU TẦM</div>
+      <div class="ttitle">PHIẾU KFC</div>
+      <div class="tline">Cấp cho <b>${esc(me.name)}</b>${me.cls?' · Lớp '+esc(me.cls):''}</div>
+      <div class="tline">Đã sưu tầm đủ ${BUA.length} lá bùa ở Góc tâm linh</div>
+      <div class="tmeta"><span>Mã: <b class="tcode">${v.code}</b></span><span>${new Date(v.date).toLocaleDateString('vi-VN')}</span></div>
+      <div class="tnote">Phần thưởng do thầy cô trao, không phải phiếu phát hành bởi KFC · Dùng một lần</div></div>
+    ${v.used?'<div class="tstamp">ĐÃ DÙNG</div>':''}</div>`}
+function ticketHTML(k,big){if(k==='kfc')return kfcTicketHTML(big);const v=vouchers[k],party=k==='party',s=party?null:STOPS.find(x=>x.k===k),i=party?-1:STOPS.indexOf(s);
   if(!v)return '';
   return `<div class="ticket ${party?'party':''} ${v.used?'used':''} ${big?'big':''}" style="--c:var(--c${party?3:i+1})">
     <div class="stub">${party?slimeSVG(10):`<span class="tpic">${LM[k]()}</span>`}<span class="tno">${party?'★':String(i+1).padStart(2,'0')}</span></div>
@@ -1154,7 +1202,9 @@ function walletHTML(){const got=STOPS.filter(s=>vouchers[s.k]).length;
   <div class="wgrid">${STOPS.map((s,i)=>vouchers[s.k]?`<button class="wslot got ${vouchers[s.k].used?'used':''}" data-t="${s.k}" style="--c:var(--c${i+1})"><span class="wpic">${LM[s.k]()}</span><span class="wtxt"><b>Miễn 1 BTVN</b><small>${s.n}${vouchers[s.k].used?' · đã dùng':''}</small></span></button>`
      :`<div class="wslot lock"><span class="wq">?</span><span class="wtxt"><b>Phiếu màn ${i+1}</b><small>Hoàn thành ${s.n}</small></span></div>`).join('')}
    ${vouchers.party?`<button class="wslot got party ${vouchers.party.used?'used':''}" data-t="party"><span class="wpic">${slimeSVG(10)}</span><span class="wtxt"><b>PHIẾU LIÊN HOAN</b><small>${vouchers.party.used?'đã dùng':'Bấm để xem'}</small></span></button>`
-     :`<div class="wslot lock party"><span class="wq">★</span><span class="wtxt"><b>Phiếu liên hoan</b><small>Hoàn thành cả 8 màn (${got}/8)</small></span></div>`}</div></section>`}
+     :`<div class="wslot lock party"><span class="wq">★</span><span class="wtxt"><b>Phiếu liên hoan</b><small>Hoàn thành cả 8 màn (${got}/8)</small></span></div>`}
+   ${vouchers.kfc?`<button class="wslot got party kfcslot ${vouchers.kfc.used?'used':''}" data-t="kfc"><span class="wpic">${drumSVG}</span><span class="wtxt"><b>PHIẾU KFC</b><small>${vouchers.kfc.used?'đã dùng':'Bấm để xem'}</small></span></button>`
+     :`<div class="wslot lock party"><span class="wq">🍗</span><span class="wtxt"><b>Phiếu KFC</b><small>Sưu tầm đủ ${BUA.length} lá bùa ở Góc tâm linh (${me?(()=>{loadAltar();return ownedSet().size})():0}/${BUA.length})</small></span></div>`}</div></section>`}
 
 /* ---------- bảng xếp hạng ---------- */
 // Dán URL Web App của Google Apps Script vào đây để có bảng xếp hạng chung cả lớp (xem apps-script.gs). Để trống = chỉ xếp hạng trên máy này.
@@ -1303,10 +1353,6 @@ const BUA_MORE=[
 ];
 BUA.forEach(b=>b.k='hg');BUA.push(...BUA_MORE);
 const kindOf=k=>KINDS.find(x=>x.k===k)||KINDS[0];
-const BUA_COST=5;
-const spentOf=()=>me?LS.get('meo-sc-spent-'+me.id,0):0;
-const fishAvail=()=>Math.max(0,fishOf(prog)-spentOf());
-const spendFish=n=>{if(!me)return false;if(fishAvail()<n)return false;LS.set('meo-sc-spent-'+me.id,spentOf()+n);return true};
 LM['tam-linh']=()=>{let st='';for(let i=0;i<26;i++){const x=(i*53)%240,y=(i*37)%86+4,r=i%4?0.9:1.6;st+=`<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" opacity="${.4+(i%3)*.2}"/>`}
   const bua=(x,y,r,c1,c2,ink)=>`<g transform="translate(${x},${y}) rotate(${r})"><rect x="-11" y="-18" width="22" height="36" rx="2" fill="${c1}" stroke="${ink}" stroke-width="1.2"/><rect x="-7" y="-13" width="14" height="2" fill="${ink}" opacity=".7"/><text x="0" y="5" text-anchor="middle" font-size="15" font-family="Georgia,serif" font-style="italic" fill="${ink}">π</text><rect x="-11" y="10" width="22" height="8" fill="${c2}" opacity=".6"/></g>`;
   return `<svg viewBox="0 0 240 140"><defs><linearGradient id="tlsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A1B5E"/><stop offset="1" stop-color="#5B2A86"/></linearGradient>
@@ -1318,34 +1364,68 @@ LM['tam-linh']=()=>{let st='';for(let i=0;i<26;i++){const x=(i*53)%240,y=(i*37)%
    ${bua(58,58,-14,'#FFE680','#F7C935','#A3120B')}${bua(86,40,8,'#D9F7C8','#9BE07C','#1F5E18')}${bua(160,42,-8,'#D6ECFF','#8CC4FF','#123E7A')}${bua(186,72,14,'#FFE0EE','#FF9DCB','#8A1450')}${bua(42,92,10,'#EBDDFF','#C3A2FF','#43198A')}${bua(200,104,-12,'#FFE8CC','#FFB35C','#7A3A00')}
    <g transform="translate(92,52) scale(.56)">${slimeSVG(10).replace(/<svg[^>]*>/,'').replace('</svg>','')}</g>
    <path d="M30 30 l1.5 4 4 1.5 -4 1.5 -1.5 4 -1.5 -4 -4 -1.5 4 -1.5Z M220 88 l1.2 3 3 1.2 -3 1.2 -1.2 3 -1.2 -3 -3 -1.2 3 -1.2Z M140 20 l1 2.5 2.5 1 -2.5 1 -1 2.5 -1 -2.5 -2.5 -1 2.5 -1Z" fill="#FFE27A"/></svg>`};
-let altar={bag:[],last:null};
-const loadAltar=()=>{const a=me?LS.get('meo-sc-altar-'+me.id,{}):{};altar={bag:(a.bag||[]).map(b=>({...b,k:b.k||BUA[b.i]?.k||'hg'})),last:a.last??null};return altar};
+/* ---------- gacha bùa ---------- */
+const BUA_COST=2;
+KINDS.push({k:'sp',n:'Bùa đặc biệt',d:'Siêu hiếm',lv:10,stamp:'10',bg:['#FFF3B0','#FFB3E6'],ink:'#7A1FA2'});
+{const t=BUA.find(b=>b.t==='Bùa Mười Điểm');t.k='sp';t.t='Bùa Được 10 Điểm';t.f='Bài kiểm tra = <b>10</b> điểm';t.m='Siêu hiếm! Ai quay được lá này coi như được các thầy cô ghi nhận tinh thần 10 điểm. Nhớ làm bài thật tốt cho xứng nhé.'}
+// độ hiếm: 1 lá đặc biệt, mỗi loại 1 lá hiếm, còn lại thường
+const RARE_TITLES=['Bùa Nhân Đôi Điểm Số','Bùa Mắt Sáng Như Sao','Bùa Câu Thần Chú','Bùa Hít Thở Sâu','Bùa Âm Dương Phân Minh','Bùa Khoanh Trúng'];
+BUA.forEach(b=>b.r=b.k==='sp'?'sp':RARE_TITLES.includes(b.t)?'rare':'common');
+const RARITY={common:{n:'Thường',p:.75,c:'#9AA6D6'},rare:{n:'Hiếm',p:.22,c:'#5BD3FF'},sp:{n:'Đặc biệt',p:.03,c:'#FFD447'}};
+const spentOf=()=>me?LS.get('meo-sc-spent-'+me.id,0):0;
+const fishAvail=()=>Math.max(0,fishOf(prog)-spentOf());
+const spendFish=n=>{if(!me||fishAvail()<n)return false;LS.set('meo-sc-spent-'+me.id,spentOf()+n);return true};
+let altar={bag:[],last:[]};
+const loadAltar=()=>{const a=me?LS.get('meo-sc-altar-'+me.id,{}):{};altar={bag:(a.bag||[]).map(b=>({...b,k:BUA[b.i]?.k||'hg'})),last:Array.isArray(a.last)?a.last:(a.last!=null?[a.last]:[])};return altar};
 const saveAltar=()=>{if(me)LS.set('meo-sc-altar-'+me.id,altar)};
-function altarPage(msg){if(!me){login();return}loadAltar();const av=fishAvail(),earned=fishOf(prog),spent=spentOf();
+const ownedSet=()=>new Set(altar.bag.map(b=>b.i));
+function rollOne(){const x=Math.random();const r=x<RARITY.sp.p?'sp':x<RARITY.sp.p+RARITY.rare.p?'rare':'common';const pool=BUA.map((b,i)=>b.r===r?i:-1).filter(i=>i>=0);return pool[Math.floor(Math.random()*pool.length)]}
+const machineSVG=()=>{let caps='';const cols=['#FF4D8D','#FFD447','#2EE6A6','#5B8CFF','#A66BFF','#FF9F1C','#22D3EE','#FF5ED1'];
+  for(let i=0;i<16;i++){const a=i*2.4,r=12+((i*7)%30),x=80+r*Math.cos(a),y=70+r*Math.sin(a)*.9;caps+=`<g class="cap" style="--d:${i*.05}s"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="9" fill="${cols[i%8]}"/><path d="M${(x-9).toFixed(1)} ${y.toFixed(1)} a9 9 0 0 0 18 0Z" fill="#fff" opacity=".85"/></g>`}
+  return `<svg class="machine" viewBox="0 0 160 190" aria-hidden="true"><defs><radialGradient id="glass" cx=".35" cy=".3"><stop offset="0" stop-color="#ffffff" stop-opacity=".5"/><stop offset="1" stop-color="#9FD8FF" stop-opacity=".12"/></radialGradient></defs>
+   <rect x="66" y="6" width="28" height="8" rx="3" fill="#C59BFF"/><circle cx="80" cy="70" r="58" fill="#0F1532" stroke="#C59BFF" stroke-width="4"/>${caps}<circle cx="80" cy="70" r="58" fill="url(#glass)"/>
+   <path d="M34 120 h92 l8 60 h-108Z" fill="#7B45F0" stroke="#3B1F8A" stroke-width="3"/><rect x="56" y="140" width="48" height="24" rx="6" fill="#0F1532" stroke="#3B1F8A" stroke-width="2"/>
+   <g class="knob"><circle cx="80" cy="132" r="9" fill="#FFD447" stroke="#9A6A00" stroke-width="2"/><rect x="77" y="124" width="6" height="16" rx="2" fill="#9A6A00"/></g>
+   <text x="80" y="157" text-anchor="middle" font-family="Chakra Petch,sans-serif" font-weight="700" font-size="11" fill="#FFD447">${BUA_COST} CÁ</text></svg>`};
+function altarPage(msg){if(!me){login();return}loadAltar();loadVou();const av=fishAvail(),earned=fishOf(prog),spent=spentOf(),own=ownedSet(),N=BUA.length;
+  const kindsOrder=['sp','hg','tt','nl','bt','nd','mm'];
   app.innerHTML=`<div class="topbar"><div style="display:flex;gap:12px;align-items:center"><span class="thumb">${LM['tam-linh']()}</span><h2>Góc tâm linh</h2></div><div class="meta"><button class="btn ghost" id="back">Về bản đồ</button></div></div>
-  <section class="spirit">
-    <div class="spirit-art" aria-hidden="true">${slimeSVG(10,{mood:'happy'})}<span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span></div>
-    <div class="spirit-text"><h3>Xin bùa</h3>
-      <p>Có ${KINDS.length} loại bùa, mỗi lần xin tốn <b>${BUA_COST} cá</b>. Mỗi lá là một công thức hoặc một mẹo nhỏ kèm lời dặn.</p>
+  <section class="gacha">
+    <div class="gm-wrap">${machineSVG()}</div>
+    <div class="spirit-text"><h3>Quay bùa</h3>
+      <p>Mỗi lượt quay tốn <b>${BUA_COST} cá</b> và ra ngẫu nhiên một lá trong ${N} lá. Sưu tầm đủ ${N} lá để nhận <b>Phiếu KFC</b>.</p>
+      <div class="odds">${Object.values(RARITY).map(r=>`<span style="--rc:${r.c}"><i></i>${r.n} ${Math.round(r.p*100)}%</span>`).join('')}</div>
       <div class="wallet-fish"><span class="fish">${fishSVG}<b>${av}</b></span><span>cá đang có</span><small>Đã câu ${earned} · đã dùng ${spent}. Tiêu cá không làm giảm cấp độ hay thứ hạng.</small></div>
+      <div class="spinbtns"><button class="btn warm" id="spin1" ${av<BUA_COST?'aria-disabled="true"':''}>Quay 1 lần · ${BUA_COST} cá</button><button class="btn primary" id="spin5" ${av<BUA_COST*5?'aria-disabled="true"':''}>Quay 5 lần · ${BUA_COST*5} cá</button></div>
       ${msg?`<p class="spirit-msg">${msg}</p>`:''}</div>
   </section>
-  <div class="kinds">${KINDS.map(K=>`<button class="kind" data-k="${K.k}" style="--kb1:${K.bg[0]};--kb2:${K.bg[1]};--ki:${K.ink}" ${av<BUA_COST?'aria-disabled="true"':''}>
-    <span class="kseal">${slimeSVG(K.lv)}</span><span class="ktxt"><b>${K.n}</b><small>${K.d}</small><em>${fishSVG} Xin · ${BUA_COST} cá</em></span></button>`).join('')}</div>
-  <div id="buaZone">${altar.last!=null?buaHTML(altar.last):''}</div>
-  ${altar.bag.length?`<section class="bag"><div class="sec-title"><span>TÚI BÙA · ${altar.bag.length} LÁ</span><i></i></div><div class="bagrow">${altar.bag.slice().reverse().map(b=>{const K=kindOf(BUA[b.i].k);return `<button class="mini-bua" data-b="${b.i}" title="${BUA[b.i].t}" style="--kb1:${K.bg[0]};--kb2:${K.bg[1]};--ki:${K.ink}"><span>${BUA[b.i].t.replace('Bùa ','')}</span><small>${b.d}</small></button>`}).join('')}</div></section>`:''}
+  <div id="buaZone">${altar.last.length?resultHTML(altar.last):''}</div>
+  <section class="collect"><div class="sec-title"><span>BỘ SƯU TẬP · ${own.size}/${N} LÁ</span><i></i></div>
+    <div class="cprog"><i style="width:${own.size/N*100}%"></i><span>${own.size>=N?'Đã đủ bộ! Phiếu KFC đã vào Túi phần thưởng':'Còn '+(N-own.size)+' lá nữa là nhận Phiếu KFC'}</span></div>
+    ${kindsOrder.map(k=>{const K=kindOf(k),items=BUA.map((b,i)=>({b,i})).filter(x=>x.b.k===k);const have=items.filter(x=>own.has(x.i)).length;
+      return `<div class="cgroup"><div class="cghead" style="--ki:${K.ink};--kb2:${K.bg[1]}"><b>${K.n}</b><small>${have}/${items.length}</small></div><div class="bagrow">${items.map(({b,i})=>{const n=altar.bag.filter(x=>x.i===i).length;
+        return own.has(i)?`<button class="mini-bua r-${b.r}" data-b="${i}" title="${b.t}" style="--kb1:${K.bg[0]};--kb2:${K.bg[1]};--ki:${K.ink}"><span>${b.t.replace('Bùa ','')}</span><small>${RARITY[b.r].n}${n>1?' · x'+n:''}</small></button>`
+          :`<div class="mini-bua lockb r-${b.r}" style="--ki:${K.ink}"><span>?</span><small>${RARITY[b.r].n}</small></div>`}).join('')}</div></div>`}).join('')}
+  </section>
   <p class="hint">Bùa để lấy tinh thần thôi nhé. Hết cá thì quay lại bản đồ câu thêm.</p>`;
   document.getElementById('back').onclick=home;
-  app.querySelectorAll('[data-k]').forEach(btn=>btn.onclick=()=>{const k=btn.dataset.k;
-    if(!spendFish(BUA_COST)){altarPage(`Chưa đủ cá rồi. Cần ${BUA_COST} cá, bạn đang có ${fishAvail()}. Làm thêm vài câu ở bản đồ nhé!`);return}
-    const pool=BUA.map((b,i)=>b.k===k?i:-1).filter(i=>i>=0);const lastSame=[...altar.bag].reverse().find(b=>BUA[b.i].k===k);
-    let i=pool[Math.floor(Math.random()*pool.length)];if(lastSame&&i===lastSame.i&&pool.length>1)i=pool[(pool.indexOf(i)+1)%pool.length];
-    const d=new Date();altar.bag.push({i,k,d:d.getDate()+'/'+(d.getMonth()+1)});altar.last=i;saveAltar();pushScore();altarPage();renderUser();
-    const z=document.querySelector('.bua');if(z){z.classList.add('reveal');z.scrollIntoView({behavior:'smooth',block:'center'})}confetti(30)});
+  const spin=n=>{if(!spendFish(BUA_COST*n)){altarPage(`Chưa đủ cá rồi. Cần ${BUA_COST*n} cá, bạn đang có ${fishAvail()}. Làm thêm vài câu ở bản đồ nhé!`);return}
+    const before=ownedSet();const got=[];for(let j=0;j<n;j++)got.push(rollOne());
+    const d=new Date();got.forEach(i=>altar.bag.push({i,k:BUA[i].k,d:d.getDate()+'/'+(d.getMonth()+1)}));altar.last=got.map(i=>({i,isNew:!before.has(i)}));saveAltar();pushScore();
+    const m=app.querySelector('.gm-wrap');m.classList.add('spinning');app.querySelectorAll('#spin1,#spin5').forEach(b=>b.disabled=true);
+    setTimeout(()=>{const done=ownedSet().size>=BUA.length&&!vouchers.kfc;altarPage();renderUser();
+      const z=document.querySelector('.gres');if(z){z.classList.add('reveal');z.scrollIntoView({behavior:'smooth',block:'center'})}
+      confetti(got.some(i=>BUA[i].r==='sp')?120:got.some(i=>BUA[i].r==='rare')?50:20);
+      if(done){loadVou();vouchers.kfc={code:vouCode('kfc'),date:Date.now(),used:false};saveVou();setTimeout(()=>{confetti(150);viewTicket('kfc')},900)}},matchMedia('(prefers-reduced-motion: reduce)').matches?50:1100)};
+  document.getElementById('spin1').onclick=()=>spin(1);document.getElementById('spin5').onclick=()=>spin(5);
   app.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{const z=document.getElementById('buaZone');z.innerHTML=buaHTML(+b.dataset.b);z.scrollIntoView({behavior:'smooth',block:'center'})});
   window.scrollTo({top:0})}
+function resultHTML(list){list=list.map(x=>typeof x==='number'?{i:x,isNew:false}:x);
+  const rank={sp:0,rare:1,common:2};const best=list.slice().sort((a,b)=>rank[BUA[a.i].r]-rank[BUA[b.i].r])[0];const r=BUA[best.i].r;
+  return `<div class="gres r-${r}"><div class="rbanner" style="--rc:${RARITY[r].c}">${r==='sp'?'★ ĐẶC BIỆT ★':r==='rare'?'HIẾM!':'BÙA THƯỜNG'}${best.isNew?' · LÁ MỚI':''}</div>${buaHTML(best.i)}
+   ${list.length>1?`<div class="gmini">${list.map(x=>{const b=BUA[x.i],K=kindOf(b.k);return `<button class="mini-bua r-${b.r}" data-b="${x.i}" style="--kb1:${K.bg[0]};--kb2:${K.bg[1]};--ki:${K.ink}"><span>${b.t.replace('Bùa ','')}</span><small>${RARITY[b.r].n}${x.isNew?' · mới':''}</small></button>`}).join('')}</div>`:''}</div>`}
 function buaHTML(i){const b=BUA[i],K=kindOf(b.k);
-  return `<div class="bua"><div class="bua-paper" style="--kb1:${K.bg[0]};--kb2:${K.bg[1]};--ki:${K.ink}"><div class="bua-top">${K.n.toUpperCase()}</div><div class="bua-seal">${slimeSVG(K.lv)}</div>
+  return `<div class="bua r-${b.r||'common'}"><div class="bua-paper" style="--kb1:${K.bg[0]};--kb2:${K.bg[1]};--ki:${K.ink}"><div class="bua-top">${K.n.toUpperCase()}</div><div class="bua-seal">${slimeSVG(K.lv)}</div>
     <div class="bua-title">${b.t}</div><div class="bua-f mf">${b.f}</div><div class="bua-m">${b.m}</div>
     <div class="bua-for">Ban cho: <b>${esc(me.name)}</b>${me.cls?' · '+esc(me.cls):''}</div><div class="bua-stamp">${K.stamp}</div></div></div>`}
 
@@ -1385,7 +1465,7 @@ function home(){
     <span class="sbody"><span class="num" data-n="${String(i+1).padStart(2,'0')}">${String(i+1).padStart(2,'0')}</span><span class="lvtag">MÀN ${i+1}${c?' · '+'★'.repeat(starsOf(c.score,c.max))+'☆'.repeat(3-starsOf(c.score,c.max)):''}</span><h3>${s.n}</h3><span class="range">Câu ${s.a}–${s.b} · ${s.sub}</span><span class="fact">${s.fact}</span><span class="bar"><i style="width:${ok/ids.length*100}%"></i></span><span class="range">${ok}/${ids.length} câu đúng hết</span></span></button>
     ${c?`<button class="certbtn" data-cert="${i}">Xem giấy chứng nhận · ${'★'.repeat(starsOf(c.score,c.max))}</button>`:''}</div>`});
   h+=`<div class="stop spiritstop" style="--c:var(--c7)"><button class="stop-main" id="spiritCard" aria-label="Vào Góc tâm linh"><span class="pic">${LM['tam-linh']()}</span><span class="ribbon">${BUA_COST} cá / lá</span>
-    <span class="sbody"><span class="num" data-n="✦">✦</span><span class="lvtag">GÓC ĐẶC BIỆT</span><h3>Góc tâm linh</h3><span class="range">${KINDS.length} loại bùa · ${BUA.length} lá để sưu tầm</span><span class="fact">Đổi cá lấy bùa học giỏi, bùa tỉnh táo, bùa may mắn…</span><span class="range spirit-wallet">${fishSVG}<span>Đang có <b>${fishAvail()}</b> cá để xin bùa</span></span></span></button></div>`;
+    <span class="sbody"><span class="num" data-n="✦">✦</span><span class="lvtag">GÓC ĐẶC BIỆT</span><h3>Góc tâm linh</h3><span class="range">Quay gacha · ${BUA.length} lá để sưu tầm</span><span class="fact">Có lá đặc biệt "Được 10 Điểm". Đủ bộ nhận Phiếu KFC!</span><span class="range spirit-wallet">${fishSVG}<span>Đang có <b>${fishAvail()}</b> cá để xin bùa</span></span></span></button></div>`;
   h+='</div><div class="extra"><button class="btn warm" id="mix">Dạo ngẫu nhiên 20 câu</button><button class="btn primary" id="rankBtn">Bảng xếp hạng</button><button class="btn ghost" id="helpBtn">Sổ tay công thức</button><button class="btn" id="redo" '+(wrong?'':'disabled')+'>Ôn lại câu sai</button><button class="btn ghost" id="reset">Xoá tiến độ</button></div>';
   h+=walletHTML();
   if(nc)h+='<section class="gallery"><h2>Sổ tham quan của bạn</h2><div class="row">'+STOPS.map((s,i)=>certs[s.k]?`<button class="gcard" data-cert="${i}"><span class="thumb">${LM[s.k]()}</span><span>${s.n}<small>${certs[s.k].score}/${certs[s.k].max} cá · ${'★'.repeat(starsOf(certs[s.k].score,certs[s.k].max))}</small></span></button>`:'').join('')+'</div></section>';
