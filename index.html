@@ -863,6 +863,9 @@ sa(97,R`Cho góc lượng giác có số đo \(\frac\pi6+\frac{k\pi}{4}\ (k\in\m
 sa(98,R`Tính \(A=\sin^2\frac\pi8+\sin^2\frac{3\pi}{8}+\sin^2\frac{5\pi}{8}+\sin^2\frac{7\pi}{8}\).`,2,R`\(\sin\frac{3\pi}{8}=\cos\frac\pi8\), \(\sin\frac{5\pi}{8}=\cos\frac{\pi}{8}\), \(\sin\frac{7\pi}{8}=\sin\frac\pi8\). Vậy \(A=2(\sin^2\frac\pi8+\cos^2\frac\pi8)=2\).`);
 sa(99,R`Cho \(\cos2x=\frac23\). Tính giá trị biểu thức \(P=6\cos^2x-7\).`,-2,R`\(\cos^2x=\frac{1+\cos2x}{2}=\frac56\). \(P=5-7=-2\).`);
 
+// Trong công thức, dấu < và > phải đổi thành \lt, \gt để trình duyệt không hiểu nhầm là thẻ HTML
+const fixMath=t=>typeof t==='string'?t.replace(/\\\(([\s\S]*?)\\\)/g,(m,x)=>'\\('+x.replace(/</g,'\\lt ').replace(/>/g,'\\gt ')+'\\)'):t;
+Q.forEach(q=>{q.q=fixMath(q.q);q.ex=fixMath(q.ex);if(q.o)q.o=q.o.map(fixMath);if(q.items)q.items.forEach(it=>{it[0]=fixMath(it[0]);it[2]=fixMath(it[2])})});
 const QM={};Q.forEach(q=>QM[q.id]=q);
 
 /* ---------- landmark illustrations (viewBox 240x140) ---------- */
