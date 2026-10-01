@@ -461,6 +461,41 @@ table.signs{border-collapse:collapse;width:100%;font-family:var(--f-display);tex
 .dhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px;position:sticky;top:-16px;background:var(--bg);padding:6px 0;z-index:1}
 .dhead h2{font-size:1.3rem;color:var(--c3);text-transform:uppercase}
 .dpanel .fgrid{columns:1}
+/* slime avatar + evolution */
+.slimeava{background:radial-gradient(circle at 50% 40%,#2A3570,#0F1532)!important;border:2px solid color-mix(in srgb,var(--c5) 45%,transparent)!important;overflow:hidden;padding:0}
+.slimeava svg{width:118%;height:118%;margin-top:4%}
+.ava.slimeava.big{width:64px;height:64px;cursor:pointer}
+.hud .ava.slimeava.big{width:76px;height:76px}
+.hud .slimeava svg{animation:jiggle 2.4s ease-in-out infinite;transform-origin:50% 90%}
+@keyframes jiggle{0%,100%{transform:scale(1,1)}45%{transform:scale(1.06,.94)}60%{transform:scale(.97,1.04)}}
+.pod .ava.slimeava.big{width:58px;height:58px}
+.evolve{position:fixed;inset:0;z-index:30;display:grid;place-items:center;padding:16px;background:#03050Fd9;backdrop-filter:blur(4px)}
+.evo-rays{position:absolute;inset:-50%;background:repeating-conic-gradient(from 0deg,#FFD44722 0 8deg,transparent 8deg 22deg);animation:spin 12s linear infinite;pointer-events:none}
+.evo-box{position:relative;text-align:center;display:grid;gap:8px;justify-items:center;background:linear-gradient(180deg,var(--panel2),var(--paper));border:1px solid var(--c3);border-radius:18px;padding:22px 24px;box-shadow:0 0 0 1px #FFD44766,0 0 60px #FFD44740;width:min(420px,100%);max-height:calc(100vh - 32px);overflow-y:auto}
+.evo-box.wide{width:min(720px,100%)}
+.evo-kicker{font-family:var(--f-display);font-weight:700;letter-spacing:.24em;color:var(--c5);font-size:.85rem}
+.evo-box h2{font-size:2.2rem;background:linear-gradient(100deg,var(--c3),var(--c2),var(--c1));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 12px #FF4D8D66)}
+.evo-box p{margin:0}.evo-note{color:var(--muted);font-size:.92rem}
+.evo-stage{position:relative;width:170px;height:170px}
+.evo-stage>div{position:absolute;inset:0}
+.evo-stage svg{width:100%;height:100%}
+.evo-old{animation:evoOld 1.4s ease-in forwards}
+.evo-new{opacity:0;transform:scale(.3);animation:evoNew .7s 1.25s cubic-bezier(.2,1.6,.4,1) forwards}
+.evo-flash{border-radius:50%;background:radial-gradient(circle,#fff,#fff0 70%);opacity:0;animation:evoFlash .6s 1.05s ease-out}
+@keyframes evoOld{0%{transform:scale(1)}20%{transform:scale(1.08,.9)}35%{transform:scale(.92,1.1) rotate(-6deg)}50%{transform:scale(1.1,.9) rotate(6deg);filter:brightness(1.5)}70%{transform:scale(.95,1.05);filter:brightness(3)}100%{transform:scale(.2);opacity:0;filter:brightness(4)}}
+@keyframes evoNew{to{opacity:1;transform:scale(1)}}
+@keyframes evoFlash{0%{opacity:0;transform:scale(.3)}40%{opacity:1}100%{opacity:0;transform:scale(1.8)}}
+@media (prefers-reduced-motion:reduce){.evo-old{display:none}.evo-new{opacity:1;transform:none;animation:none}.evo-flash,.evo-rays{animation:none}.hud .slimeava svg{animation:none}}
+.forms{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;width:100%;margin:6px 0}
+@media (max-width:560px){.forms{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.form{display:grid;justify-items:center;gap:2px;background:#0F1532;border:1px solid var(--line);border-radius:12px;padding:8px 4px}
+.form svg{width:64px;height:64px}
+.form b{font-family:var(--f-display);font-size:.78rem;letter-spacing:.08em;color:var(--c3)}
+.form small{font-size:.72rem;color:var(--muted);text-align:center;line-height:1.2}
+.form.cur{border-color:var(--c3);box-shadow:0 0 16px #FFD44755}
+.form.lock b{color:var(--muted)}
+.slime.shadowed{filter:brightness(0) opacity(.35)}
+.avabtn{all:unset;cursor:pointer;border-radius:50%;display:inline-flex}.avabtn:focus-visible{outline:3px solid var(--c3);outline-offset:3px}
 </style>
 </head>
 <body>
@@ -924,6 +959,59 @@ function viewCert(i){app.innerHTML=`<div class="topbar"><h2>Chứng nhận đã 
   <div class="extra" style="justify-content:center"><button class="btn warm" id="again">Chơi lại chặng này</button></div>`;
   document.getElementById('back').onclick=home;document.getElementById('again').onclick=()=>startStop(i);bindCert();window.scrollTo({top:0})}
 
+/* ---------- mèo slime: hình đại diện tiến hoá theo cấp ---------- */
+const TITLES=['Mèo tập sự','Mèo chăm chỉ','Mèo tò mò','Mèo nhanh nhẹn','Mèo thông thái','Mèo cao thủ','Mèo bậc thầy','Mèo tinh anh','Mèo huyền thoại','Mèo Sin Cos'];
+const FORM_NOTE=['Giọt slime bé xíu vừa nở','Má hồng, chăm chỉ ôn bài','Mọc mầm cây vì tò mò','Quàng khăn đỏ chạy nhanh','Đeo kính thông thái','Băng đô cao thủ','Mũ phù thuỷ bậc thầy','Mọc đôi cánh tinh anh','Vương miện và áo choàng','Hào quang sin cos'];
+const lvOf=f=>Math.min(10,1+Math.floor(f/15));
+const fishOf=pg=>{let t=0;for(const k in pg)t+=pg[k]||0;return t};
+const SL=[['#9CF3D2','#2BB98A'],['#7FE7F0','#1AA7B8'],['#8CC4FF','#3378E0'],['#B6EE7A','#5DA324'],['#C3A2FF','#7A4BE0'],['#FF9DCB','#D63D86'],['#7E8BFF','#3B44C8'],['#FFE07A','#D99A0B'],['#FF8E7A','#C8382A'],['#FFFFFF','#7A5CFF']];
+let slimeN=0;
+function slimeSVG(lv,opts={}){lv=Math.max(1,Math.min(10,lv||1));const [c,d]=SL[lv-1],id='sl'+(++slimeN),g=opts.mood||'happy';
+  const body="M14 80 C8 62 16 40 30 32 L31 14 Q32 9 36 12 L46 25 Q50 24 54 25 L64 12 Q68 9 69 14 L70 32 C84 40 92 62 86 80 Q85 86 78 87 Q72 92 66 87 Q60 85 56 88 Q50 94 44 88 Q38 85 32 88 Q26 92 22 87 Q15 86 14 80Z";
+  const fill=lv===10?`url(#${id}r)`:`url(#${id}g)`;
+  let back='',front='';
+  if(lv===8)back+=`<path d="M18 56 Q-2 40 4 22 Q14 34 24 40Z M82 56 Q102 40 96 22 Q86 34 76 40Z" fill="#fff" stroke="${d}" stroke-width="2.5" stroke-linejoin="round"/><path d="M8 30 Q14 38 20 42 M92 30 Q86 38 80 42" stroke="${d}" stroke-width="1.5" fill="none"/>`;
+  if(lv===9)back+=`<path d="M26 40 Q4 66 8 92 Q20 86 30 94 Q40 86 50 94 Q60 86 70 94 Q80 86 92 92 Q96 66 74 40Z" fill="#5B2A9E" stroke="#2A1050" stroke-width="2.5" stroke-linejoin="round"/>`;
+  if(lv===10)back+=`<circle cx="50" cy="56" r="47" fill="url(#${id}a)"/><ellipse cx="50" cy="7" rx="18" ry="5" fill="none" stroke="#FFE27A" stroke-width="3"/>`;
+  if(lv>=2)front+=`<ellipse cx="29" cy="66" rx="6" ry="4" fill="#FF7FA8" opacity=".55"/><ellipse cx="71" cy="66" rx="6" ry="4" fill="#FF7FA8" opacity=".55"/>`;
+  if(lv===3)front+=`<path d="M50 26 V12" stroke="#3E8E2E" stroke-width="3" stroke-linecap="round"/><path d="M50 15 Q40 6 34 12 Q42 18 50 15Z M50 13 Q60 3 67 9 Q59 16 50 13Z" fill="#6BD34F" stroke="#3E8E2E" stroke-width="1.5"/>`;
+  if(lv===4)front+=`<path d="M18 72 Q50 82 82 72 L83 79 Q50 89 17 79Z" fill="#E5383B" stroke="#7A1214" stroke-width="2"/><path d="M68 80 L72 94 L80 92 L74 79Z" fill="#E5383B" stroke="#7A1214" stroke-width="2"/>`;
+  if(lv===5)front+=`<g fill="#ffffff30" stroke="#2B2D5C" stroke-width="2.6"><circle cx="38" cy="56" r="9.5"/><circle cx="62" cy="56" r="9.5"/></g><path d="M47.5 56 h5 M28.5 54 l-8 -3 M71.5 54 l8 -3" stroke="#2B2D5C" stroke-width="2.6"/>`;
+  if(lv===6)front+=`<path d="M17 40 Q50 30 83 40 L84 47 Q50 37 16 47Z" fill="#2B2D5C"/><rect x="44" y="34.5" width="12" height="7" rx="1.5" fill="#C9CEE8"/><path d="M83 42 L96 36 M84 45 L97 48" stroke="#2B2D5C" stroke-width="3.5" stroke-linecap="round"/>`;
+  if(lv===7)front+=`<path d="M50 -6 L68 30 Q50 34 32 30Z" fill="#3B2A8F" stroke="#1B1250" stroke-width="2.5" stroke-linejoin="round"/><ellipse cx="50" cy="30" rx="24" ry="5" fill="#3B2A8F" stroke="#1B1250" stroke-width="2.5"/><path d="M47 12 l1.5 3 3.3.4 -2.4 2.3 .6 3.3 -3 -1.6 -3 1.6 .6 -3.3 -2.4 -2.3 3.3 -.4Z" fill="#FFD447"/><circle cx="55" cy="22" r="1.6" fill="#FFD447"/>`;
+  if(lv>=9)front+=`<path d="M33 30 L33 14 L41 22 L50 10 L59 22 L67 14 L67 30Z" fill="#FFD447" stroke="#9A6A00" stroke-width="2.2" stroke-linejoin="round"/><circle cx="50" cy="24" r="3" fill="#FF4D8D"/><circle cx="40" cy="26" r="2" fill="#22D3EE"/><circle cx="60" cy="26" r="2" fill="#22D3EE"/>`;
+  if(lv===10)front+=`<path d="M26 76 q6 -7 12 0 t12 0 t12 0 t12 0" stroke="#7A5CFF" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M6 20 l1.5 4 4 1.5 -4 1.5 -1.5 4 -1.5 -4 -4 -1.5 4 -1.5Z M92 64 l1.2 3 3 1.2 -3 1.2 -1.2 3 -1.2 -3 -3 -1.2 3 -1.2Z" fill="#FFE27A"/>`;
+  const eyes=g==='sad'?`<path d="M32 54 l11 3 M68 54 l-11 3" stroke="#2B2D5C" stroke-width="3.5" stroke-linecap="round"/><path d="M45 70 q5 -4 10 0" stroke="#2B2D5C" stroke-width="2.5" fill="none" stroke-linecap="round"/>`
+   :g==='wow'?`<circle cx="38" cy="56" r="6.5" fill="#2B2D5C"/><circle cx="62" cy="56" r="6.5" fill="#2B2D5C"/><circle cx="40" cy="53.5" r="2.4" fill="#fff"/><circle cx="64" cy="53.5" r="2.4" fill="#fff"/><ellipse cx="50" cy="70" rx="4" ry="5" fill="#2B2D5C"/>`
+   :`<ellipse cx="38" cy="56" rx="5.5" ry="6.5" fill="#2B2D5C"/><ellipse cx="62" cy="56" rx="5.5" ry="6.5" fill="#2B2D5C"/><circle cx="40" cy="53.5" r="2.2" fill="#fff"/><circle cx="64" cy="53.5" r="2.2" fill="#fff"/><path d="M44 67 q3 4 6 0 q3 4 6 0" stroke="#2B2D5C" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
+  return `<svg class="slime lv${lv} ${opts.cls||''}" viewBox="-6 -8 112 112" aria-hidden="true"><defs>
+    <linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c}"/><stop offset="1" stop-color="${d}"/></linearGradient>
+    <linearGradient id="${id}r" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7FE7F0"/><stop offset=".35" stop-color="#C3A2FF"/><stop offset=".7" stop-color="#FF9DCB"/><stop offset="1" stop-color="#FFE07A"/></linearGradient>
+    <radialGradient id="${id}a"><stop offset=".55" stop-color="#FFE27A" stop-opacity=".55"/><stop offset="1" stop-color="#FFE27A" stop-opacity="0"/></radialGradient></defs>
+    ${back}<ellipse cx="50" cy="93" rx="30" ry="4" fill="#000" opacity=".25"/>
+    <path d="${body}" fill="${fill}" stroke="${d}" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M36 22 L37.5 30 L44 27Z M64 22 L62.5 30 L56 27Z" fill="#FFB3C7" opacity=".85"/>
+    <ellipse cx="30" cy="46" rx="6" ry="10" fill="#fff" opacity=".55" transform="rotate(25 30 46)"/><circle cx="38" cy="36" r="2.5" fill="#fff" opacity=".7"/>
+    <path d="M60 89 q2 7 -1 10 q-3 -3 -1 -10" fill="${lv===10?'#C3A2FF':d}" opacity=".8"/>
+    ${eyes}${front}</svg>`}
+function avatarFor(fish,cls=''){return `<span class="ava slimeava ${cls}" title="Cấp ${lvOf(fish)} · ${TITLES[lvOf(fish)-1]}">${slimeSVG(lvOf(fish))}</span>`}
+function showEvolve(from,to){
+  const o=document.createElement('div');o.className='evolve';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.setAttribute('aria-label','Biến hình');
+  o.innerHTML=`<div class="evo-rays"></div><div class="evo-box"><div class="evo-kicker">LÊN CẤP!</div>
+    <div class="evo-stage"><div class="evo-old">${slimeSVG(from,{mood:'wow'})}</div><div class="evo-flash"></div><div class="evo-new">${slimeSVG(to)}</div></div>
+    <h2>BIẾN HÌNH!</h2><p><span class="lv">CẤP ${to}</span> ${TITLES[to-1]}</p><p class="evo-note">${FORM_NOTE[to-1]}</p>
+    <button class="btn warm" id="evoOk">Tuyệt vời!</button></div>`;
+  document.body.appendChild(o);confetti(50);
+  const close=()=>{o.remove();document.removeEventListener('keydown',k)};const k=e=>{if(e.key==='Enter'||e.key==='Escape'){e.preventDefault();e.stopPropagation();close()}};
+  document.addEventListener('keydown',k,true);o.querySelector('#evoOk').onclick=close;setTimeout(()=>{const b=o.querySelector('#evoOk');b&&b.focus()},1600)}
+function showForms(fish){const cur=lvOf(fish);
+  const o=document.createElement('div');o.className='evolve';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');
+  o.innerHTML=`<div class="evo-box wide"><div class="evo-kicker">BỘ SƯU TẬP HÌNH DẠNG</div><p class="evo-note">Mỗi 15 cá lên một cấp, mèo slime sẽ biến hình.</p>
+    <div class="forms">${TITLES.map((t,i)=>`<div class="form ${i+1<=cur?'got':'lock'} ${i+1===cur?'cur':''}">${i+1<=cur?slimeSVG(i+1):slimeSVG(i+1,{cls:'shadowed'})}<b>CẤP ${i+1}</b><small>${i+1<=cur?t:'Cần '+(i*15)+' cá'}</small></div>`).join('')}</div>
+    <button class="btn primary" id="evoOk">Đóng</button></div>`;
+  document.body.appendChild(o);const close=()=>{o.remove();document.removeEventListener('keydown',k,true)};const k=e=>{if(e.key==='Escape'){e.stopPropagation();close()}};
+  document.addEventListener('keydown',k,true);o.querySelector('#evoOk').onclick=close;o.onclick=e=>{if(e.target===o)close()}}
+
 /* ---------- bảng xếp hạng ---------- */
 // Dán URL Web App của Google Apps Script vào đây để có bảng xếp hạng chung cả lớp (xem apps-script.gs). Để trống = chỉ xếp hạng trên máy này.
 const SCORE_API='';
@@ -956,10 +1044,10 @@ async function board(){
   if(!view.length){h+=`<div class="empty">${catSVG('sad')}<p>Chưa có ai làm câu nào. ${me?'Chơi một chặng để ghi tên lên bảng nhé!':'Đăng nhập và chơi một chặng để ghi tên lên bảng nhé!'}</p></div>`}
   else{
     h+=`<div class="bsum"><span><b>${tot.n}</b> người chơi</span><span class="fish">${fishSVG}<b>${tot.fish}</b> cá đã câu</span><span><b>${tot.certs}</b> giấy chứng nhận</span></div>`;
-    h+='<div class="podium">'+[1,0,2].filter(i=>top[i]).map(i=>{const r=top[i];return `<div class="pod p${i+1} ${me&&r.id===me.id?'mine':''}"><div class="crown">${i+1}</div><span class="ava big">${esc(initial(r.name))}</span><b>${esc(r.name)}</b><small>${r.cls?'Lớp '+esc(r.cls):'&nbsp;'}</small><span class="fish">${fishSVG}${r.fish}</span><div class="block">Hạng ${i+1}<br><small>Huy chương ${medal[i]}</small></div></div>`}).join('')+'</div>';
+    h+='<div class="podium">'+[1,0,2].filter(i=>top[i]).map(i=>{const r=top[i];return `<div class="pod p${i+1} ${me&&r.id===me.id?'mine':''}"><div class="crown">${i+1}</div>${avatarFor(r.fish,'big')}<b>${esc(r.name)}</b><small>${r.cls?'Lớp '+esc(r.cls):'&nbsp;'}</small><span class="fish">${fishSVG}${r.fish}</span><div class="block">Hạng ${i+1}<br><small>Huy chương ${medal[i]}</small></div></div>`}).join('')+'</div>';
     h+=`<div class="tablewrap"><table class="rank"><thead><tr><th>Hạng</th><th>Người chơi</th><th class="n">Cá</th><th class="hide-s">Tiến độ</th><th class="n hide-s">Chính xác</th><th>Chứng nhận</th><th class="hide-s">Gần nhất</th></tr></thead><tbody>`+
       view.map((r,i)=>`<tr class="${me&&r.id===me.id?'mine':''}"><td><span class="rk r${i<3?i+1:''}">${i+1}</span></td>
-      <td><div class="pl"><span class="ava">${esc(initial(r.name))}</span><span>${esc(r.name)}${me&&r.id===me.id?' <em>(bạn)</em>':''}<small>${r.cls?'Lớp '+esc(r.cls):''}</small></span></div></td>
+      <td><div class="pl">${avatarFor(r.fish)}<span>${esc(r.name)}${me&&r.id===me.id?' <em>(bạn)</em>':''}<small>${r.cls?'Lớp '+esc(r.cls):''}</small></span></div></td>
       <td class="n"><b>${r.fish}</b><small>/${MAXFISH}</small></td>
       <td class="hide-s"><div class="mini"><i style="width:${r.done/Q.length*100}%"></i></div><small>${r.done}/${Q.length} câu</small></td>
       <td class="n hide-s">${r.acc}%</td>
@@ -1030,7 +1118,7 @@ function login(){
   <form id="lf" class="lform" novalidate><div class="field"><label for="lname">Họ và tên</label><input id="lname" maxlength="40" autocomplete="name" placeholder="Ví dụ: Nguyễn Minh Anh" required></div>
   <div class="field"><label for="lcls">Lớp</label><input id="lcls" maxlength="12" placeholder="Ví dụ: 11C2"></div>
   <p class="lerr" id="lerr" hidden>Bạn nhập họ tên trước đã nhé.</p><button class="btn primary" type="submit">Vào chơi</button></form>
-  ${past.length?`<div class="past"><h3>Đã từng chơi trên máy này</h3><div class="row">${past.map(u=>`<button class="pchip" data-u="${u.id}"><span class="ava">${esc(u.name.trim().split(/\s+/).pop()[0]||'?').toUpperCase()}</span><span>${esc(u.name)}<small>${u.cls?'Lớp '+esc(u.cls)+' · ':''}${Object.keys(LS.get('meo-sc-cert-'+u.id,{})).length}/8 chứng nhận</small></span></button>`).join('')}</div></div>`:''}
+  ${past.length?`<div class="past"><h3>Đã từng chơi trên máy này</h3><div class="row">${past.map(u=>`<button class="pchip" data-u="${u.id}">${avatarFor(fishOf(LS.get('meo-sc-prog-'+u.id,{})))}<span>${esc(u.name)}<small>${u.cls?'Lớp '+esc(u.cls)+' · ':''}${Object.keys(LS.get('meo-sc-cert-'+u.id,{})).length}/8 chứng nhận</small></span></button>`).join('')}</div></div>`:''}
   ${past.length?'<button class="linkbtn" id="toRank" type="button">Xem bảng xếp hạng</button>':''}<p class="hint">Tên và tiến độ được lưu trên trình duyệt của máy này. Mỗi bạn dùng chung máy có thể đăng nhập bằng tên riêng.</p></section>`;
   document.getElementById('lf').onsubmit=e=>{e.preventDefault();const n=document.getElementById('lname').value.trim().replace(/\s+/g,' '),c=document.getElementById('lcls').value.trim().toUpperCase();
     if(!n){document.getElementById('lerr').hidden=false;document.getElementById('lname').focus();return}addPlayer(n,c);pushScore();renderUser();home()};
@@ -1038,7 +1126,7 @@ function login(){
   const tr=document.getElementById('toRank');if(tr)tr.onclick=board;
   renderUser();document.getElementById('lname').focus()}
 function renderUser(){const el=document.getElementById('userbar');if(!me){el.innerHTML='';return}
-  el.innerHTML=`<span class="ava">${esc(me.name.trim().split(/\s+/).pop()[0]||'?').toUpperCase()}</span><span>Xin chào <b>${esc(me.name)}</b>${me.cls?' · Lớp '+esc(me.cls):''}</span><button class="linkbtn" id="rankLink">Xếp hạng</button><button class="linkbtn" id="helpLink">Công thức</button><button class="linkbtn" id="logout">Đổi người chơi</button>`;
+  el.innerHTML=`${avatarFor(fishOf(prog))}<span>Xin chào <b>${esc(me.name)}</b>${me.cls?' · Lớp '+esc(me.cls):''}</span><button class="linkbtn" id="rankLink">Xếp hạng</button><button class="linkbtn" id="helpLink">Công thức</button><button class="linkbtn" id="logout">Đổi người chơi</button>`;
   document.getElementById('rankLink').onclick=board;document.getElementById('helpLink').onclick=()=>openHelp(null);
   document.getElementById('logout').onclick=()=>{users.cur=null;LS.set('meo-sc-users',users);me=null;prog={};certs={};S0=null;login()}}
 function home(){
@@ -1047,9 +1135,8 @@ function home(){
   const fish=Q.reduce((s,q)=>s+(prog[q.id]||0),0), maxFish=Q.reduce((s,q)=>s+full(q),0);
   const wrong=Q.filter(q=>isDone(q.id)&&!isPerfect(q.id)).length;
   const nc=STOPS.filter(s=>certs[s.k]).length;
-  const lv=Math.min(10,1+Math.floor(fish/15)),lvIn=lv>=10?15:fish-(lv-1)*15;
-  const TITLES=['Mèo tập sự','Mèo chăm chỉ','Mèo tò mò','Mèo nhanh nhẹn','Mèo thông thái','Mèo cao thủ','Mèo bậc thầy','Mèo tinh anh','Mèo huyền thoại','Mèo Sin Cos'];
-  let h=`<section class="hud"><div class="hud-id"><span class="ava big">${esc(initial(me.name))}</span><div><div class="hud-name">${esc(me.name)}</div><div class="hud-title"><span class="lv">CẤP ${lv}</span>${TITLES[lv-1]}${me.cls?' · '+esc(me.cls):''}</div>
+  const lv=lvOf(fish),lvIn=lv>=10?15:fish-(lv-1)*15;
+  let h=`<section class="hud"><div class="hud-id"><button class="avabtn" id="formsBtn" aria-label="Xem các hình dạng mèo slime">${avatarFor(fish,'big')}</button><div><div class="hud-name">${esc(me.name)}</div><div class="hud-title"><span class="lv">CẤP ${lv}</span>${TITLES[lv-1]}${me.cls?' · '+esc(me.cls):''}</div>
     <div class="xp" title="Kinh nghiệm"><i style="width:${lvIn/15*100}%"></i><span>${lv>=10?'TỐI ĐA':lvIn+'/15 XP'}</span></div></div></div>
     <div class="hud-stats"><div><b class="fish">${fishSVG}${fish}</b><small>Cá / ${maxFish}</small></div><div><b>${done}</b><small>Câu / ${total}</small></div><div><b>${nc}</b><small>Huy hiệu / ${STOPS.length}</small></div><div><b>${wrong}</b><small>Cần ôn</small></div></div></section>
     <div class="sec-title"><span>BẢN ĐỒ HÀNH TRÌNH</span><i></i></div>`;
@@ -1061,6 +1148,7 @@ function home(){
   h+='</div><div class="extra"><button class="btn warm" id="mix">Dạo ngẫu nhiên 20 câu</button><button class="btn primary" id="rankBtn">Bảng xếp hạng</button><button class="btn ghost" id="helpBtn">Sổ tay công thức</button><button class="btn" id="redo" '+(wrong?'':'disabled')+'>Ôn lại câu sai</button><button class="btn ghost" id="reset">Xoá tiến độ</button></div>';
   if(nc)h+='<section class="gallery"><h2>Sổ tham quan của bạn</h2><div class="row">'+STOPS.map((s,i)=>certs[s.k]?`<button class="gcard" data-cert="${i}"><span class="thumb">${LM[s.k]()}</span><span>${s.n}<small>${certs[s.k].score}/${certs[s.k].max} cá · ${'★'.repeat(starsOf(certs[s.k].score,certs[s.k].max))}</small></span></button>`:'').join('')+'</div></section>';
   app.innerHTML=h;
+  document.getElementById('formsBtn').onclick=()=>showForms(fish);
   app.querySelectorAll('[data-stop]').forEach(b=>b.onclick=()=>startStop(+b.dataset.stop));
   app.querySelectorAll('[data-cert]').forEach(b=>b.onclick=()=>viewCert(+b.dataset.cert));
   document.getElementById('rankBtn').onclick=board;document.getElementById('helpBtn').onclick=helpPage;
@@ -1087,7 +1175,7 @@ function show(){
   document.getElementById('back').onclick=home;document.getElementById('qhelp').onclick=()=>openHelp(s.stop!==undefined?HELP_FOR[STOPS[s.stop].k]:null);
   const next=document.getElementById('next');next.onclick=()=>{s.i++;s.i<s.ids.length?show():summary();window.scrollTo({top:0})};
   const cat=app.querySelector('.cat'),say=app.querySelector('.say'),exEl=app.querySelector('.bubble .ex');
-  const finish=(got,exHTML)=>{s.score+=got;prog[q.id]=got;save();pushScore();if(got<full(q))s.wrong.push(q.id);
+  const finish=(got,exHTML)=>{const lvBefore=lvOf(fishOf(prog));s.score+=got;prog[q.id]=got;save();const lvAfter=lvOf(fishOf(prog));if(lvAfter>lvBefore){setTimeout(()=>showEvolve(lvBefore,lvAfter),700);renderUser()}pushScore();if(got<full(q))s.wrong.push(q.id);
     const ok=got===full(q);cat.classList.add(ok?'happy':'sad');
     s.streak=ok?s.streak+1:0;const stk=document.getElementById('stk');stk.textContent='COMBO x'+s.streak;stk.classList.toggle('hot',s.streak>=3);
     const milestone={3:'Ba câu liền! Mèo bắt đầu thấy nóng tay.',5:'Năm câu liền! Mèo xoay vòng như đường tròn lượng giác.',10:'Mười câu liền! Bậc thầy sin cos đây rồi.',15:'Mười lăm câu liền, mèo xin bái phục!'}[s.streak];
@@ -1109,7 +1197,7 @@ function show(){
       chk.hidden=true;inp.disabled=true;const ok=Math.abs(v-q.a)<1e-9;inp.classList.add(ok?'right':'wrong');finish(ok?1:0,`<b>Đáp số: ${q.a}.</b> ${q.ex}`)};
     chk.onclick=go;inp.onkeydown=e=>{if(e.key==='Enter'&&!inp.disabled){e.preventDefault();go()}};inp.focus();}
 }
-document.addEventListener('keydown',e=>{const hd=document.getElementById('helpDrawer');if(hd&&!hd.hidden)return;if(!S0||!app.querySelector('.qcard'))return;const n=document.getElementById('next');
+document.addEventListener('keydown',e=>{if(document.querySelector('.evolve'))return;const hd=document.getElementById('helpDrawer');if(hd&&!hd.hidden)return;if(!S0||!app.querySelector('.qcard'))return;const n=document.getElementById('next');
   if(e.key==='Enter'&&n&&!n.hidden&&document.activeElement!==n){n.click();return}if(S0.key)S0.key(e)});
 function summary(){
   const s=S0,pct=Math.round(s.score/s.max*100);
