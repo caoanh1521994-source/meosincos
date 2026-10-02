@@ -733,6 +733,32 @@ table.signs{border-collapse:collapse;width:100%;font-family:var(--f-display);tex
 .fcard.geo .fno{background:linear-gradient(180deg,#C59BFF,#7B45F0);color:#fff}
 .fcard li.fimg{background:#fff;border-radius:10px;padding:8px;display:grid;place-items:center}
 .fcard li.fimg img{max-width:min(100%,420px);height:auto;display:block}
+/* thi thử */
+.launch.exam .launch-main{border-color:#FF4D8D66;background:linear-gradient(120deg,#2A0C22,#141B3B);box-shadow:0 0 0 1px #FF4D8D33,0 0 40px #FF4D8D33,0 10px 30px #0009}
+.launch.exam .launch-main:hover{box-shadow:0 0 0 1.5px #FF4D8D,0 0 40px #FF4D8D55,0 14px 34px #000a}
+.exintro{gap:12px}.exintro h3{font-size:1.4rem;color:var(--c3)}
+.parts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:600px){.parts{grid-template-columns:1fr}}
+.parts>div{display:grid;gap:2px;background:#0F1532;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.parts b{font-family:var(--f-display);color:var(--c5);letter-spacing:.06em}.parts span{font-weight:600}.parts small{color:var(--muted);font-size:.78rem}
+table.matrix th,table.matrix td{text-align:center;border:1px solid var(--line)}table.matrix tbody th{text-align:left;color:var(--ink);letter-spacing:0;text-transform:none;font-family:var(--f-body);font-size:.88rem;white-space:normal}
+.exbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:8;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 12px;margin:0 0 14px;border-radius:12px;background:#0A0F24f2;border:1px solid var(--line);box-shadow:0 8px 24px #000a;backdrop-filter:blur(6px)}
+.extime{font-family:var(--f-display);font-weight:700;font-size:1.3rem;color:var(--c3);font-variant-numeric:tabular-nums}.extime.warn{color:#FF5470;animation:ember 1s ease-in-out infinite alternate}
+#exCount{color:var(--muted);font-size:.85rem}
+.exnav{display:flex;flex-wrap:wrap;gap:4px;flex:1;min-width:0}
+.exdot{font-family:var(--f-display);font-size:.7rem;padding:2px 5px;border-radius:5px;border:1px solid var(--line);background:#0F1532;color:var(--muted)}.exdot.ok{border-color:#2EE6A6;color:#2EE6A6}
+.expart{margin-bottom:16px}
+.exq{background:linear-gradient(180deg,var(--panel2),var(--paper));border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:12px;box-shadow:0 8px 24px #0006;scroll-margin-top:90px}
+.exq .qhead .tag{background:#FF4D8D;color:#fff;font-family:var(--f-display);font-weight:700;padding:2px 12px;border-radius:4px}
+.exq.rv.good{border-color:#2EE6A6}.exq.rv.bad{border-color:#FF5470}.exq.rv.part{border-color:var(--c3)}
+.pts{margin-left:auto;font-family:var(--f-display);font-weight:700;color:var(--c3)}
+.exq .opt.chosen{border-color:var(--c5)!important;background:color-mix(in srgb,var(--c5) 16%,#0F1532)!important}
+div.opt{cursor:default}
+.rvmark{font-size:.78rem;color:var(--muted);white-space:nowrap}
+.exex{margin:10px 0 0;font-size:.92rem;color:var(--ink);background:#0F1532;border-radius:8px;padding:8px 12px;overflow-x:auto}
+.exres{grid-template-columns:auto minmax(0,1fr);align-items:center}
+@media (max-width:560px){.exres{grid-template-columns:1fr}}
+.exscore{display:grid;justify-items:center;padding:14px 22px;border-radius:14px;background:#0F1532;border:1px solid var(--c3);box-shadow:0 0 24px #FFD44733}.exscore .big{font-size:3.4rem!important}.exscore small{color:var(--muted)}
 </style>
 </head>
 <body>
@@ -1823,6 +1849,121 @@ function gLand(){const P=PLANETS[G0.pi],a=gAns(),s=pStat(P,a),done=s.d===s.n;con
   document.getElementById('gmap').onclick=spacePage;const nb=document.getElementById('gnextP');if(nb)nb.onclick=()=>gStart(G0.pi+1);
   app.querySelectorAll('.gmiss').forEach(b=>b.onclick=()=>gStart(G0.pi,pIds(P).indexOf(+b.dataset.id)));window.scrollTo({top:0})}
 
+/* ---------- THI THỬ GIỮA KÌ: 12 TN + 4 Đ/S + 6 TLN ---------- */
+const EX_MIN=90;
+const gm=(id,a,lv,ex,fig)=>({part:1,topic:'hh',lv,src:id,q:GQM[id].q,o:GQM[id].o,a,ex,fig});
+const lm=(id,lv)=>({part:1,topic:'lg',lv,src:id,q:QM[id].q,o:QM[id].o,a:QM[id].a,ex:QM[id].ex,fig:FIG[id]?'f'+id:null});
+const EXAM=[
+ lm(1,'NB'),lm(48,'NB'),lm(27,'NB'),lm(68,'NB'),lm(12,'TH'),lm(37,'TH'),lm(56,'VD'),
+ gm(119,2,'NB',R`\(O\in AC\subset(SAC)\) nên \(O\) nằm trên \((SAC)\).`),
+ gm(123,2,'NB','Một mặt phẳng được xác định khi chứa hai đường thẳng cắt nhau. Ba điểm phân biệt có thể thẳng hàng, một điểm có thể nằm trên đường thẳng.'),
+ gm(131,0,'TH',R`Định lí: \(d\parallel(\alpha)\), \((\beta)\supset d\) cắt \((\alpha)\) theo giao tuyến \(d'\) thì \(d'\parallel d\).`),
+ gm(141,0,'TH',R`\(AD\parallel BC\), \(AD\subset(SAD)\), \(BC\subset(SBC)\), hai mặt phẳng có điểm chung \(S\) nên giao tuyến đi qua \(S\) và song song với \(BC\).`),
+ gm(143,1,'VD',R`\((IBC)\) chứa \(BC\parallel AD\) nên cắt \((SAD)\) theo \(IJ\parallel AD\). \(I\) là trung điểm \(SA\) nên \(J\) là trung điểm \(SD\), suy ra \(\frac{SJ}{JD}=1\).`,'h143'),
+];
+const tfLg=(id)=>({part:2,topic:'lg',src:id,q:QM[id].q,items:QM[id].items.map(it=>it[0]),ans:QM[id].items.map(it=>it[1]),exs:QM[id].items.map(it=>it[2])});
+EXAM.push(tfLg(84),tfLg(87),
+ {part:2,topic:'hh',src:155,q:GQM[155].q,items:GQM[155].items,ans:[1,1,0,1],exs:[R`\(MO\) là đường trung bình tam giác \(SAC\).`,R`\(AB\parallel CD\) nên giao tuyến qua \(S\) và song song \(CD\).`,R`Giao tuyến của \((SAD),(SBC)\) đi qua \(S\) (song song \(AD\)), không đi qua \(O\).`,R`\((MBC)\) chứa \(BC\parallel AD\) nên cắt \(SD\) tại \(N\) với \(MN\parallel AD\), \(N\) là trung điểm \(SD\).`]},
+ {part:2,topic:'hh',src:159,q:GQM[159].q,items:GQM[159].items,ans:[1,1,1,0],exs:[R`\(M,Q\) là trung điểm \(SA,SD\).`,'Đường trung bình của các tam giác SBC và SAB.',R`\(MN\parallel AB,\ MQ\parallel AD\) nên \((MNPQ)\parallel(ABCD)\).`,R`\(MNPQ\) là hình vuông cạnh \(\frac a2\) nên tỉ số diện tích là \(\frac14\).`]});
+EXAM.push(
+ {part:3,topic:'lg',lv:'TH',src:100,q:R`Xét hàm số \(f(x)=\cos2x\) trên \([0;2\pi]\) có đồ thị như hình vẽ. Gọi \(T\) là tập hợp tất cả các giá trị của \(x\in[0;2\pi]\) để \(\cos2x=0\). Tổng tất cả các phần tử của \(T\) là bao nhiêu? (làm tròn đến hàng phần chục)`,ans:12.6,tol:.05,ex:R`\(\cos2x=0\Leftrightarrow x=\frac\pi4+k\frac\pi2\). Trên \([0;2\pi]\): \(\frac\pi4,\frac{3\pi}4,\frac{5\pi}4,\frac{7\pi}4\). Tổng \(=4\pi\approx12{,}6\).`,fig:'f100'},
+ {part:3,topic:'lg',lv:'VD',src:103,q:R`Gọi giá trị lớn nhất và giá trị nhỏ nhất của hàm số \(y=3-2\cos2x-\cos^22x\) lần lượt là \(M,m\). Tính giá trị biểu thức \(2024M+2025m\).`,ans:8096,ex:R`Đặt \(t=\cos2x\in[-1;1]\): \(y=4-(t+1)^2\). \(M=4\) khi \(t=-1\), \(m=0\) khi \(t=1\). Kết quả \(2024\cdot4=8096\).`},
+ {part:3,topic:'lg',lv:'VD',src:107,q:R`Số giờ có ánh sáng mặt trời của một thành phố A ở vĩ độ \(40^\circ\) bắc trong ngày thứ \(t\) của một năm không nhuận được cho bởi hàm số \(d(t)=3\sin\left[\frac{\pi}{182}(t-80)\right]+12\) với \(t\in\mathbb Z\) và \(100<t\le365\). Hỏi thành phố A có đúng 12 giờ có ánh sáng mặt trời vào ngày thứ bao nhiêu trong năm?`,ans:262,ex:R`\(d=12\Leftrightarrow\sin\left[\frac{\pi}{182}(t-80)\right]=0\Leftrightarrow t=80+182k\). Với \(100<t\le365\) chỉ có \(t=262\).`},
+ {part:3,topic:'hh',lv:'TH',src:174,q:GQM[174].q,ans:4,ex:R`\((BMC)\) chứa \(BC\parallel AD\) nên \(MQ\parallel AD\), \(Q\) là trung điểm \(SD\): \(\frac{SQ}{SD}=\frac12\), \(b+2a=2+2=4\).`},
+ {part:3,topic:'hh',lv:'VD',src:169,q:GQM[169].q,ans:1.5,tol:.01,ex:R`\(IJ\parallel AB\) nên \((IJK)\) cắt \((ABD)\) theo đường qua \(K\) song song \(AB\), cắt \(AD\) tại \(F\) với \(\frac{DF}{DA}=\frac{DK}{DB}=\frac13\). Vậy \(AF=\frac23AD\), \(\frac{AD}{AF}=1{,}5\).`},
+ {part:3,topic:'hh',lv:'VD',src:166,q:GQM[166].q,ans:3,ex:R`\(MN\) cắt \(AC\) tại \(E\) là trung điểm \(AO\) (\(AE=\frac14AC\)). Trong \((SAC)\), \(EG\) cắt \(SC\) tại \(H\); tính theo tỉ số (hoặc Menelaus) được \(SH=\frac14SC\), tức \(HC=3HS\), \(k=3\).`});
+EXAM.forEach(x=>{x.q=fixMath(x.q);if(x.ex)x.ex=fixMath(x.ex);if(x.o)x.o=x.o.map(fixMath);if(x.items)x.items=x.items.map(fixMath);if(x.exs)x.exs=x.exs.map(fixMath)});
+EXAM.forEach((x,i)=>{x.no=EXAM.slice(0,i).filter(y=>y.part===x.part).length+1;x.k=i});
+LM['thi']=()=>`<svg viewBox="0 0 240 140" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="thbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3A0F2A"/><stop offset="1" stop-color="#14061C"/></linearGradient></defs>
+ <rect width="240" height="140" fill="url(#thbg)"/>${Array.from({length:24},(_,i)=>`<circle cx="${(i*53)%240}" cy="${(i*29)%140}" r="${i%4?0.8:1.4}" fill="#fff" opacity=".4"/>`).join('')}
+ <g transform="translate(70,16) rotate(-6)"><rect width="88" height="112" rx="6" fill="#FFF9EC" stroke="#22183A" stroke-width="2"/><rect x="10" y="10" width="68" height="8" rx="2" fill="#FF4D8D"/>
+  ${[30,44,58,72,86].map(y=>`<rect x="12" y="${y}" width="8" height="8" rx="2" fill="none" stroke="#22183A" stroke-width="1.5"/><path d="M26 ${y+4} h${40-(y%3)*6}" stroke="#9AA6D6" stroke-width="3" stroke-linecap="round"/>`).join('')}
+  <path d="M13 34 l3 3 5 -6 M13 62 l3 3 5 -6 M13 76 l3 3 5 -6" stroke="#2EE6A6" stroke-width="2.4" fill="none" stroke-linecap="round"/></g>
+ <g transform="translate(170,66)"><circle r="30" fill="#FFD447" stroke="#22183A" stroke-width="3"/><circle r="23" fill="#FFF9EC"/><path d="M0 -16 V0 L11 7" stroke="#22183A" stroke-width="3" fill="none" stroke-linecap="round"/><rect x="-6" y="-38" width="12" height="7" rx="2" fill="#22183A"/></g>
+ <text x="38" y="118" font-family="Georgia,serif" font-weight="700" font-style="italic" font-size="34" fill="#FF4D8D" transform="rotate(-12 38 118)">10</text></svg>`;
+const exKey=()=>'meo-sc-exam-'+(me?me.id:'x');
+const exData=()=>LS.get(exKey(),{draft:null,hist:[]});
+const exSave=d=>LS.set(exKey(),d);
+let examT=null;
+const exDone=(x,v)=>v==null?false:x.part===2?Array.isArray(v)&&v.every(y=>y===0||y===1):x.part===3?String(v).trim()!=='':true;
+const numOf=t=>{const v=parseFloat(String(t).trim().replace(/\s/g,'').replace(',','.').replace('−','-'));return isNaN(v)?null:v};
+function exGrade(ans){const r={p1:0,p2:0,p3:0,items:[]};
+  EXAM.forEach(x=>{const v=ans[x.k];let pts=0,ok=false,nright=0;
+    if(x.part===1){ok=v===x.a;pts=ok?.25:0;r.p1+=pts}
+    if(x.part===2){nright=x.ans.filter((a,i)=>Array.isArray(v)&&v[i]===a).length;pts=[0,.1,.25,.5,1][nright];ok=nright===4;r.p2+=pts}
+    if(x.part===3){const n=numOf(v);ok=n!=null&&Math.abs(n-x.ans)<=(x.tol||1e-9);pts=ok?.5:0;r.p3+=pts}
+    r.items.push({pts,ok,nright})});
+  r.total=Math.round((r.p1+r.p2+r.p3)*100)/100;return r}
+function examCardHTML(){const d=exData(),best=d.hist.length?Math.max(...d.hist.map(h=>h.total)):null;
+  return `<div class="launch exam"><button class="launch-main" id="examCard" aria-label="Thi thử giữa kì"><span class="lpic">${LM['thi']()}</span>
+   <span class="ltxt"><span class="lvtag" style="color:#FF7AA8">PHÒNG THI · ${EX_MIN} PHÚT</span><h3>Thi thử giữa kì</h3><span class="range">Lượng giác + Quan hệ song song · đúng form đề mới</span>
+   <span class="fact">22 câu: 12 trắc nghiệm, 4 đúng – sai, 6 trả lời ngắn. Chấm điểm thang 10 ngay khi nộp.</span>
+   <span class="lprog"><small>${d.draft?'Đang có một bài làm dở · ':''}${best!=null?`Điểm cao nhất: <b style="color:var(--c3)">${best.toLocaleString('vi-VN')}</b> · ${d.hist.length} lần thi`:'Chưa thi lần nào'}</small></span>
+   <span class="btn warm lgo">${d.draft?'Vào làm tiếp':'Vào phòng thi'}</span></span></button></div>`}
+const LVN={NB:'Nhận biết',TH:'Thông hiểu',VD:'Vận dụng'};
+function examIntro(){if(!me){login();return}S0=null;clearInterval(examT);const d=exData();
+  const cnt=(part,topic,lv)=>EXAM.filter(x=>x.part===part&&x.topic===topic&&(!lv||x.lv===lv||(part===2))).length;
+  const row=(topic,name)=>`<tr><th>${name}</th>${['NB','TH','VD'].map(l=>`<td>${EXAM.filter(x=>x.part===1&&x.topic===topic&&x.lv===l).length||''}</td>`).join('')}<td>${cnt(2,topic)}</td>${['TH','VD'].map(l=>`<td>${EXAM.filter(x=>x.part===3&&x.topic===topic&&x.lv===l).length||''}</td>`).join('')}<td><b>${EXAM.filter(x=>x.topic===topic).length}</b></td></tr>`;
+  app.innerHTML=`<div class="topbar"><div style="display:flex;gap:12px;align-items:center"><span class="thumb">${LM['thi']()}</span><h2>Thi thử giữa kì</h2></div><div class="meta"><button class="btn ghost" id="back">Về bản đồ</button></div></div>
+  <section class="sum exintro"><h3>Toán 11 · Đề thi thử giữa học kì</h3><p style="margin:0;color:var(--muted)">Thời gian làm bài <b>${EX_MIN} phút</b>. Đồng hồ chạy ngay khi bắt đầu, hết giờ bài tự nộp.</p>
+   <div class="parts"><div><b>Phần I</b><span>12 câu trắc nghiệm 4 phương án</span><small>0,25 điểm/câu · 3 điểm</small></div><div><b>Phần II</b><span>4 câu đúng – sai</span><small>Đúng 1/2/3/4 ý: 0,1 / 0,25 / 0,5 / 1 điểm · 4 điểm</small></div><div><b>Phần III</b><span>6 câu trả lời ngắn</span><small>0,5 điểm/câu · 3 điểm</small></div></div>
+   <div class="tablewrap"><table class="rank matrix"><thead><tr><th rowspan="2">Chủ đề</th><th colspan="3">Phần I · TN</th><th>Phần II</th><th colspan="2">Phần III · TLN</th><th rowspan="2">Tổng</th></tr><tr><th>NB</th><th>TH</th><th>VD</th><th>Đ/S</th><th>TH</th><th>VD</th></tr></thead>
+   <tbody>${row('lg','Hàm số lượng giác và PT lượng giác')}${row('hh','Đường thẳng, mặt phẳng. Quan hệ song song')}</tbody></table></div>
+   <p class="hint" style="margin:0">Câu hỏi lấy từ hai đề cương (lượng giác và quan hệ song song) và phần bổ sung câu 100–118. Mỗi câu đúng – sai gồm ý a) nhận biết, b) c) thông hiểu, d) vận dụng.</p>
+   <div class="extra" style="margin:0">${d.draft?`<button class="btn warm" id="exCont">Làm tiếp bài dở</button><button class="btn ghost" id="exNew">Làm lại từ đầu</button>`:`<button class="btn warm" id="exNew">Bắt đầu tính giờ</button>`}</div></section>
+  ${d.hist.length?`<section class="bag"><div class="sec-title"><span>LỊCH SỬ THI · ${d.hist.length} LẦN</span><i></i></div><div class="tablewrap"><table class="rank"><thead><tr><th>Lần</th><th>Ngày</th><th class="n">Phần I</th><th class="n">Phần II</th><th class="n">Phần III</th><th class="n">Tổng</th></tr></thead><tbody>
+   ${d.hist.slice().reverse().map((h,i)=>`<tr><td>${d.hist.length-i}</td><td>${new Date(h.date).toLocaleString('vi-VN',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</td><td class="n">${h.p1.toFixed(2)}</td><td class="n">${h.p2.toFixed(2)}</td><td class="n">${h.p3.toFixed(1)}</td><td class="n"><b>${h.total.toLocaleString('vi-VN')}</b></td></tr>`).join('')}</tbody></table></div></section>`:''}`;
+  document.getElementById('back').onclick=home;
+  document.getElementById('exNew').onclick=()=>{const d=exData();d.draft={start:Date.now(),ans:{}};exSave(d);examRun()};
+  const c=document.getElementById('exCont');if(c)c.onclick=examRun;window.scrollTo({top:0})}
+function exFig(x){if(!x.fig)return '';if(x.fig==='f100')return `<div class="fig">${plot({x0:-.3,x1:2.15*P,f:t=>Math.cos(2*t),xt:[[P/4,'π/4'],[3*P/4,'3π/4'],[P,'π'],[5*P/4,'5π/4'],[7*P/4,'7π/4'],[2*P,'2π']]})}</div>`;
+  if(x.fig.startsWith('f'))return `<div class="fig">${FIG[+x.fig.slice(1)]()}</div>`;return `<div class="gfig"><img src="hinh/${x.fig}.png" alt="Hình vẽ" loading="lazy"></div>`}
+function examRun(){S0=null;clearInterval(examT);const d=exData();if(!d.draft){examIntro();return}const ans=d.draft.ans;
+  const qHTML=x=>{const v=ans[x.k];let h=`<article class="exq" id="exq${x.k}" data-k="${x.k}"><div class="qhead"><span class="tag">Câu ${x.no}</span><span class="kind">${x.topic==='lg'?'Lượng giác':'Hình học'}</span></div><div class="qtext">${x.q}</div>${exFig(x)}`;
+    if(x.part===1)h+='<div class="opts">'+x.o.map((o,i)=>`<button class="opt ${v===i?'chosen':''}" data-i="${i}"><span class="k" data-l="${L[i]}">${L[i]}</span><span>${o}</span></button>`).join('')+'</div>';
+    if(x.part===2)h+='<div class="tf">'+x.items.map((it,i)=>{const c=Array.isArray(v)?v[i]:null;return `<div class="tfrow"><span class="lab">${'abcd'[i]})</span><span class="st">${it}</span><span class="seg"><button data-r="${i}" data-v="1" class="${c===1?'on':''}">Đúng</button><button data-r="${i}" data-v="0" class="${c===0?'on':''}">Sai</button></span></div>`}).join('')+'</div>';
+    if(x.part===3)h+=`<div class="sa"><label for="exa${x.k}">Đáp số:</label><input id="exa${x.k}" class="exin" inputmode="decimal" autocomplete="off" value="${esc(v??'')}" placeholder="vd: 12,6"></div>`;
+    return h+'</article>'};
+  const part=(p,t)=>`<section class="expart"><div class="sec-title"><span>${t}</span><i></i></div>${EXAM.filter(x=>x.part===p).map(qHTML).join('')}</section>`;
+  app.innerHTML=`<div class="exbar" id="exbar"><span class="extime" id="exTimer">⏱ --:--</span><span id="exCount"></span><div class="exnav">${EXAM.map(x=>`<button class="exdot" data-go="${x.k}" title="Phần ${['I','II','III'][x.part-1]} · Câu ${x.no}">${['I','II','III'][x.part-1]}.${x.no}</button>`).join('')}</div><button class="btn warm" id="exSubmit">Nộp bài</button></div>
+  ${part(1,'PHẦN I · TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN (3 ĐIỂM)')}${part(2,'PHẦN II · TRẮC NGHIỆM ĐÚNG SAI (4 ĐIỂM)')}${part(3,'PHẦN III · TRẢ LỜI NGẮN (3 ĐIỂM)')}
+  <div class="extra" style="justify-content:center"><button class="btn warm" id="exSubmit2">Nộp bài</button><button class="btn ghost" id="exLeave">Tạm rời phòng thi</button></div>
+  <p class="hint" style="text-align:center">Rời phòng thi đồng hồ vẫn chạy. Bài làm được lưu tự động.</p>`;
+  typeset(app);
+  const save=()=>{const D=exData();if(!D.draft)return;D.draft.ans=ans;exSave(D);refresh()};
+  const refresh=()=>{let n=0;EXAM.forEach(x=>{const ok=exDone(x,ans[x.k]);if(ok)n++;const b=app.querySelector(`[data-go="${x.k}"]`);if(b)b.classList.toggle('ok',ok)});document.getElementById('exCount').textContent=`Đã làm ${n}/${EXAM.length}`;return n};
+  app.querySelectorAll('.exq').forEach(el=>{const k=+el.dataset.k,x=EXAM[k];
+    el.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{ans[k]=+b.dataset.i;el.querySelectorAll('.opt').forEach(o=>o.classList.toggle('chosen',o===b));save()});
+    el.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{const a=Array.isArray(ans[k])?ans[k]:[null,null,null,null];a[+b.dataset.r]=+b.dataset.v;ans[k]=a;b.parentNode.querySelectorAll('button').forEach(o=>o.classList.toggle('on',o===b));save()});
+    const inp=el.querySelector('.exin');if(inp)inp.oninput=()=>{ans[k]=inp.value;save()}});
+  app.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{const t=document.getElementById('exq'+b.dataset.go);const y=t.getBoundingClientRect().top+scrollY-document.getElementById('exbar').offsetHeight-12;scrollTo({top:y,behavior:'smooth'})});
+  const submit=btn=>{const n=refresh();if(!btn.dataset.c&&n<EXAM.length){btn.dataset.c=1;btn.textContent=`Còn ${EXAM.length-n} câu chưa làm · bấm lần nữa để nộp`;return}examFinish()};
+  document.getElementById('exSubmit').onclick=e=>submit(e.currentTarget);document.getElementById('exSubmit2').onclick=e=>submit(e.currentTarget);
+  document.getElementById('exLeave').onclick=()=>{clearInterval(examT);home()};
+  const tick=()=>{const T=document.getElementById('exTimer');if(!T){clearInterval(examT);return}const D=exData();if(!D.draft){clearInterval(examT);return}
+    const left=Math.max(0,D.draft.start+EX_MIN*60000-Date.now()),m=Math.floor(left/60000),s=Math.floor(left/1000)%60;T.textContent=`⏱ ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;T.classList.toggle('warn',left<5*60000);
+    if(left<=0){clearInterval(examT);examFinish(true)}};
+  refresh();tick();examT=setInterval(tick,1000);window.scrollTo({top:0})}
+function examFinish(timeout){clearInterval(examT);const d=exData();if(!d.draft){examIntro();return}const ans=d.draft.ans,r=exGrade(ans);
+  const used=Math.min(EX_MIN*60000,Date.now()-d.draft.start);
+  d.hist.push({date:Date.now(),total:r.total,p1:r.p1,p2:r.p2,p3:r.p3,used});d.last={ans,r};d.draft=null;exSave(d);examReview(timeout)}
+function examReview(timeout){S0=null;const d=exData();if(!d.last){examIntro();return}const {ans,r}=d.last;const h=d.hist[d.hist.length-1];
+  const msg=r.total>=9?'Xuất sắc! Mèo Sin Cos xin nghiêng mình.':r.total>=8?'Giỏi lắm! Ôn thêm vài câu là chạm 9.':r.total>=6.5?'Khá rồi đó, xem lại các câu sai bên dưới nhé.':r.total>=5?'Qua mức trung bình. Luyện thêm các chặng để chắc hơn.':'Mèo đề nghị luyện lại bản đồ rồi thi lại nhé.';
+  const rv=x=>{const v=ans[x.k],it=r.items[x.k];let b=`<article class="exq rv ${it.ok?'good':it.pts>0?'part':'bad'}"><div class="qhead"><span class="tag">Câu ${x.no}</span><span class="kind">${x.topic==='lg'?'Lượng giác':'Hình học'} · nguồn câu ${x.src}</span><span class="pts">+${String(it.pts).replace('.',',')}đ</span></div><div class="qtext">${x.q}</div>${exFig(x)}`;
+    if(x.part===1)b+='<div class="opts">'+x.o.map((o,i)=>`<div class="opt ${i===x.a?'right':v===i?'wrong':''}"><span class="k" data-l="${L[i]}">${L[i]}</span><span>${o}</span></div>`).join('')+`</div><p class="exex"><b>Đáp án ${L[x.a]}.</b> ${v==null?'(Bạn bỏ trống) ':''}${x.ex}</p>`;
+    if(x.part===2)b+='<div class="tf">'+x.items.map((t,i)=>{const c=Array.isArray(v)?v[i]:null,ok=c===x.ans[i];return `<div class="tfrow ${ok?'right':'wrong'}"><span class="lab">${'abcd'[i]})</span><span class="st">${t}</span><span class="rvmark">${c==null?'Bỏ trống':c?'Bạn chọn Đúng':'Bạn chọn Sai'}</span><div class="tfex"><b>${x.ans[i]?'Đúng':'Sai'}.</b> ${x.exs[i]}</div></div>`}).join('')+`</div><p class="exex">Đúng ${it.nright}/4 ý.</p>`;
+    if(x.part===3)b+=`<p class="exex">Bạn trả lời: <b>${esc(String(v??'').trim()||'(bỏ trống)')}</b> · Đáp số: <b>${String(x.ans).replace('.',',')}</b>. ${x.ex}</p>`;
+    return b+'</article>'};
+  app.innerHTML=`<div class="topbar"><h2>Kết quả thi thử</h2><div class="meta"><button class="btn ghost" id="back">Về bản đồ</button></div></div>
+  <section class="sum exres"><div class="exscore"><span class="big">${r.total.toLocaleString('vi-VN',{minimumFractionDigits:2})}</span><small>/ 10 điểm</small></div>
+   <div><p style="margin:0">${timeout?'<b>Hết giờ, bài đã tự nộp.</b> ':''}${msg}</p><p class="hint" style="margin:4px 0 0">Thời gian làm: ${Math.floor(h.used/60000)} phút ${Math.floor(h.used/1000)%60} giây</p>
+   <div class="parts" style="margin-top:10px"><div><b>Phần I</b><span>${r.p1.toFixed(2).replace('.',',')} / 3</span></div><div><b>Phần II</b><span>${r.p2.toFixed(2).replace('.',',')} / 4</span></div><div><b>Phần III</b><span>${r.p3.toFixed(1).replace('.',',')} / 3</span></div></div>
+   <div class="extra" style="margin:12px 0 0"><button class="btn warm" id="exAgain">Thi lại</button><button class="btn primary" id="exHist">Lịch sử thi</button></div></div></section>
+  ${[1,2,3].map(p=>`<section class="expart"><div class="sec-title"><span>${['PHẦN I · TRẮC NGHIỆM','PHẦN II · ĐÚNG SAI','PHẦN III · TRẢ LỜI NGẮN'][p-1]}</span><i></i></div>${EXAM.filter(x=>x.part===p).map(rv).join('')}</section>`).join('')}`;
+  typeset(app);if(r.total>=8)confetti(80);
+  document.getElementById('back').onclick=home;document.getElementById('exHist').onclick=examIntro;
+  document.getElementById('exAgain').onclick=()=>{const D=exData();D.draft={start:Date.now(),ans:{}};exSave(D);examRun()};window.scrollTo({top:0})}
+
 /* ---------- views ---------- */
 function login(){
   const past=users.list.slice().sort((a,b)=>(b.last||0)-(a.last||0));
@@ -1858,7 +1999,7 @@ function home(){
     h+=`<div class="stop ${c?'done':''}" style="--c:var(--c${i+1})"><button class="stop-main" data-stop="${i}" aria-label="Chơi chặng ${s.n}"><span class="pic">${LM[s.k]()}</span>${c?'<span class="ribbon">Đã tham quan</span>':''}
     <span class="sbody"><span class="num" data-n="${String(i+1).padStart(2,'0')}">${String(i+1).padStart(2,'0')}</span><span class="lvtag">MÀN ${i+1}${c?' · '+'★'.repeat(starsOf(c.score,c.max))+'☆'.repeat(3-starsOf(c.score,c.max)):''}</span><h3>${s.n}</h3><span class="range">Câu ${s.a}–${s.b} · ${s.sub}</span><span class="fact">${s.fact}</span><span class="bar"><i style="width:${ok/ids.length*100}%"></i></span><span class="range">${ok}/${ids.length} câu đúng hết</span></span></button>
     ${c?`<button class="certbtn" data-cert="${i}">Xem giấy chứng nhận · ${'★'.repeat(starsOf(c.score,c.max))}</button>`:''}</div>`});
-  h+='</div>'+spaceCardHTML()+'<div class="sec-title"><span>GÓC ĐẶC BIỆT</span><i></i></div><div class="specials">'+`<div class="stop songstop" style="--c:var(--c1)"><button class="stop-main" id="songCard" aria-label="Vào Bài ca sin cos"><span class="pic">${LM['bai-ca']()}</span><span class="ribbon">Hát theo</span>
+  h+='</div>'+spaceCardHTML()+examCardHTML()+'<div class="sec-title"><span>GÓC ĐẶC BIỆT</span><i></i></div><div class="specials">'+`<div class="stop songstop" style="--c:var(--c1)"><button class="stop-main" id="songCard" aria-label="Vào Bài ca sin cos"><span class="pic">${LM['bai-ca']()}</span><span class="ribbon">Hát theo</span>
     <span class="sbody"><span class="num" data-n="♪">♪</span><span class="lvtag">GÓC ĐẶC BIỆT</span><h3>Bài ca sin cos</h3><span class="range">${SONGS_SC.length} bài vè · sáng từng dòng theo nhịp</span><span class="fact">"Cos cộng cos bằng hai cos cos, cos trừ cos bằng trừ hai sin sin…"</span><span class="range spirit-wallet song-hint"><span>♪ Thuộc vè là thuộc công thức</span></span></span></button></div><div class="stop spiritstop" style="--c:var(--c7)"><button class="stop-main" id="spiritCard" aria-label="Vào Góc tâm linh"><span class="pic">${LM['tam-linh']()}</span><span class="ribbon">${BUA_COST} cá / lá</span>
     <span class="sbody"><span class="num" data-n="✦">✦</span><span class="lvtag">GÓC ĐẶC BIỆT</span><h3>Góc tâm linh</h3><span class="range">Quay gacha · ${BUA.length} lá để sưu tầm</span><span class="fact">Có lá đặc biệt "Được 10 Điểm". Đủ bộ nhận Phiếu KFC!</span><span class="range spirit-wallet">${fishSVG}<span>Đang có <b>${fishAvail()}</b> cá để xin bùa</span></span></span></button></div>`;
   h+='</div><div class="extra"><button class="btn warm" id="mix">Dạo ngẫu nhiên 20 câu</button><button class="btn primary" id="rankBtn">Bảng xếp hạng</button><button class="btn ghost" id="helpBtn">Sổ tay công thức</button><button class="btn" id="redo" '+(wrong?'':'disabled')+'>Ôn lại câu sai</button><button class="btn ghost" id="reset">Xoá tiến độ</button></div>';
@@ -1869,7 +2010,7 @@ function home(){
   app.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>viewTicket(b.dataset.t));
   app.querySelectorAll('[data-stop]').forEach(b=>b.onclick=()=>startStop(+b.dataset.stop));
   app.querySelectorAll('[data-cert]').forEach(b=>b.onclick=()=>viewCert(+b.dataset.cert));
-  document.getElementById('rankBtn').onclick=board;document.getElementById('helpBtn').onclick=helpPage;document.getElementById('songCard').onclick=songPage;document.getElementById('spaceCard').onclick=spacePage;document.getElementById('spiritCard').onclick=()=>altarPage();
+  document.getElementById('rankBtn').onclick=board;document.getElementById('helpBtn').onclick=helpPage;document.getElementById('songCard').onclick=songPage;document.getElementById('spaceCard').onclick=spacePage;document.getElementById('examCard').onclick=examIntro;document.getElementById('spiritCard').onclick=()=>altarPage();
   document.getElementById('mix').onclick=()=>start('Dạo ngẫu nhiên',shuffle(Q.map(q=>q.id)).slice(0,20));
   document.getElementById('redo').onclick=()=>start('Ôn lại câu sai',Q.filter(q=>isDone(q.id)&&!isPerfect(q.id)).map(q=>q.id));
   const rs=document.getElementById('reset');rs.onclick=()=>{if(rs.dataset.c){prog={};certs={};saveCerts();save();home()}else{rs.dataset.c=1;rs.textContent='Bấm lần nữa để xoá tiến độ của '+me.name;}};
