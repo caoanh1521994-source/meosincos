@@ -766,6 +766,12 @@ div.opt{cursor:default}
 .launch+.launch{margin-top:16px}
 .fig .tx,.fig .txs{paint-order:stroke;stroke:var(--paper);stroke-width:4px;stroke-linejoin:round}
 .disclaimer{margin:10px 0 0;padding:10px 14px;border-radius:10px;background:#2E2A1C;border:1px solid #FFD44766;color:#F6E7C8;font-size:.85rem}.disclaimer b{color:var(--c3)}
+
+.exbadge{font-family:var(--f-display);font-weight:700;color:var(--c3)}
+b.exsc{color:var(--c3);font-family:var(--f-display);font-size:1.05rem}
+.loginlog{margin-top:16px}.loginlog summary{cursor:pointer;font-family:var(--f-display);font-weight:700;color:var(--c5);letter-spacing:.04em;margin-bottom:8px}
+.btools{gap:10px 16px}
+table.rank:not(.matrix){min-width:860px}.rank td .pl span{white-space:nowrap}
 </style>
 </head>
 <body>
@@ -1171,11 +1177,14 @@ let me=null,prog={},certs={},who='';
 const save=()=>{if(me)LS.set('meo-sc-prog-'+me.id,prog)};
 function loadPlayer(id){me=users.list.find(u=>u.id===id)||null;users.cur=me?me.id:null;LS.set('meo-sc-users',users);
   prog=me?LS.get('meo-sc-prog-'+me.id,{}):{};certs=me?LS.get('meo-sc-cert-'+me.id,{}):{};who=me?me.name:''}
+function recordLogin(u){const t=Date.now();u.last=t;u.logins=(u.logins||0)+1;u.first=u.first||u.created||t;
+  const log=LS.get('meo-sc-loginlog',[]);log.push({id:u.id,name:u.name,cls:u.cls||'',t});LS.set('meo-sc-loginlog',log.slice(-300));LS.set('meo-sc-users',users);
+  if(SCORE_API)fetch(SCORE_API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({type:'login',id:u.id,name:u.name,cls:u.cls||'',t})}).catch(()=>{})}
 function addPlayer(name,cls){const key=(name+'|'+cls).toLowerCase();let u=users.list.find(x=>(x.name+'|'+x.cls).toLowerCase()===key);
   if(!u){u={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),name,cls,created:Date.now()};
     if(!users.list.length){const op=LS.get('meo-lg-prog',null),oc=LS.get('meo-lg-cert',null);if(op)LS.set('meo-sc-prog-'+u.id,op);if(oc)LS.set('meo-sc-cert-'+u.id,oc)}
     users.list.push(u)}
-  u.last=Date.now();loadPlayer(u.id)}
+  recordLogin(u);loadPlayer(u.id)}
 const full=q=>q.t==='tf'?4:1;
 const isDone=id=>prog[id]!==undefined;
 const isPerfect=id=>prog[id]===full(QM[id]);
@@ -1345,13 +1354,17 @@ const SCORE_API='';
 const MAXFISH=Q.reduce((s,q)=>s+full(q),0);
 function statsOf(u){const pg=LS.get('meo-sc-prog-'+u.id,{}),ct=LS.get('meo-sc-cert-'+u.id,{});
   let fish=0,done=0,tried=0;for(const id in pg){const q=QM[id];if(!q)continue;fish+=pg[id];done++;tried+=full(q)}
-  return {id:u.id,name:u.name,cls:u.cls||'',fish,done,acc:tried?Math.round(fish/tried*100):0,certs:Object.keys(ct),stars:Object.values(ct).reduce((s,c)=>s+starsOf(c.score,c.max),0),last:u.last||u.created||0}}
-const rankSort=(a,b)=>b.fish-a.fish||b.certs.length-a.certs.length||b.acc-a.acc||a.last-b.last;
+  const ex=LS.get('meo-sc-exam-'+u.id,{hist:[]}),hist=ex.hist||[],ga=LS.get('meo-sc-geo-'+u.id,{});
+  const exam=hist.length?Math.max(...hist.map(h=>h.total)):null,geo=GQ.filter(q=>gDone(q,ga)).length;
+  return {id:u.id,name:u.name,cls:u.cls||'',fish,done,exam,examN:hist.length,geo,logins:u.logins||1,acc:tried?Math.round(fish/tried*100):0,certs:Object.keys(ct),stars:Object.values(ct).reduce((s,c)=>s+starsOf(c.score,c.max),0),last:u.last||u.created||0}}
+let boardBy='exam';
+const exv=r=>r.exam==null||r.exam===''?-1:+r.exam;
+const rankSort=(a,b)=>boardBy==='exam'?(exv(b)-exv(a)||b.fish-a.fish||a.last-b.last):(b.fish-a.fish||b.certs.length-a.certs.length||b.acc-a.acc||a.last-b.last);
 let pushT=null;
 function pushScore(){if(!SCORE_API||!me)return;clearTimeout(pushT);pushT=setTimeout(()=>{const st=statsOf(me);
   fetch(SCORE_API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({...st,certs:st.certs.join(',')})}).catch(()=>{})},1500)}
 async function fetchOnline(){const r=await fetch(SCORE_API+'?t='+Date.now());const j=await r.json();
-  return (j.rows||[]).map(x=>({...x,fish:+x.fish||0,done:+x.done||0,acc:+x.acc||0,stars:+x.stars||0,last:+x.last||0,certs:String(x.certs||'').split(',').filter(Boolean)}))}
+  return (j.rows||[]).map(x=>({...x,fish:+x.fish||0,done:+x.done||0,acc:+x.acc||0,stars:+x.stars||0,last:+x.last||0,exam:x.exam===''||x.exam==null?null:+x.exam,examN:+x.examN||0,geo:+x.geo||0,logins:+x.logins||0,certs:String(x.certs||'').split(',').filter(Boolean)}))}
 const ago=t=>{if(!t)return '—';const m=Math.round((Date.now()-t)/60000);if(m<1)return 'vừa xong';if(m<60)return m+' phút trước';const h=Math.round(m/60);if(h<24)return h+' giờ trước';const d=new Date(t);return d.getDate()+'/'+(d.getMonth()+1)};
 let boardMode=SCORE_API?'online':'local',boardCls='';
 async function board(){
@@ -1360,29 +1373,34 @@ async function board(){
   let rows,note='';
   if(boardMode==='online'){try{rows=await fetchOnline()}catch(e){rows=null;note='Chưa tải được bảng cả lớp, đang hiện người chơi trên máy này.'}}
   if(!rows){rows=users.list.map(statsOf);if(boardMode==='online'&&!note)note=''}
-  rows=rows.filter(r=>r.done>0||(me&&r.id===me.id)).sort(rankSort);
+  rows=rows.filter(r=>r.done>0||r.exam!=null||r.geo>0||(me&&r.id===me.id)).sort(rankSort);
   const classes=[...new Set(rows.map(r=>r.cls).filter(Boolean))].sort();
   const view=boardCls?rows.filter(r=>r.cls===boardCls):rows;
   const top=view.slice(0,3),medal=['vàng','bạc','đồng'];
   const tot={n:view.length,fish:view.reduce((s,r)=>s+r.fish,0),certs:view.reduce((s,r)=>s+r.certs.length,0)};
   let h=`<div class="btools">${SCORE_API?`<div class="seg big"><button data-m="online" class="${boardMode==='online'?'on':''}">Cả lớp (trực tuyến)</button><button data-m="local" class="${boardMode==='local'?'on':''}">Trên máy này</button></div>`:'<span class="hint" style="margin:0">Xếp hạng những người đã chơi trên máy này</span>'}
+    <div class="seg big"><button data-by="exam" class="${boardBy==='exam'?'on':''}">Xếp theo điểm thi thử</button><button data-by="fish" class="${boardBy==='fish'?'on':''}">Xếp theo số cá</button></div>
     ${classes.length>1?`<label class="clsf">Lớp <select id="clsSel"><option value="">Tất cả</option>${classes.map(c=>`<option ${c===boardCls?'selected':''}>${esc(c)}</option>`).join('')}</select></label>`:''}</div>`;
   if(note)h+=`<p class="hint">${note}</p>`;
   if(!view.length){h+=`<div class="empty">${catSVG('sad')}<p>Chưa có ai làm câu nào. ${me?'Chơi một chặng để ghi tên lên bảng nhé!':'Đăng nhập và chơi một chặng để ghi tên lên bảng nhé!'}</p></div>`}
   else{
     h+=`<div class="bsum"><span><b>${tot.n}</b> người chơi</span><span class="fish">${fishSVG}<b>${tot.fish}</b> cá đã câu</span><span><b>${tot.certs}</b> giấy chứng nhận</span></div>`;
-    h+='<div class="podium">'+[1,0,2].filter(i=>top[i]).map(i=>{const r=top[i];return `<div class="pod p${i+1} ${me&&r.id===me.id?'mine':''}"><div class="crown">${i+1}</div>${avatarFor(r.fish,'big')}<b>${esc(r.name)}</b><small>${r.cls?'Lớp '+esc(r.cls):'&nbsp;'}</small><span class="fish">${fishSVG}${r.fish}</span><div class="block">Hạng ${i+1}<br><small>Huy chương ${medal[i]}</small></div></div>`}).join('')+'</div>';
-    h+=`<div class="tablewrap"><table class="rank"><thead><tr><th>Hạng</th><th>Người chơi</th><th class="n">Cá</th><th class="hide-s">Tiến độ</th><th class="n hide-s">Chính xác</th><th>Chứng nhận</th><th class="hide-s">Gần nhất</th></tr></thead><tbody>`+
+    h+='<div class="podium">'+[1,0,2].filter(i=>top[i]).map(i=>{const r=top[i];return `<div class="pod p${i+1} ${me&&r.id===me.id?'mine':''}"><div class="crown">${i+1}</div>${avatarFor(r.fish,'big')}<b>${esc(r.name)}</b><small>${r.cls?'Lớp '+esc(r.cls):'&nbsp;'}</small>${boardBy==='exam'?`<span class="exbadge">${r.exam==null?'Chưa thi':String(r.exam).replace('.',',')+' điểm'}</span>`:`<span class="fish">${fishSVG}${r.fish}</span>`}<div class="block">Hạng ${i+1}<br><small>Huy chương ${medal[i]}</small></div></div>`}).join('')+'</div>';
+    h+=`<div class="tablewrap"><table class="rank"><thead><tr><th>Hạng</th><th>Người chơi</th><th class="n">Thi thử</th><th class="n">Cá</th><th class="hide-s">Lượng giác</th><th class="n hide-s">Chính xác</th><th>Chứng nhận</th><th class="hide-s">Hình học</th><th class="hide-s">Gần nhất</th></tr></thead><tbody>`+
       view.map((r,i)=>`<tr class="${me&&r.id===me.id?'mine':''}"><td><span class="rk r${i<3?i+1:''}">${i+1}</span></td>
       <td><div class="pl">${avatarFor(r.fish)}<span>${esc(r.name)}${me&&r.id===me.id?' <em>(bạn)</em>':''}<small>${r.cls?'Lớp '+esc(r.cls):''}</small></span></div></td>
+      <td class="n">${r.exam==null?'<small>—</small>':`<b class="exsc">${String(r.exam).replace('.',',')}</b><small> · ${r.examN} lần</small>`}</td>
       <td class="n"><b>${r.fish}</b><small>/${MAXFISH}</small></td>
       <td class="hide-s"><div class="mini"><i style="width:${r.done/Q.length*100}%"></i></div><small>${r.done}/${Q.length} câu</small></td>
       <td class="n hide-s">${r.acc}%</td>
       <td><div class="dots" title="${r.certs.length}/8 chứng nhận">${STOPS.map(s=>`<i class="${r.certs.includes(s.k)?'on':''}" title="${s.n}"></i>`).join('')}</div><small>${r.certs.length}/8 · ${r.stars}★</small></td>
-      <td class="hide-s"><small>${ago(r.last)}</small></td></tr>`).join('')+'</tbody></table></div>';
-    h+='<p class="hint">Xếp theo số cá; bằng nhau thì xét số giấy chứng nhận, rồi tỉ lệ đúng.</p>';
+      <td class="hide-s"><div class="mini"><i style="width:${r.geo/GQ.length*100}%;background:var(--c7)"></i></div><small>${r.geo}/${GQ.length} câu</small></td><td class="hide-s"><small>${ago(r.last)}${r.logins?'<br>'+r.logins+' lần đăng nhập':''}</small></td></tr>`).join('')+'</tbody></table></div>';
+    h+=`<p class="hint">${boardBy==='exam'?'Xếp theo điểm thi thử cao nhất (thang 10); bằng nhau thì xét số cá.':'Xếp theo số cá; bằng nhau thì xét số giấy chứng nhận, rồi tỉ lệ đúng.'}</p>`;
   }
+  const log=LS.get('meo-sc-loginlog',[]);
+  if(log.length)h+=`<details class="loginlog"><summary>Nhật ký đăng nhập trên máy này (${log.length} lượt)</summary><div class="tablewrap"><table class="rank"><thead><tr><th>Thời gian</th><th>Người chơi</th><th>Lớp</th></tr></thead><tbody>${log.slice().reverse().slice(0,100).map(l=>`<tr><td><small>${new Date(l.t).toLocaleString('vi-VN',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})}</small></td><td>${esc(l.name)}</td><td>${esc(l.cls||'—')}</td></tr>`).join('')}</tbody></table></div></details>`;
   document.getElementById('bwrap').innerHTML=h;
+  app.querySelectorAll('[data-by]').forEach(b=>b.onclick=()=>{boardBy=b.dataset.by;board()});
   app.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{boardMode=b.dataset.m;board()});
   const cs=document.getElementById('clsSel');if(cs)cs.onchange=()=>{boardCls=cs.value;board()};
 }
@@ -1796,7 +1814,7 @@ LM['space']=()=>{let st='';for(let i=0;i<40;i++){const x=(i*47)%240,y=(i*31)%140
 
 /* ---------- giao diện Bay vào không gian ---------- */
 const gAns=()=>me?LS.get('meo-sc-geo-'+me.id,{}):{};
-const gSave=a=>{if(me)LS.set('meo-sc-geo-'+me.id,a)};
+const gSave=a=>{if(me){LS.set('meo-sc-geo-'+me.id,a);pushScore()}};
 const gDone=(q,a)=>{const v=a[q.id];if(v==null)return false;if(q.t==='tf')return Array.isArray(v)&&v.every(x=>x===0||x===1);if(q.t==='tl')return !!(v&&v.done);return String(v).trim()!==''};
 const pIds=P=>{const r=[];for(let k=P.a;k<=P.b;k++)r.push(k);return r};
 const pStat=(P,a)=>{const ids=pIds(P);const d=ids.filter(id=>gDone(GQM[id],a)).length;return {d,n:ids.length}};
@@ -1953,7 +1971,7 @@ function examRun(){S0=null;clearInterval(examT);const d=exData();if(!d.draft){ex
   refresh();tick();examT=setInterval(tick,1000);window.scrollTo({top:0})}
 function examFinish(timeout){clearInterval(examT);const d=exData();if(!d.draft){examIntro();return}const ans=d.draft.ans,r=exGrade(ans);
   const used=Math.min(EX_MIN*60000,Date.now()-d.draft.start);
-  d.hist.push({date:Date.now(),total:r.total,p1:r.p1,p2:r.p2,p3:r.p3,used});d.last={ans,r};d.draft=null;exSave(d);examReview(timeout)}
+  d.hist.push({date:Date.now(),total:r.total,p1:r.p1,p2:r.p2,p3:r.p3,used});d.last={ans,r};d.draft=null;exSave(d);pushScore();examReview(timeout)}
 function examReview(timeout){S0=null;const d=exData();if(!d.last){examIntro();return}const {ans,r}=d.last;const h=d.hist[d.hist.length-1];
   const msg=r.total>=9?'Xuất sắc! Mèo Sin Cos xin nghiêng mình.':r.total>=8?'Giỏi lắm! Ôn thêm vài câu là chạm 9.':r.total>=6.5?'Khá rồi đó, xem lại các câu sai bên dưới nhé.':r.total>=5?'Qua mức trung bình. Luyện thêm các chặng để chắc hơn.':'Mèo đề nghị luyện lại bản đồ rồi thi lại nhé.';
   const rv=x=>{const v=ans[x.k],it=r.items[x.k];let b=`<article class="exq rv ${it.ok?'good':it.pts>0?'part':'bad'}"><div class="qhead"><span class="tag">Câu ${x.no}</span><span class="kind">${x.topic==='lg'?'Lượng giác':'Hình học'} · nguồn câu ${x.src}</span><span class="pts">+${String(it.pts).replace('.',',')}đ</span></div><div class="qtext">${x.q}</div>${exFig(x)}`;
@@ -1982,7 +2000,7 @@ function login(){
   ${past.length?'<button class="linkbtn" id="toRank" type="button">Xem bảng xếp hạng</button>':''}<p class="hint">Tên và tiến độ được lưu trên trình duyệt của máy này. Mỗi bạn dùng chung máy có thể đăng nhập bằng tên riêng.</p></section>`;
   document.getElementById('lf').onsubmit=e=>{e.preventDefault();const n=document.getElementById('lname').value.trim().replace(/\s+/g,' '),c=document.getElementById('lcls').value.trim().toUpperCase();
     if(!n){document.getElementById('lerr').hidden=false;document.getElementById('lname').focus();return}addPlayer(n,c);pushScore();renderUser();home()};
-  app.querySelectorAll('[data-u]').forEach(b=>b.onclick=()=>{const u=users.list.find(x=>x.id===b.dataset.u);u.last=Date.now();loadPlayer(u.id);renderUser();home()});
+  app.querySelectorAll('[data-u]').forEach(b=>b.onclick=()=>{const u=users.list.find(x=>x.id===b.dataset.u);recordLogin(u);loadPlayer(u.id);pushScore();renderUser();home()});
   const tr=document.getElementById('toRank');if(tr)tr.onclick=board;
   renderUser();document.getElementById('lname').focus()}
 function renderUser(){const el=document.getElementById('userbar');if(!me){el.innerHTML='';return}

@@ -15,6 +15,6 @@ Web game ôn tập 99 câu lượng giác Toán 11 (đề cương giữa học k
 3. Framework Preset: **Other**, không cần Build Command, Output Directory để trống → Deploy.
 4. Địa chỉ sẽ là `https://meo-sin-cos.vercel.app` (nếu tên còn trống; nếu không, đổi trong Settings → Domains).
 
-## Bảng xếp hạng cả lớp (tuỳ chọn)
+## Lưu đăng nhập và bảng xếp hạng cả lớp
 
-Mặc định bảng xếp hạng chỉ tính những người đã chơi trên cùng một máy. Muốn cả lớp chung một bảng: làm theo hướng dẫn trong `apps-script.gs`, rồi dán URL Web App vào dòng `const SCORE_API='';` trong `index.html`.
+Mặc định danh sách đăng nhập và bảng xếp hạng (điểm thi thử, số cá, tiến độ lượng giác, hình học) chỉ lưu trên từng máy. Sau khi nối Google Sheets, mỗi lần đăng nhập được ghi vào trang tính `DangNhap`, điểm của từng học sinh vào `BangXepHang`. Muốn cả lớp chung một bảng: làm theo hướng dẫn trong `apps-script.gs`, rồi dán URL Web App vào dòng `const SCORE_API='';` trong `index.html`.
