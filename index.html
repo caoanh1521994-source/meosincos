@@ -759,6 +759,12 @@ div.opt{cursor:default}
 .exres{grid-template-columns:auto minmax(0,1fr);align-items:center}
 @media (max-width:560px){.exres{grid-template-columns:1fr}}
 .exscore{display:grid;justify-items:center;padding:14px 22px;border-radius:14px;background:#0F1532;border:1px solid var(--c3);box-shadow:0 0 24px #FFD44733}.exscore .big{font-size:3.4rem!important}.exscore small{color:var(--muted)}
+
+.launch.hanoi .launch-main{border-color:#FFD44766;background:linear-gradient(120deg,#2A2008,#141B3B);box-shadow:0 0 0 1px #FFD44733,0 0 40px #FF9F1C33,0 10px 30px #0009}
+.launch.hanoi .launch-main:hover{box-shadow:0 0 0 1.5px #FFD447,0 0 40px #FFD44755,0 14px 34px #000a}
+.lpic.hn4{display:grid;grid-template-columns:1fr 1fr;gap:3px;background:#0A0F24}.lpic.hn4 span{display:block;overflow:hidden;min-height:100px}.lpic.hn4 svg{width:100%;height:100%;display:block}
+.launch+.launch{margin-top:16px}
+.fig .tx,.fig .txs{paint-order:stroke;stroke:var(--paper);stroke-width:4px;stroke-linejoin:round}
 </style>
 </head>
 <body>
@@ -854,12 +860,12 @@ function plot(o){
   s+=`<line class="ax" x1="${pad-10}" x2="${W-pad+12}" y1="${mid}" y2="${mid}"/><line class="ax" x1="${sx(0)}" x2="${sx(0)}" y1="6" y2="${H-6}"/>`;
   s+=`<text class="tx" x="${W-pad+6}" y="${mid-6}">x</text><text class="tx" x="${sx(0)+5}" y="14">y</text>`;
   s+=`<text class="txs" x="${sx(0)-12}" y="${sy(1)+4}">1</text><text class="txs" x="${sx(0)-16}" y="${sy(-1)+4}">−1</text><text class="txs" x="${sx(0)-12}" y="${mid+14}">O</text>`;
-  (o.xt||[]).forEach(([v,l],i)=>{s+=`<line class="ax" x1="${sx(v)}" x2="${sx(v)}" y1="${mid-3}" y2="${mid+3}"/><text class="txs" text-anchor="middle" x="${sx(v)}" y="${mid+(i%2?-8:16)}">${l}</text>`});
+  let lab='';(o.xt||[]).forEach(([v,l],i)=>{s+=`<line class="ax" x1="${sx(v)}" x2="${sx(v)}" y1="${mid-3}" y2="${mid+3}"/>`;lab+=`<text class="txs" text-anchor="middle" x="${sx(v)}" y="${mid+(i%2?-8:16)}">${l}</text>`});
   let d='',pen=false,prev=null;
   for(let i=0;i<=900;i++){const x=o.x0+(o.x1-o.x0)*i/900,y=o.f(x);
     if(!isFinite(y)||Math.abs(y)>(o.ym||1.25)*1.6||(prev!==null&&Math.abs(y-prev)>3)){pen=false;prev=isFinite(y)?y:null;continue}
     d+=(pen?'L':'M')+sx(x).toFixed(1)+' '+sy(y).toFixed(1)+' ';pen=true;prev=y}
-  s+=`<path class="cv" d="${d}"/></svg>`;return s;
+  s+=`<path class="cv" d="${d}"/>${lab}</svg>`;return s;
 }
 const pt=(k)=>{const m={'-4':'−4π','-3':'−3π','-2':'−2π','-1':'−π','1':'π','2':'2π','3':'3π','4':'4π'};return [k*P,m[k]]};
 const half=(n)=>{if(n===1)return[P/2,'π/2'];if(n===-1)return[-P/2,'−π/2'];return[n*P/2,(n<0?'−':'')+Math.abs(n)+'π/2']};
@@ -1226,7 +1232,7 @@ function certHTML(i){const s=STOPS[i],c=certs[s.k],st=starsOf(c.score,c.max);
 function bindCert(){}
 function viewCert(i){app.innerHTML=`<div class="topbar"><h2>Chứng nhận đã nhận</h2><div class="meta"><button class="btn ghost" id="back">Về bản đồ</button></div></div>${certHTML(i)}
   <div class="extra" style="justify-content:center"><button class="btn warm" id="again">Chơi lại chặng này</button></div>`;
-  document.getElementById('back').onclick=home;document.getElementById('again').onclick=()=>startStop(i);bindCert();window.scrollTo({top:0})}
+  document.getElementById('back').onclick=hanoiPage;document.getElementById('again').onclick=()=>startStop(i);bindCert();window.scrollTo({top:0})}
 
 /* ---------- mèo slime: hình đại diện tiến hoá theo cấp ---------- */
 const TITLES=['Mèo tập sự','Mèo chăm chỉ','Mèo tò mò','Mèo nhanh nhẹn','Mèo thông thái','Mèo cao thủ','Mèo bậc thầy','Mèo tinh anh','Mèo huyền thoại','Mèo Sin Cos'];
@@ -1982,6 +1988,33 @@ function renderUser(){const el=document.getElementById('userbar');if(!me){el.inn
   el.innerHTML=`${avatarFor(fishOf(prog))}<span>Xin chào <b>${esc(me.name)}</b>${me.cls?' · Lớp '+esc(me.cls):''}</span><button class="linkbtn" id="rankLink">Xếp hạng</button><button class="linkbtn" id="helpLink">Công thức</button><button class="linkbtn" id="songLink">Bài ca</button><button class="linkbtn" id="logout">Đổi người chơi</button>`;
   document.getElementById('rankLink').onclick=board;document.getElementById('helpLink').onclick=()=>openHelp(null);document.getElementById('songLink').onclick=songPage;
   document.getElementById('logout').onclick=()=>{users.cur=null;LS.set('meo-sc-users',users);me=null;prog={};certs={};S0=null;login()}}
+
+function hanoiCardHTML(){const done=Q.filter(q=>isDone(q.id)).length,ok=Q.filter(q=>isPerfect(q.id)).length,nc=STOPS.filter(s=>certs[s.k]).length;
+  return `<div class="launch hanoi"><button class="launch-main" id="hanoiCard" aria-label="Vào chặng Hà Nội"><span class="lpic hn4">${['the-huc','van-mieu','long-bien','thap-rua'].map(k=>`<span>${LM[k]()}</span>`).join('')}</span>
+   <span class="ltxt"><span class="lvtag" style="color:var(--c3)">CHẶNG 1 · LƯỢNG GIÁC</span><h3>Chặng Hà Nội</h3><span class="range">Chủ đề 1 · Hàm số lượng giác và phương trình lượng giác · Câu 1–99</span>
+   <span class="fact">8 điểm dừng từ Cầu Thê Húc đến Tháp Rùa. Câu đúng được cá, xong mỗi màn nhận giấy chứng nhận và phiếu miễn bài tập.</span>
+   <span class="lprog"><span class="bar"><i style="width:${ok/Q.length*100}%;--c:var(--c3)"></i></span><small>Đã làm ${done}/${Q.length} câu · Đúng hết ${ok} câu · Giấy chứng nhận ${nc}/8</small></span>
+   <span class="btn warm lgo">Lên đường 🏮</span></span></button></div>`}
+function hanoiPage(){if(!me){login();return}S0=null;
+  const wrong=Q.filter(q=>isDone(q.id)&&!isPerfect(q.id)).length,nc=STOPS.filter(s=>certs[s.k]).length;
+  let h=`<div class="topbar"><div style="display:flex;gap:12px;align-items:center"><span class="thumb">${LM['thap-rua']()}</span><h2>Chặng Hà Nội</h2></div><div class="meta"><button class="helpbtn" id="hnHelp">? TRỢ GIÚP · LƯỢNG GIÁC</button><button class="btn ghost" id="back">Về bản đồ</button></div></div>
+  <p class="hint" style="margin-top:0">Chủ đề 1 · Hàm số lượng giác và phương trình lượng giác. 8 điểm dừng, 99 câu.</p>`;
+  h+='<div class="map">';
+  STOPS.forEach((s,i)=>{const ids=[];for(let k=s.a;k<=s.b;k++)ids.push(k);const ok=ids.filter(isPerfect).length,c=certs[s.k];
+    h+=`<div class="stop ${c?'done':''}" style="--c:var(--c${i+1})"><button class="stop-main" data-stop="${i}" aria-label="Chơi chặng ${s.n}"><span class="pic">${LM[s.k]()}</span>${c?'<span class="ribbon">Đã tham quan</span>':''}
+    <span class="sbody"><span class="num" data-n="${String(i+1).padStart(2,'0')}">${String(i+1).padStart(2,'0')}</span><span class="lvtag">MÀN ${i+1}${c?' · '+'★'.repeat(starsOf(c.score,c.max))+'☆'.repeat(3-starsOf(c.score,c.max)):''}</span><h3>${s.n}</h3><span class="range">Câu ${s.a}–${s.b} · ${s.sub}</span><span class="fact">${s.fact}</span><span class="bar"><i style="width:${ok/ids.length*100}%"></i></span><span class="range">${ok}/${ids.length} câu đúng hết</span></span></button>
+    ${c?`<button class="certbtn" data-cert="${i}">Xem giấy chứng nhận · ${'★'.repeat(starsOf(c.score,c.max))}</button>`:''}</div>`});
+  h+='</div>';
+  h+='<div class="extra"><button class="btn warm" id="mix">Dạo ngẫu nhiên 20 câu</button><button class="btn" id="redo" '+(wrong?'':'disabled')+'>Ôn lại câu sai</button><button class="btn ghost" id="reset">Xoá tiến độ</button></div>';
+  if(nc)h+='<section class="gallery"><h2>Sổ tham quan của bạn</h2><div class="row">'+STOPS.map((s,i)=>certs[s.k]?`<button class="gcard" data-cert="${i}"><span class="thumb">${LM[s.k]()}</span><span>${s.n}<small>${certs[s.k].score}/${certs[s.k].max} cá · ${'★'.repeat(starsOf(certs[s.k].score,certs[s.k].max))}</small></span></button>`:'').join('')+'</div></section>';
+  app.innerHTML=h;
+  document.getElementById('back').onclick=home;document.getElementById('hnHelp').onclick=()=>openHelp(null,'lg');
+  app.querySelectorAll('[data-stop]').forEach(b=>b.onclick=()=>startStop(+b.dataset.stop));
+  app.querySelectorAll('[data-cert]').forEach(b=>b.onclick=()=>viewCert(+b.dataset.cert));
+  document.getElementById('mix').onclick=()=>start('Dạo ngẫu nhiên',shuffle(Q.map(q=>q.id)).slice(0,20));
+  document.getElementById('redo').onclick=()=>start('Ôn lại câu sai',Q.filter(q=>isDone(q.id)&&!isPerfect(q.id)).map(q=>q.id));
+  const rs=document.getElementById('reset');rs.onclick=()=>{if(rs.dataset.c){prog={};certs={};saveCerts();save();hanoiPage()}else{rs.dataset.c=1;rs.textContent='Bấm lần nữa để xoá tiến độ của '+me.name;}};
+  window.scrollTo({top:0})}
 function home(){
   if(!me){login();return}
   const total=Q.length, done=Q.filter(q=>isDone(q.id)).length;
@@ -1994,26 +2027,17 @@ function home(){
     <div class="xp" title="Kinh nghiệm"><i style="width:${lvIn/15*100}%"></i><span>${lv>=10?'TỐI ĐA':lvIn+'/15 XP'}</span></div></div></div>
     <div class="hud-stats"><div><b class="fish">${fishSVG}${fish}</b><small>Cá / ${maxFish}</small></div><div><b>${done}</b><small>Câu / ${total}</small></div><div><b>${nc}</b><small>Huy hiệu / ${STOPS.length}</small></div><div><b>${wrong}</b><small>Cần ôn</small></div></div></section>
     <div class="sec-title"><span>BẢN ĐỒ HÀNH TRÌNH</span><i></i></div>`;
-  h+='<div class="map">';
-  STOPS.forEach((s,i)=>{const ids=[];for(let k=s.a;k<=s.b;k++)ids.push(k);const ok=ids.filter(isPerfect).length,c=certs[s.k];
-    h+=`<div class="stop ${c?'done':''}" style="--c:var(--c${i+1})"><button class="stop-main" data-stop="${i}" aria-label="Chơi chặng ${s.n}"><span class="pic">${LM[s.k]()}</span>${c?'<span class="ribbon">Đã tham quan</span>':''}
-    <span class="sbody"><span class="num" data-n="${String(i+1).padStart(2,'0')}">${String(i+1).padStart(2,'0')}</span><span class="lvtag">MÀN ${i+1}${c?' · '+'★'.repeat(starsOf(c.score,c.max))+'☆'.repeat(3-starsOf(c.score,c.max)):''}</span><h3>${s.n}</h3><span class="range">Câu ${s.a}–${s.b} · ${s.sub}</span><span class="fact">${s.fact}</span><span class="bar"><i style="width:${ok/ids.length*100}%"></i></span><span class="range">${ok}/${ids.length} câu đúng hết</span></span></button>
-    ${c?`<button class="certbtn" data-cert="${i}">Xem giấy chứng nhận · ${'★'.repeat(starsOf(c.score,c.max))}</button>`:''}</div>`});
-  h+='</div>'+spaceCardHTML()+examCardHTML()+'<div class="sec-title"><span>GÓC ĐẶC BIỆT</span><i></i></div><div class="specials">'+`<div class="stop songstop" style="--c:var(--c1)"><button class="stop-main" id="songCard" aria-label="Vào Bài ca sin cos"><span class="pic">${LM['bai-ca']()}</span><span class="ribbon">Hát theo</span>
+  h+=hanoiCardHTML();
+  h+=spaceCardHTML()+examCardHTML()+'<div class="sec-title"><span>GÓC ĐẶC BIỆT</span><i></i></div><div class="specials">'+`<div class="stop songstop" style="--c:var(--c1)"><button class="stop-main" id="songCard" aria-label="Vào Bài ca sin cos"><span class="pic">${LM['bai-ca']()}</span><span class="ribbon">Hát theo</span>
     <span class="sbody"><span class="num" data-n="♪">♪</span><span class="lvtag">GÓC ĐẶC BIỆT</span><h3>Bài ca sin cos</h3><span class="range">${SONGS_SC.length} bài vè · sáng từng dòng theo nhịp</span><span class="fact">"Cos cộng cos bằng hai cos cos, cos trừ cos bằng trừ hai sin sin…"</span><span class="range spirit-wallet song-hint"><span>♪ Thuộc vè là thuộc công thức</span></span></span></button></div><div class="stop spiritstop" style="--c:var(--c7)"><button class="stop-main" id="spiritCard" aria-label="Vào Góc tâm linh"><span class="pic">${LM['tam-linh']()}</span><span class="ribbon">${BUA_COST} cá / lá</span>
     <span class="sbody"><span class="num" data-n="✦">✦</span><span class="lvtag">GÓC ĐẶC BIỆT</span><h3>Góc tâm linh</h3><span class="range">Quay gacha · ${BUA.length} lá để sưu tầm</span><span class="fact">Có lá đặc biệt "Được 10 Điểm". Đủ bộ nhận Phiếu KFC!</span><span class="range spirit-wallet">${fishSVG}<span>Đang có <b>${fishAvail()}</b> cá để xin bùa</span></span></span></button></div>`;
-  h+='</div><div class="extra"><button class="btn warm" id="mix">Dạo ngẫu nhiên 20 câu</button><button class="btn primary" id="rankBtn">Bảng xếp hạng</button><button class="btn ghost" id="helpBtn">Sổ tay công thức</button><button class="btn" id="redo" '+(wrong?'':'disabled')+'>Ôn lại câu sai</button><button class="btn ghost" id="reset">Xoá tiến độ</button></div>';
+  h+='</div><div class="extra"><button class="btn primary" id="rankBtn">Bảng xếp hạng</button><button class="btn ghost" id="helpBtn">Sổ tay công thức</button></div>';
   h+=walletHTML();
-  if(nc)h+='<section class="gallery"><h2>Sổ tham quan của bạn</h2><div class="row">'+STOPS.map((s,i)=>certs[s.k]?`<button class="gcard" data-cert="${i}"><span class="thumb">${LM[s.k]()}</span><span>${s.n}<small>${certs[s.k].score}/${certs[s.k].max} cá · ${'★'.repeat(starsOf(certs[s.k].score,certs[s.k].max))}</small></span></button>`:'').join('')+'</div></section>';
   app.innerHTML=h;
   document.getElementById('formsBtn').onclick=()=>showForms(fish);
   app.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>viewTicket(b.dataset.t));
-  app.querySelectorAll('[data-stop]').forEach(b=>b.onclick=()=>startStop(+b.dataset.stop));
-  app.querySelectorAll('[data-cert]').forEach(b=>b.onclick=()=>viewCert(+b.dataset.cert));
   document.getElementById('rankBtn').onclick=board;document.getElementById('helpBtn').onclick=helpPage;document.getElementById('songCard').onclick=songPage;document.getElementById('spaceCard').onclick=spacePage;document.getElementById('examCard').onclick=examIntro;document.getElementById('spiritCard').onclick=()=>altarPage();
-  document.getElementById('mix').onclick=()=>start('Dạo ngẫu nhiên',shuffle(Q.map(q=>q.id)).slice(0,20));
-  document.getElementById('redo').onclick=()=>start('Ôn lại câu sai',Q.filter(q=>isDone(q.id)&&!isPerfect(q.id)).map(q=>q.id));
-  const rs=document.getElementById('reset');rs.onclick=()=>{if(rs.dataset.c){prog={};certs={};saveCerts();save();home()}else{rs.dataset.c=1;rs.textContent='Bấm lần nữa để xoá tiến độ của '+me.name;}};
+  document.getElementById('hanoiCard').onclick=hanoiPage;
 }
 function startStop(i){const s=STOPS[i],ids=[];for(let k=s.a;k<=s.b;k++)ids.push(k);start(s.n,ids,i)}
 function start(name,ids,stop){S0={name,ids,stop,i:0,streak:0,score:0,max:ids.reduce((s,id)=>s+full(QM[id]),0),wrong:[]};show();window.scrollTo({top:0})}
@@ -2031,7 +2055,7 @@ function show(){
   <div class="actions"><span></span><span style="display:flex;gap:10px">${q.t!=='mc'?'<button class="btn warm" id="check" '+(q.t==='tf'?'disabled':'')+'>Kiểm tra</button>':''}<button class="btn primary" id="next" hidden>${s.i+1<s.ids.length?'Câu tiếp':'Xem kết quả'}</button></span></div></article>
   <p class="hint">Mỗi câu đúng được 1 con cá; câu đúng–sai có 4 ý, đúng ý nào được cá ý đó.</p>`;
   app.innerHTML=h;typeset(app);
-  document.getElementById('back').onclick=home;document.getElementById('qhelp').onclick=()=>openHelp(s.stop!==undefined?HELP_FOR[STOPS[s.stop].k]:null);
+  document.getElementById('back').onclick=()=>s.stop!==undefined?hanoiPage():home();document.getElementById('qhelp').onclick=()=>openHelp(s.stop!==undefined?HELP_FOR[STOPS[s.stop].k]:null);
   const next=document.getElementById('next');next.onclick=()=>{s.i++;s.i<s.ids.length?show():summary();window.scrollTo({top:0})};
   const cat=app.querySelector('.cat'),say=app.querySelector('.say'),exEl=app.querySelector('.bubble .ex');
   const finish=(got,exHTML)=>{const lvBefore=lvOf(fishOf(prog));s.score+=got;prog[q.id]=got;save();const lvAfter=lvOf(fishOf(prog));if(lvAfter>lvBefore){setTimeout(()=>showEvolve(lvBefore,lvAfter),700);renderUser()}pushScore();if(got<full(q))s.wrong.push(q.id);
@@ -2069,7 +2093,7 @@ function summary(){
   app.innerHTML=`<div class="sum"><div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">${catSVG(pct>=50?'happy':'sad')}<div><h2>${s.name}</h2><div class="big">${s.score}<span style="font-size:1.4rem;color:var(--muted)">/${s.max} cá</span></div></div></div>
   <p style="margin:0">${msg}${s.stop!==undefined?(isNew?' Bạn vừa nhận giấy chứng nhận đã tham quan '+STOPS[s.stop].n+'!':' Giấy chứng nhận giữ kết quả tốt nhất của bạn.'):''}</p>${s.wrong.length?'<div><b>Câu chưa trọn điểm:</b><div class="chips" style="margin-top:6px">'+s.wrong.map(id=>`<span class="chip">Câu ${id}</span>`).join('')+'</div></div>':''}
   <div class="extra" style="margin:0">${s.wrong.length?'<button class="btn warm" id="rw">Làm lại câu sai</button>':''}${s.stop!==undefined&&s.stop+1<STOPS.length?`<button class="btn" id="nx">Đi tiếp: ${STOPS[s.stop+1].n}</button>`:''}<button class="btn primary" id="hm">Về bản đồ</button></div></div>${prize}${cert}`;
-  document.getElementById('hm').onclick=home;const rw=document.getElementById('rw');if(rw)rw.onclick=()=>start('Làm lại câu sai',s.wrong.slice());
+  document.getElementById('hm').onclick=hanoiPage;const rw=document.getElementById('rw');if(rw)rw.onclick=()=>start('Làm lại câu sai',s.wrong.slice());
   const nx=document.getElementById('nx');if(nx)nx.onclick=()=>startStop(s.stop+1);bindCert();if(s.stop!==undefined)confetti(fresh.includes('party')?120:isNew?60:30);
 }
 if(users.cur)loadPlayer(users.cur);renderUser();renderMusic();home();
