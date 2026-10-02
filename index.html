@@ -726,6 +726,13 @@ table.signs{border-collapse:collapse;width:100%;font-family:var(--f-display);tex
 .landart{position:relative;width:150px;height:150px}.flag.big{font-size:2.6rem;right:10px;top:-4px}
 .chip.gmiss{cursor:pointer}
 .qcard.gq .qhead .tag{color:#0A0F24;text-shadow:none}
+
+.ftabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.ftabs button{font-family:var(--f-display);font-weight:700;letter-spacing:.04em;padding:8px 16px;border-radius:999px;border:1px solid var(--line);background:#0F1532;color:var(--muted)}
+.ftabs button.on{background:linear-gradient(180deg,#46E3FF,#2B7BFF);color:#06112E;border-color:transparent;box-shadow:0 0 14px #22D3EE66}
+.fcard.geo .fno{background:linear-gradient(180deg,#C59BFF,#7B45F0);color:#fff}
+.fcard li.fimg{background:#fff;border-radius:10px;padding:8px;display:grid;place-items:center}
+.fcard li.fimg img{max-width:min(100%,420px);height:auto;display:block}
 </style>
 </head>
 <body>
@@ -1377,26 +1384,34 @@ const FORMULAS=[
 ];
 const SIGN=`<div class="signwrap"><table class="signs"><thead><tr><th></th><th>I</th><th>II</th><th>III</th><th>IV</th></tr></thead><tbody>${[['sin','++--'.replace(/(.)(.)(.)(.)/,'$1$2$3$4'),'+','+','−','−'],['cos','','+','−','−','+'],['tan','','+','−','+','−'],['cot','','+','−','+','−']].map(r=>`<tr><th>${r[0]}</th>${r.slice(2).map(v=>`<td class="${v==='+'?'pos':'neg'}">${v}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 const HELP_FOR={'the-huc':[14,1,2],'hang-ma':[2,3,4,5,6],'van-mieu':[7,8,9,10,11],'long-bien':[1,12],'ho-tay':[12,1,2],'dong-xuan':[13,1,14],'khue-van-cac':[2,7,8,13],'thap-rua':[2,9,8]};
-function helpHTML(focus,filter){const f=(filter||'').trim().toLowerCase();
-  let list=FORMULAS.filter(x=>!f||(x.title+' '+x.items.join(' ')).toLowerCase().includes(f));
-  if(focus&&focus.length&&!f)list=[...focus.map(id=>FORMULAS.find(x=>x.id===id)),...FORMULAS.filter(x=>!focus.includes(x.id))];
-  if(!list.length)return '<p class="hint">Không có công thức nào khớp. Thử gõ "cộng", "nhân đôi", "tan"…</p>';
-  return '<div class="fgrid">'+list.map(x=>`<article class="fcard ${focus&&focus.includes(x.id)&&!f?'rec':''}"><header><span class="fno">${String(x.id).padStart(2,'0')}</span><h3>${x.title}</h3>${focus&&focus.includes(x.id)&&!f?'<span class="rtag">Gợi ý</span>':''}</header>
-    <ul class="${x.cols===2?'two':''}">${x.items.map(it=>it==='__SIGN__'?`<li class="full">${SIGN}</li>`:`<li>${it}</li>`).join('')}</ul></article>`).join('')+'</div>'}
-function helpPage(){clearInterval(karaokeT);app.innerHTML=`<div class="topbar"><h2>Sổ tay công thức</h2><div class="meta"><button class="btn ghost" id="toSong">Bài ca sin cos</button><button class="btn ghost" id="back">${me?'Về bản đồ':'Về đăng nhập'}</button></div></div>
-  <p class="hint" style="margin-top:0">14 nhóm công thức lượng giác lớp 11. Trong lúc làm bài, bấm nút <b>TRỢ GIÚP</b> để mở nhanh mà không mất câu đang làm.</p>
-  <div class="fsearch"><input id="fq" type="search" placeholder="Tìm công thức: cộng, nhân đôi, tan, chu kì…" autocomplete="off"></div><div id="flist">${helpHTML()}</div>`;
+const fold=t=>String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d');
+function helpHTML(focus,filter,set='lg'){const f=fold((filter||'').trim()),F=FSETS[set].list();
+  const txt=x=>fold(x.title+' '+x.items.filter(i=>!String(i).startsWith('__IMG__')).join(' '));
+  let list=F.filter(x=>!f||txt(x).includes(f));
+  if(focus&&focus.length&&!f)list=[...focus.map(id=>F.find(x=>x.id===id)),...F.filter(x=>!focus.includes(x.id))];
+  if(!list.length)return `<p class="hint">Không có mục nào khớp. Thử gõ ${FSETS[set].miss}…</p>`;
+  return '<div class="fgrid">'+list.map(x=>`<article class="fcard ${set==='hh'?'geo':''} ${focus&&focus.includes(x.id)&&!f?'rec':''}"><header><span class="fno">${set==='hh'?'H':''}${String(x.id).padStart(2,'0')}</span><h3>${x.title}</h3>${focus&&focus.includes(x.id)&&!f?'<span class="rtag">Gợi ý</span>':''}</header>
+    <ul class="${x.cols===2?'two':''}">${x.items.map(it=>it==='__SIGN__'?`<li class="full">${SIGN}</li>`:String(it).startsWith('__IMG__')?`<li class="full fimg"><img src="hinh/${it.slice(7)}.png" alt="Hình minh hoạ" loading="lazy"></li>`:`<li>${it}</li>`).join('')}</ul></article>`).join('')+'</div>'}
+const ftabs=(set,id)=>`<div class="ftabs" role="tablist">${Object.entries(FSETS).map(([k,v])=>`<button role="tab" aria-selected="${k===set}" class="${k===set?'on':''}" data-fs="${k}" data-for="${id}">${k==='lg'?'∿ ':'◇ '}${v.name}</button>`).join('')}</div>`;
+let helpSet='lg';
+function helpPage(set){clearInterval(karaokeT);if(typeof set==='string'&&FSETS[set])helpSet=set;const S=FSETS[helpSet];
+  app.innerHTML=`<div class="topbar"><h2>Sổ tay công thức</h2><div class="meta"><button class="btn ghost" id="toSong">Bài ca sin cos</button><button class="btn ghost" id="back">${me?'Về bản đồ':'Về đăng nhập'}</button></div></div>
+  ${ftabs(helpSet,'page')}
+  <p class="hint" style="margin-top:0">${helpSet==='lg'?'14 nhóm công thức lượng giác lớp 11.':'8 nhóm kiến thức Quan hệ song song trong không gian, kèm hình minh hoạ.'} Trong lúc làm bài, bấm nút <b>TRỢ GIÚP</b> để mở nhanh mà không mất câu đang làm.</p>
+  <div class="fsearch"><input id="fq" type="search" placeholder="${S.ph}" autocomplete="off"></div><div id="flist">${helpHTML(null,'',helpSet)}</div>`;
   document.getElementById('back').onclick=()=>me?home():login();document.getElementById('toSong').onclick=songPage;
-  const q=document.getElementById('fq'),fl=document.getElementById('flist');q.oninput=()=>{fl.innerHTML=helpHTML(null,q.value);typeset(fl)};typeset(app);window.scrollTo({top:0})}
-function openHelp(focus){let d=document.getElementById('helpDrawer');
+  app.querySelectorAll('[data-fs]').forEach(b=>b.onclick=()=>helpPage(b.dataset.fs));
+  const q=document.getElementById('fq'),fl=document.getElementById('flist');q.oninput=()=>{fl.innerHTML=helpHTML(null,q.value,helpSet);typeset(fl)};typeset(app);window.scrollTo({top:0})}
+function openHelp(focus,set='lg'){let d=document.getElementById('helpDrawer');
   if(!d){d=document.createElement('div');d.id='helpDrawer';d.className='drawer';document.body.appendChild(d)}
-  d.innerHTML=`<div class="dback" data-close></div><aside class="dpanel" role="dialog" aria-modal="true" aria-label="Sổ tay công thức"><div class="dhead"><h2>Trợ giúp · Công thức</h2><button class="btn ghost" data-close>Đóng</button></div>
-    <div class="fsearch"><input id="dq" type="search" placeholder="Tìm công thức…" autocomplete="off"></div><div id="dlist">${helpHTML(focus)}</div></aside>`;
-  d.hidden=false;document.body.style.overflow='hidden';
+  const render=()=>{d.innerHTML=`<div class="dback" data-close></div><aside class="dpanel" role="dialog" aria-modal="true" aria-label="Sổ tay công thức"><div class="dhead"><h2>Trợ giúp · ${FSETS[set].name}</h2><button class="btn ghost" data-close>Đóng</button></div>
+    ${ftabs(set,'drawer')}<div class="fsearch"><input id="dq" type="search" placeholder="${FSETS[set].ph}" autocomplete="off"></div><div id="dlist">${helpHTML(focus,'',set)}</div></aside>`;
+    d.querySelectorAll('[data-close]').forEach(b=>b.onclick=close);
+    d.querySelectorAll('[data-fs]').forEach(b=>b.onclick=()=>{if(b.dataset.fs!==set){focus=null;set=b.dataset.fs;render()}});
+    const q=d.querySelector('#dq'),dl=d.querySelector('#dlist');q.oninput=()=>{dl.innerHTML=helpHTML(focus,q.value,set);typeset(dl)};typeset(d);q.focus()};
   const close=()=>{d.hidden=true;document.body.style.overflow='';document.removeEventListener('keydown',esc_)};
   const esc_=e=>{if(e.key==='Escape'){e.stopPropagation();close()}};document.addEventListener('keydown',esc_);
-  d.querySelectorAll('[data-close]').forEach(b=>b.onclick=close);
-  const q=d.querySelector('#dq'),dl=d.querySelector('#dlist');q.oninput=()=>{dl.innerHTML=helpHTML(focus,q.value);typeset(dl)};typeset(d);q.focus()}
+  d.hidden=false;document.body.style.overflow='hidden';render()}
 
 /* ---------- Góc tâm linh: xin bùa học giỏi ---------- */
 const BUA=[
@@ -1612,6 +1627,38 @@ function songPage(){clearInterval(karaokeT);clearInterval(recallT);
     step();karaokeT=setInterval(step,1800)});
   window.scrollTo({top:0})}
 
+/* ---------- sổ tay: Hình học không gian (Quan hệ song song) ---------- */
+const SYS=(rows,res)=>R`\(\left\{\begin{array}{l}`+rows.join(R`\\`)+R`\end{array}\right.\Rightarrow `+res+R`\)`;
+const IMG=n=>`__IMG__${n}`;
+const FORMULAS_G=[
+ {id:1,title:'Biểu diễn hình không gian lên mặt phẳng',items:['Hình biểu diễn của đường thẳng là đường thẳng, của đoạn thẳng là đoạn thẳng.','Giữ nguyên tính liên thuộc (thuộc hay không thuộc) giữa điểm với đường thẳng hoặc với đoạn thẳng.','Giữ nguyên tính song song, tính cắt nhau giữa các đường thẳng.','Đường nhìn thấy vẽ nét liền, đường bị che khuất vẽ nét đứt đoạn.']},
+ {id:2,title:'Các tính chất thừa nhận',items:['<b>TC1:</b> Có một và chỉ một đường thẳng đi qua hai điểm phân biệt cho trước.','<b>TC2:</b> Có một và chỉ một mặt phẳng đi qua ba điểm không thẳng hàng cho trước.','<b>TC3:</b> Nếu một đường thẳng có hai điểm phân biệt thuộc một mặt phẳng thì mọi điểm của đường thẳng đều thuộc mặt phẳng đó.','<b>TC4:</b> Tồn tại bốn điểm không cùng nằm trên một mặt phẳng.','<b>TC5:</b> Nếu hai mặt phẳng phân biệt có một điểm chung thì chúng có một đường thẳng chung duy nhất chứa tất cả các điểm chung của hai mặt phẳng đó.','<b>TC6:</b> Trong mỗi mặt phẳng, các kết quả đã biết của hình học phẳng đều đúng.']},
+ {id:3,title:'Cách xác định mặt phẳng · Kí hiệu',items:['Mặt phẳng được xác định nếu biết nó chứa <b>ba điểm không thẳng hàng</b>.','… chứa <b>một đường thẳng và một điểm không thuộc đường thẳng đó</b>.','… chứa <b>hai đường thẳng cắt nhau</b>.','… chứa <b>hai đường thẳng song song</b>.',
+   R`Điểm thuộc đường thẳng: \(A\in\Delta\); điểm thuộc mặt phẳng: \(A\in(\alpha)\)`,R`Đường thẳng nằm trong mặt phẳng: \(\Delta\subset(\alpha)\)`,R`Giao điểm 2 đường thẳng: \(M=\Delta\cap d\)`,R`Điểm chung của 2 mặt phẳng: \(M\in(\alpha)\cap(\beta)\)`,R`Giao tuyến của 2 mặt phẳng: \(\Delta=(\alpha)\cap(\beta)\)`,R`Giao điểm của đường thẳng và mặt phẳng: \(M=\Delta\cap(\alpha)\)`]},
+ {id:4,title:'Hai đường thẳng song song',items:[R`Vị trí tương đối của \(a,b\): \(a\parallel b\); \(a\cap b=M\); \(a\equiv b\); \(a,b\) chéo nhau (không cùng nằm trong một mặt phẳng).`,IMG('g-vitri'),
+   'Qua một điểm nằm ngoài một đường thẳng, có một và chỉ một đường thẳng song song với đường thẳng đó.',
+   '<b>Giao tuyến của ba mặt phẳng:</b> nếu ba mặt phẳng đôi một cắt nhau theo ba giao tuyến phân biệt thì ba giao tuyến ấy hoặc đồng quy hoặc đôi một song song.',SYS([R`(\alpha)\cap(\beta)=a`,R`(\beta)\cap(\gamma)=b`,R`(\gamma)\cap(\alpha)=c`],R`a\parallel b\parallel c\ \text{hoặc}\ a,b,c\ \text{đồng quy}`),IMG('g-bamp'),
+   '<b>Hệ quả:</b> hai mặt phẳng phân biệt lần lượt chứa hai đường thẳng song song thì giao tuyến của chúng (nếu có) song song với hai đường thẳng đó (hoặc trùng với một trong hai).',SYS([R`a\subset(\alpha),\ b\subset(\beta)`,R`a\parallel b`,R`(\alpha)\cap(\beta)=c`],R`c\parallel a\parallel b\ \text{hoặc}\ c\equiv a\ \text{hoặc}\ c\equiv b`),IMG('g-hequa1'),
+   'Hai đường thẳng phân biệt cùng song song với một đường thẳng thứ ba thì song song với nhau.']},
+ {id:5,title:'Đường thẳng và mặt phẳng song song',items:['Đường thẳng và mặt phẳng song song nếu chúng không có điểm chung.',
+   '<b>Định lí (dấu hiệu):</b>',SYS([R`d\not\subset(\alpha)`,R`d\parallel d'`,R`d'\subset(\alpha)`],R`d\parallel(\alpha)`),IMG('g-dmp1'),
+   '<b>Định lí (giao tuyến):</b>',SYS([R`d\parallel(\alpha)`,R`d\subset(\beta)`,R`(\alpha)\cap(\beta)=d'`],R`d'\parallel d`),IMG('g-dmp2'),
+   '<b>Hệ quả:</b> qua điểm thuộc mặt phẳng vẽ đường song song với đường thẳng song song mặt phẳng thì đường đó nằm trong mặt phẳng.',SYS([R`a\parallel(P)`,R`M\in(P)\cap b`,R`b\parallel a`],R`b\subset(P)`),IMG('g-dmp3'),
+   '<b>Hệ quả:</b> hai mặt phẳng phân biệt cùng song song với một đường thẳng thì giao tuyến (nếu có) cũng song song với đường thẳng đó.',SYS([R`(\alpha)\parallel d`,R`(\beta)\parallel d`,R`(\alpha)\cap(\beta)=d'`],R`d'\parallel d`),IMG('g-hequa2'),
+   R`Nếu \(a,b\) chéo nhau thì qua \(a\) có một và chỉ một mặt phẳng song song với \(b\).`]},
+ {id:6,title:'Hai mặt phẳng song song',items:['Hai mặt phẳng song song nếu chúng không có điểm chung.',
+   '<b>Định lí (dấu hiệu):</b> mặt phẳng chứa hai đường thẳng cắt nhau cùng song song với mặt phẳng kia.',SYS([R`a,b\subset(\alpha)`,R`a\cap b=M`,R`a\parallel(\beta),\ b\parallel(\beta)`],R`(\alpha)\parallel(\beta)`),IMG('g-mpsong'),
+   'Qua một điểm nằm ngoài một mặt phẳng có một và chỉ một mặt phẳng song song với mặt phẳng đó.',
+   '<b>Định lí:</b> một mặt phẳng cắt hai mặt phẳng song song thì hai giao tuyến song song.',SYS([R`(\alpha)\parallel(\beta)`,R`(\gamma)\cap(\alpha)=a`,R`(\gamma)\cap(\beta)=b`],R`a\parallel b`),IMG('g-giaotuyen')]},
+ {id:7,title:'Định lí Thalès trong không gian',items:['Ba mặt phẳng đôi một song song chắn trên hai cát tuyến bất kì các đoạn thẳng tương ứng tỉ lệ.',
+   R`\(\left.\begin{array}{l}(\alpha)\parallel(\beta)\parallel(\gamma)\\ d_1\cap(\alpha)=A_1,\ d_1\cap(\beta)=B_1,\ d_1\cap(\gamma)=C_1\\ d_2\cap(\alpha)=A_2,\ d_2\cap(\beta)=B_2,\ d_2\cap(\gamma)=C_2\end{array}\right\}\Rightarrow\dfrac{A_1B_1}{B_1C_1}=\dfrac{A_2B_2}{B_2C_2}\)`,IMG('g-thales'),
+   R`<b>Định lí đảo:</b> cho \(d_1,d_2\) chéo nhau, \(A_1,B_1,C_1\in d_1\) và \(A_2,B_2,C_2\in d_2\) thỏa \(\dfrac{A_1B_1}{B_1C_1}=\dfrac{A_2B_2}{B_2C_2}\). Khi đó \(A_1A_2,\ B_1B_2,\ C_1C_2\) cùng song song với một mặt phẳng.`]},
+ {id:8,title:'Hình lăng trụ · Hình hộp',items:[R`Cho \((P)\parallel(P')\), đa giác lồi \(A_1A_2\dots A_n\) trên \((P)\). Qua các đỉnh vẽ các đường song song cắt \((P')\) tại \(A_1',\dots,A_n'\). Hình tạo bởi các hình bình hành \(A_1A_2A_2'A_1',\dots\) và hai đa giác đáy là <b>hình lăng trụ</b> \(A_1A_2\dots A_n.A_1'A_2'\dots A_n'\).`,IMG('g-langtru'),
+   'Hai đáy là hai đa giác nằm trên hai mặt phẳng song song.','Các mặt bên là hình bình hành.','Các cạnh bên song song và bằng nhau; các cạnh đáy tương ứng song song và bằng nhau.','Đáy là tam giác, tứ giác, ngũ giác,… gọi là lăng trụ tam giác, tứ giác, ngũ giác,…',R`Lăng trụ \(n\)-giác có \(2n\) đỉnh, \(3n\) cạnh, \(n+2\) mặt.`,'<b>Hình hộp</b> là hình lăng trụ có đáy là hình bình hành.']},
+];
+const HELP_FOR_G={moon:[3,2,8],mercury:[5,4],venus:[2,4,6],mars:[4,5,6],jupiter:[2,4,5],saturn:[6,7,8],uranus:[7,5,6],neptune:[2,5,6]};
+const FSETS={lg:{list:()=>FORMULAS,name:'Lượng giác',ph:'Tìm công thức: cộng, nhân đôi, tan, chu kì…',miss:'"cộng", "nhân đôi", "tan"'},hh:{list:()=>FORMULAS_G,name:'Hình học không gian',ph:'Tìm: giao tuyến, song song, Thalès, lăng trụ…',miss:'"giao tuyến", "Thalès", "lăng trụ"'}};
+
 /* ---------- BAY VÀO KHÔNG GIAN: Chủ đề 2 · Quan hệ song song (không có đáp án) ---------- */
 const GQ=[];
 const gmc=(id,q,o,fig)=>GQ.push({id,t:'mc',q,o,fig});
@@ -1728,13 +1775,13 @@ function spaceCardHTML(){const a=gAns();let d=0,n=0;PLANETS.forEach(P=>{const s=
    <span class="lprog"><span class="bar"><i style="width:${d/n*100}%;--c:var(--c5)"></i></span><small>Đã làm ${d}/${n} câu · Hạ cánh ${land}/8 hành tinh</small></span>
    <span class="btn primary lgo">Phóng tàu 🚀</span></span></button></div>`}
 function spacePage(){if(!me){login();return}S0=null;const a=gAns();
-  app.innerHTML=`<div class="topbar"><div style="display:flex;gap:12px;align-items:center"><span class="thumb">${LM['space']()}</span><h2>Bay vào không gian</h2></div><div class="meta"><button class="btn ghost" id="back">Về Trái Đất</button></div></div>
+  app.innerHTML=`<div class="topbar"><div style="display:flex;gap:12px;align-items:center"><span class="thumb">${LM['space']()}</span><h2>Bay vào không gian</h2></div><div class="meta"><button class="helpbtn" id="spHelp">? TRỢ GIÚP · HÌNH HỌC</button><button class="btn ghost" id="back">Về Trái Đất</button></div></div>
   <p class="hint" style="margin-top:0">Chủ đề 2 · Quan hệ song song trong không gian. Đề này chưa có đáp án, nên bài làm của bạn được <b>lưu lại</b> chứ không chấm đúng sai. Làm xong hết câu của một hành tinh là <b>hạ cánh</b> thành công.</p>
   <div class="orbit">${PLANETS.map((P,i)=>{const s=pStat(P,a),done=s.d===s.n;return `<button class="planet ${done?'landed':''}" data-p="${i}" style="--pc:${P.c};--pc2:${P.c2}">
     <span class="pimg">${planetSVG(P,110)}${done?'<span class="flag">🚩</span>':''}</span>
     <span class="ptxt"><span class="lvtag" style="color:${P.c}">HÀNH TINH ${i+1} · ${P.kind.toUpperCase()}</span><b>${P.n}</b><small>Câu ${P.a}–${P.b} · ${P.sub}</small><em>${P.fact}</em>
     <span class="bar"><i style="width:${s.d/s.n*100}%;--c:${P.c}"></i></span><small>${done?'Đã hạ cánh':'Đã làm '+s.d+'/'+s.n+' câu'}</small></span></button>`}).join('')}</div>`;
-  document.getElementById('back').onclick=home;
+  document.getElementById('back').onclick=home;document.getElementById('spHelp').onclick=()=>openHelp(null,'hh');
   app.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>gStart(+b.dataset.p));window.scrollTo({top:0})}
 let G0=null;
 function gStart(pi,from=0){S0=null;const P=PLANETS[pi];G0={pi,ids:pIds(P),i:from};gShow();window.scrollTo({top:0})}
@@ -1754,7 +1801,7 @@ function gShow(){const P=PLANETS[G0.pi],q=GQM[G0.ids[G0.i]],a=gAns(),v=a[q.id];
   <div class="actions"><button class="btn ghost" id="gprev" ${G0.i?'':'disabled'}>Câu trước</button><button class="btn primary" id="gnext">${G0.i+1<G0.ids.length?'Câu tiếp':'Kết thúc chuyến bay'}</button></div></article>`;
   app.innerHTML=h;typeset(app);
   document.getElementById('back').onclick=spacePage;
-  document.getElementById('qhelp').onclick=()=>openHelp(null);
+  document.getElementById('qhelp').onclick=()=>openHelp(HELP_FOR_G[P.k],'hh');
   app.querySelectorAll('[data-j]').forEach(b=>b.onclick=()=>{G0.i=+b.dataset.j;gShow()});
   const said=()=>{const s=document.getElementById('gsay');s.textContent=pick(['Đã lưu! Tàu tiếp tục bay.','Ghi nhận rồi, phi hành gia!','Lưu xong, sang câu tiếp nhé.']);const c=app.querySelector('.guide .cat');c.classList.remove('happy');void c.offsetWidth;c.classList.add('happy');
     const dot=app.querySelector('.gdot.cur');if(dot)dot.classList.toggle('ok',gDone(q,gAns()))};
