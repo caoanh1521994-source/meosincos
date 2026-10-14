@@ -8,7 +8,33 @@
 <meta property="og:description" content="Ôn lượng giác Toán 11, câu cá và sưu tầm giấy chứng nhận tham quan Hà Nội.">
 <meta name="theme-color" content="#0A0F24">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cellipse cx='32' cy='40' rx='22' ry='18' fill='%23E58A3A'/%3E%3Cpath d='M6 26 L32 4 L58 26 Q32 31 6 26Z' fill='%23E9CF8A' stroke='%23B79A4F' stroke-width='2'/%3E%3Ccircle cx='24' cy='40' r='3'/%3E%3Ccircle cx='40' cy='40' r='3'/%3E%3C/svg%3E">
-<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}/* màn mở đầu */
+body.on-login .hero,body.on-login .userbar{display:none}
+.intro{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:28px;align-items:center;min-height:min(86vh,760px);padding-block:12px}
+@media (max-width:760px){.intro{grid-template-columns:1fr;gap:12px}}
+.intro-art{position:relative;display:grid;justify-items:center;gap:18px}
+.scene.big{width:min(420px,100%)!important;max-width:100%!important}
+.intro-say{position:relative;max-width:340px;background:#0F1532;border:1px solid #22D3EE88;border-radius:14px;padding:14px 16px;box-shadow:0 0 22px #22D3EE33;font-weight:600;line-height:1.45}
+.intro-say::before{content:"";position:absolute;top:-9px;left:50%;width:16px;height:16px;background:#0F1532;border-left:1px solid #22D3EE88;border-top:1px solid #22D3EE88;transform:translateX(-50%) rotate(45deg)}
+.intro-say b{color:var(--c3)}
+.intro-kick{font-family:var(--f-display);font-weight:700;letter-spacing:.22em;font-size:.82rem;color:var(--c5)}
+.intro-title{margin:4px 0 10px;font-size:clamp(3rem,9vw,5.2rem);line-height:1.05;font-style:italic;letter-spacing:.01em}
+.intro-title span{display:block;padding:.08em .12em 0 0;background-image:linear-gradient(100deg,#7FF3E6,#22D3EE);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 18px #22D3EE55)}
+.intro-title span+span{background-image:linear-gradient(100deg,#FFB3C7,#FF9F1C 55%,#FFD447);filter:drop-shadow(0 0 18px #FF4D8D55)}
+.intro-lead{margin:0 0 14px;color:#C9D0F2;max-width:58ch;line-height:1.6}.intro-lead b{color:var(--c3)}
+.intro-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.intro-chips span{background:#141B3Bcc;border:1px solid var(--line);border-radius:10px;padding:6px 12px;font-size:.88rem;color:#C9D0F2}.intro-chips b{color:#2EE6A6}
+.intro-form{display:grid;gap:10px;max-width:640px}
+.intro-lab{font-weight:600;color:#C9D0F2}
+.intro-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.intro-row #lname{grid-column:1/-1}
+@media (max-width:560px){.intro-row{grid-template-columns:1fr}}
+.intro-row input{font:inherit;padding:13px 14px;border-radius:12px;background:#141B3Bcc;border:1px solid var(--line);color:var(--ink);min-width:0}
+.intro-row input:focus{outline:none;border-color:var(--c5);box-shadow:0 0 0 1px var(--c5),0 0 16px #22D3EE55}
+.intro-go{justify-self:start;font:inherit;font-weight:700;font-size:1.05rem;color:#fff;border:0;border-radius:14px;padding:13px 26px;background:linear-gradient(100deg,#FF6FA8,#B26BFF);box-shadow:0 8px 24px #B26BFF55;cursor:pointer;transition:transform .12s,filter .12s}
+.intro-go:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.intro-note{margin:0;color:var(--muted);font-size:.82rem}
+.intro .past{margin-top:20px}.intro .lerr{margin:0}
+</style>
 <title>Mèo Sin Cos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Itim&family=Chakra+Petch:wght@500;600;700&family=Playfair+Display:wght@600;700&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
@@ -2002,20 +2028,44 @@ function examReview(timeout){S0=null;const d=exData();if(!d.last){examIntro();re
   document.getElementById('exAgain').onclick=()=>{const D=exData();D.draft={start:Date.now(),ans:{}};exSave(D);examRun()};window.scrollTo({top:0})}
 
 /* ---------- views ---------- */
-function login(){
+function login(prefill){
   const past=users.list.slice().sort((a,b)=>(b.last||0)-(a.last||0));
-  app.innerHTML=`<section class="login"><div class="lhead">${catSVG('happy')}<div><h2>Chào bạn mới!</h2><p>Cho Mèo Sin Cos biết bạn là ai để lưu số cá, tiến độ và ghi tên lên giấy chứng nhận nhé.</p></div></div>
-  <form id="lf" class="lform" novalidate><div class="field"><label for="lname">Họ và tên</label><input id="lname" maxlength="40" autocomplete="name" placeholder="Ví dụ: Nguyễn Minh Anh" required></div>
-  <div class="field"><label for="lcls">Lớp</label><input id="lcls" maxlength="12" placeholder="Ví dụ: 11C2"></div>
-  <p class="lerr" id="lerr" hidden>Bạn nhập họ tên trước đã nhé.</p><button class="btn primary" type="submit">Vào chơi</button></form>
-  ${past.length?`<div class="past"><h3>Đã từng chơi trên máy này</h3><div class="row">${past.map(u=>`<button class="pchip" data-u="${u.id}">${avatarFor(fishOf(LS.get('meo-sc-prog-'+u.id,{})))}<span>${esc(u.name)}<small>${u.cls?'Lớp '+esc(u.cls)+' · ':''}${Object.keys(LS.get('meo-sc-cert-'+u.id,{})).length}/8 chứng nhận</small></span></button>`).join('')}</div></div>`:''}
-  ${past.length?'<button class="linkbtn" id="toRank" type="button">Xem bảng xếp hạng</button>':''}<p class="hint">Tên và tiến độ được lưu trên trình duyệt của máy này. Mỗi bạn dùng chung máy có thể đăng nhập bằng tên riêng.</p></section>`;
-  document.getElementById('lf').onsubmit=e=>{e.preventDefault();const n=document.getElementById('lname').value.trim().replace(/\s+/g,' '),c=document.getElementById('lcls').value.trim().toUpperCase();
-    if(!n){document.getElementById('lerr').hidden=false;document.getElementById('lname').focus();return}addPlayer(n,c);pushScore();renderUser();home()};
-  app.querySelectorAll('[data-u]').forEach(b=>b.onclick=()=>{const u=users.list.find(x=>x.id===b.dataset.u);recordLogin(u);loadPlayer(u.id);pushScore();renderUser();home()});
+  const nLG=Q.length,nHH=GQ.length,nF=FORMULAS.length+FORMULAS_G.length;
+  const scene=(document.querySelector('.hero .scene')||{}).outerHTML||'';
+  app.innerHTML=`<section class="intro">
+   <div class="intro-art">${scene.replace('class="scene"','class="scene big"')}
+     <div class="intro-say">Chào bạn! Mình là <b>Mèo Sin Cos</b>. Lướt sóng hình sin cùng mình, câu thật nhiều cá rồi bay vào không gian nhé!</div></div>
+   <div class="intro-main">
+     <div class="intro-kick">ÔN TẬP TOÁN 11 · GIỮA HỌC KÌ I</div>
+     <h1 class="intro-title"><span>MÈO</span><span>SIN COS</span></h1>
+     <p class="intro-lead">Dạo 8 điểm dừng ở Hà Nội để luyện lượng giác, rồi phóng tàu qua 8 hành tinh để ôn quan hệ song song. Mỗi câu đúng được thưởng cá, mèo slime lên cấp là biến hình, xong mỗi màn nhận <b>giấy chứng nhận</b> và <b>phiếu miễn 1 bài tập về nhà</b>.</p>
+     <div class="intro-chips">
+       <span><b>3</b> chặng · <b>16</b> điểm dừng</span><span><b>${nLG+nHH}</b> câu hỏi lượng giác & hình học</span><span><b>22</b> câu thi thử · <b>90</b> phút</span>
+       <span><b>10</b> hình dạng mèo slime</span><span><b>32</b> lá bùa · phiếu KFC</span><span><b>${nF}</b> mục sổ tay + <b>${SONGS_SC.length}</b> bài ca sin cos</span><span>Nhạc nền không lời</span></div>
+     <form id="lf" class="intro-form" novalidate>
+       <label class="intro-lab" for="lname">Tên của bạn (ghi lên giấy chứng nhận)</label>
+       <div class="intro-row"><input id="lname" maxlength="40" autocomplete="name" placeholder="Ví dụ: Nguyễn Minh Anh" required value="${esc(prefill?.name||'')}">
+         <input id="lcls" maxlength="12" placeholder="Lớp, vd: 11C2" value="${esc(prefill?.cls||'')}"><input id="lpin" maxlength="4" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="Mã PIN 4 số (không bắt buộc)"></div>
+       <p class="lerr" id="lerr" hidden></p>
+       <button class="intro-go" type="submit">Bắt đầu lướt sóng</button>
+       <p class="intro-note">Mã PIN giúp bạn bè dùng chung máy không vào nhầm tài khoản của bạn.</p></form>
+     ${past.length?`<div class="past"><h3>Đã từng chơi trên máy này</h3><div class="row">${past.map(u=>`<button class="pchip" data-u="${u.id}">${avatarFor(fishOf(LS.get('meo-sc-prog-'+u.id,{})))}<span>${esc(u.name)}${u.pin?' 🔒':''}<small>${u.cls?'Lớp '+esc(u.cls)+' · ':''}${Object.keys(LS.get('meo-sc-cert-'+u.id,{})).length}/8 chứng nhận</small></span></button>`).join('')}</div>
+       <button class="linkbtn" id="toRank" type="button">Xem bảng xếp hạng</button></div>`:''}
+   </div></section>`;
+  const err=t=>{const e=document.getElementById('lerr');e.textContent=t;e.hidden=false};
+  const enter=u=>{recordLogin(u);loadPlayer(u.id);pushScore();renderUser();home()};
+  document.getElementById('lf').onsubmit=e=>{e.preventDefault();const n=document.getElementById('lname').value.trim().replace(/\s+/g,' '),c=document.getElementById('lcls').value.trim().toUpperCase(),pin=document.getElementById('lpin').value.trim();
+    if(!n){err('Bạn nhập họ tên trước đã nhé.');document.getElementById('lname').focus();return}
+    if(pin&&!/^\d{4}$/.test(pin)){err('Mã PIN gồm đúng 4 chữ số.');document.getElementById('lpin').focus();return}
+    const key=(n+'|'+c).toLowerCase(),u=users.list.find(x=>(x.name+'|'+(x.cls||'')).toLowerCase()===key);
+    if(u&&u.pin&&u.pin!==pin){err(pin?'Mã PIN chưa đúng. Thử lại nhé!':'Tài khoản này có mã PIN, bạn nhập mã PIN nhé.');document.getElementById('lpin').value='';document.getElementById('lpin').focus();return}
+    if(u){if(!u.pin&&pin)u.pin=pin;enter(u);return}
+    addPlayer(n,c);if(pin){me.pin=pin;LS.set('meo-sc-users',users)}pushScore();renderUser();home()};
+  app.querySelectorAll('[data-u]').forEach(b=>b.onclick=()=>{const u=users.list.find(x=>x.id===b.dataset.u);
+    if(u.pin){document.getElementById('lname').value=u.name;document.getElementById('lcls').value=u.cls||'';err('Nhập mã PIN của '+u.name+' để vào.');document.getElementById('lpin').focus();return}enter(u)});
   const tr=document.getElementById('toRank');if(tr)tr.onclick=board;
-  renderUser();document.getElementById('lname').focus()}
-function renderUser(){const el=document.getElementById('userbar');if(!me){el.innerHTML='';return}
+  renderUser();document.getElementById(prefill?'lpin':'lname').focus();window.scrollTo({top:0})}
+function renderUser(){document.body.classList.toggle('on-login',!me);const el=document.getElementById('userbar');if(!me){el.innerHTML='';return}
   el.innerHTML=`${avatarFor(fishOf(prog))}<span>Xin chào <b>${esc(me.name)}</b>${me.cls?' · Lớp '+esc(me.cls):''}</span><button class="linkbtn" id="rankLink">Xếp hạng</button><button class="linkbtn" id="helpLink">Công thức</button><button class="linkbtn" id="songLink">Bài ca</button><button class="linkbtn" id="logout">Đổi người chơi</button>`;
   document.getElementById('rankLink').onclick=board;document.getElementById('helpLink').onclick=()=>openHelp(null);document.getElementById('songLink').onclick=songPage;
   document.getElementById('logout').onclick=()=>{users.cur=null;LS.set('meo-sc-users',users);me=null;prog={};certs={};S0=null;login()}}
