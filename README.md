@@ -10,10 +10,10 @@ Web game ôn tập 99 câu lượng giác Toán 11 (đề cương giữa học k
 
 ## Đưa lên Vercel
 
-1. Tạo repo GitHub tên `meo-sin-cos`, đẩy các file trong thư mục này lên nhánh `main`.
-2. Vào vercel.com → Add New → Project → Import repo `meo-sin-cos`.
+1. Tạo repo GitHub tên `meosincos`, đẩy các file trong thư mục này lên nhánh `main`.
+2. Vào vercel.com → Add New → Project → Import repo `meosincos`.
 3. Framework Preset: **Other**, không cần Build Command, Output Directory để trống → Deploy.
-4. Địa chỉ sẽ là `https://meo-sin-cos.vercel.app` (nếu tên còn trống; nếu không, đổi trong Settings → Domains).
+4. Đặt Project Name là `meosincos` để có địa chỉ `https://meosincos.vercel.app`.
 
 ## Lưu đăng nhập và bảng xếp hạng cả lớp
 
