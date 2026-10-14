@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="Mèo Sin Cos: web game ôn 99 câu lượng giác Toán 11 cùng chú mèo đội nón lá dạo quanh Hà Nội.">
+<meta name="description" content="Mèo Sin Cos: web game ôn 110 câu lượng giác Toán 11 cùng chú mèo đội nón lá dạo quanh Hà Nội.">
 <meta property="og:title" content="Mèo Sin Cos">
 <meta property="og:description" content="Ôn lượng giác Toán 11, câu cá và sưu tầm giấy chứng nhận tham quan Hà Nội.">
 <meta name="theme-color" content="#0A0F24">
@@ -783,7 +783,7 @@ table.rank:not(.matrix){min-width:860px}.rank td .pl span{white-space:nowrap}
       <div class="eyebrow">Toán 11 · Ôn giữa kì I · Lượng giác</div>
       <h1 class="rainbow" aria-label="Mèo Sin Cos"><span aria-hidden="true" style="--c:var(--c1);--d:0.00s">M</span><span aria-hidden="true" style="--c:var(--c2);--d:0.08s">è</span><span aria-hidden="true" style="--c:var(--c3);--d:0.16s">o</span> <span aria-hidden="true" style="--c:var(--c4);--d:0.32s">S</span><span aria-hidden="true" style="--c:var(--c5);--d:0.40s">i</span><span aria-hidden="true" style="--c:var(--c6);--d:0.48s">n</span> <span aria-hidden="true" style="--c:var(--c7);--d:0.64s">C</span><span aria-hidden="true" style="--c:var(--c8);--d:0.72s">o</span><span aria-hidden="true" style="--c:var(--c1);--d:0.80s">s</span></h1>
       <svg class="squiggle" viewBox="0 0 360 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 7 Q24 -2 46 7 T90 7 T134 7 T178 7 T222 7 T266 7 T310 7 T358 7" stroke="var(--wall)" stroke-width="4" fill="none" stroke-linecap="round"/></svg>
-      <p>Chú mèo trắng tròn vo thích nhất hai thứ: cá và đường hình sin. Đi một vòng 8 điểm dừng ở Hà Nội, giải hết 99 câu trong đề cương, câu thật nhiều cá và sưu tầm giấy chứng nhận.</p>
+      <p>Chú mèo trắng tròn vo thích nhất hai thứ: cá và đường hình sin. Đi một vòng 8 điểm dừng ở Hà Nội, giải hết 110 câu trong đề cương, câu thật nhiều cá và sưu tầm giấy chứng nhận.</p>
     </div>
     <svg class="scene" viewBox="0 0 300 210" aria-hidden="true">
       <defs><clipPath id="sceneClip"><rect x="0" y="0" width="300" height="210" rx="26"/></clipPath></defs>
@@ -914,6 +914,7 @@ const FIG={
  <text class="txs" x="188" y="44">12 km</text><text class="txs" x="276" y="114">3 km</text><text class="txs" x="140" y="188">21 km</text></svg>`,
  83:()=>circle({pts:[{a:0,l:'A'},{a:60,l:'M',ray:1,proj:1},{a:120,l:'N',ray:1,proj:1},{a:240,l:'K',ray:1,proj:1}],extra:'<text class="txs" x="182" y="146">0,5</text><text class="txs" x="80" y="146">−0,5</text>'}),
  91:()=>circle({pts:[{a:0,l:'A'},{a:90,l:'B'},{a:180,l:"A′"},{a:270,l:"B′"}],extra:'<text class="tx" x="176" y="100">I</text><text class="tx" x="94" y="100">II</text><text class="tx" x="90" y="170">III</text><text class="tx" x="174" y="170">IV</text>'}),
+ 100:()=>plot({x0:-.3,x1:2.15*P,f:x=>Math.cos(2*x),xt:[[P/4,'π/4'],[3*P/4,'3π/4'],[P,'π'],[5*P/4,'5π/4'],[7*P/4,'7π/4'],[2*P,'2π']]}),
  96:()=>{let s='<svg viewBox="0 0 280 260" width="280"><circle class="ci" cx="130" cy="120" r="90"/>';for(let i=0;i<12;i++){const a=i*P/6;s+=`<line class="gr" x1="130" y1="120" x2="${130+90*Math.cos(a)}" y2="${120-90*Math.sin(a)}"/><rect x="${122+90*Math.cos(a)}" y="${114-90*Math.sin(a)}" width="16" height="12" rx="3" fill="var(--lake)"/>`}
    const mx=130+90*Math.cos(P/6),my=120-90*Math.sin(P/6);
    s+=`<path d="M130 120 L95 240 M130 120 L165 240 M80 240 H180" stroke="var(--wall)" stroke-width="6" fill="none"/><line class="ax" x1="30" x2="270" y1="120" y2="120"/><text class="tx" x="262" y="114">x</text><text class="tx" x="114" y="136">O</text>
@@ -1098,6 +1099,17 @@ tf(96,R`Khi đu quay hoạt động, vận tốc theo phương ngang của cabin
 sa(97,R`Cho góc lượng giác có số đo \(\frac\pi6+\frac{k\pi}{4}\ (k\in\mathbb Z)\). Các điểm biểu diễn góc này trên đường tròn lượng giác lập thành một đa giác đều có bao nhiêu đỉnh?`,8,R`Mỗi bước tăng \(\frac\pi4\), một vòng \(2\pi\) có \(\frac{2\pi}{\pi/4}=8\) điểm phân biệt.`);
 sa(98,R`Tính \(A=\sin^2\frac\pi8+\sin^2\frac{3\pi}{8}+\sin^2\frac{5\pi}{8}+\sin^2\frac{7\pi}{8}\).`,2,R`\(\sin\frac{3\pi}{8}=\cos\frac\pi8\), \(\sin\frac{5\pi}{8}=\cos\frac{\pi}{8}\), \(\sin\frac{7\pi}{8}=\sin\frac\pi8\). Vậy \(A=2(\sin^2\frac\pi8+\cos^2\frac\pi8)=2\).`);
 sa(99,R`Cho \(\cos2x=\frac23\). Tính giá trị biểu thức \(P=6\cos^2x-7\).`,-2,R`\(\cos^2x=\frac{1+\cos2x}{2}=\frac56\). \(P=5-7=-2\).`);
+sa(100,R`Xét hàm số \(f(x)=\cos2x\) trên \([0;2\pi]\) có đồ thị như hình vẽ. Gọi \(T\) là tập hợp tất cả các giá trị của \(x\in[0;2\pi]\) để \(\cos2x=0\). Tổng tất cả các phần tử của \(T\) là bao nhiêu? (làm tròn đến hàng phần chục)`,12.6,R`\(\cos2x=0\Leftrightarrow 2x=\frac\pi2+k\pi\Leftrightarrow x=\frac\pi4+k\frac\pi2\). Trên \([0;2\pi]\): \(\frac\pi4,\frac{3\pi}4,\frac{5\pi}4,\frac{7\pi}4\) (khớp với 4 giao điểm trên đồ thị). Tổng \(=\frac{16\pi}{4}=4\pi\approx12{,}6\).`);
+sa(101,R`Tính \(A=\sin^25^\circ+\sin^210^\circ+\sin^215^\circ+\dots+\sin^285^\circ\).`,8.5,R`Có 17 số hạng. \(\sin85^\circ=\cos5^\circ,\ \sin80^\circ=\cos10^\circ,\dots\) nên ghép 8 cặp \((5^\circ,85^\circ),\dots,(40^\circ,50^\circ)\), mỗi cặp bằng \(\sin^2+\cos^2=1\). Còn \(\sin^245^\circ=\frac12\). \(A=8+\frac12=8{,}5\).`);
+sa(102,R`Cho \(\cot\alpha=\sqrt5\). Biết giá trị của biểu thức \(C=\sin^2\alpha-\sin\alpha\cos\alpha+\cos^2\alpha\) bằng \(a-\dfrac{\sqrt5}{b}\) với \(a,b\in\mathbb N\). Khi đó \(\dfrac{a+b}{2}\) bằng bao nhiêu?`,3.5,R`\(C=1-\sin\alpha\cos\alpha\). Mà \(\sin\alpha\cos\alpha=\cot\alpha\cdot\sin^2\alpha=\dfrac{\cot\alpha}{1+\cot^2\alpha}=\dfrac{\sqrt5}{6}\). Vậy \(C=1-\dfrac{\sqrt5}{6}\): \(a=1,\ b=6\), \(\dfrac{a+b}{2}=3{,}5\).`);
+sa(103,R`Gọi giá trị lớn nhất và giá trị nhỏ nhất của hàm số \(y=3-2\cos2x-\cos^22x\) lần lượt là \(M,m\). Tính giá trị biểu thức \(2024M+2025m\).`,8096,R`Đặt \(t=\cos2x\in[-1;1]\): \(y=3-2t-t^2=4-(t+1)^2\). \(M=4\) khi \(t=-1\); \(m=0\) khi \(t=1\). Vậy \(2024\cdot4+2025\cdot0=8096\).`);
+sa(104,R`Có bao nhiêu giá trị nguyên của tham số \(m\) để phương trình \(2024(\cos^4x-\sin^4x)-m+5=0\) có nghiệm?`,4049,R`\(\cos^4x-\sin^4x=(\cos^2x-\sin^2x)(\cos^2x+\sin^2x)=\cos2x\). Phương trình \(\Leftrightarrow\cos2x=\dfrac{m-5}{2024}\) có nghiệm \(\Leftrightarrow-2024\le m-5\le2024\Leftrightarrow-2019\le m\le2029\). Có \(2029-(-2019)+1=4049\) giá trị nguyên.`);
+sa(105,R`Tính giá trị của biểu thức \(P=\dfrac{\sin^2x+\sin2x}{\cos2x+2}\) biết \(\tan x=1\).`,0.75,R`\(\tan x=1\Rightarrow\cos^2x=\frac{1}{1+\tan^2x}=\frac12\), \(\sin^2x=\frac12\), \(\sin2x=\frac{2\tan x}{1+\tan^2x}=1\), \(\cos2x=\frac{1-\tan^2x}{1+\tan^2x}=0\). \(P=\dfrac{\frac12+1}{0+2}=0{,}75\).`);
+sa(106,R`Nhiệt độ ngoài trời ở một thành phố vào các thời điểm khác nhau trong ngày được mô phỏng bởi công thức \(h(t)=29+3\sin\left[\frac{\pi}{12}(t-9)\right]\), với \(h\) tính bằng độ C và \(t\) là thời gian trong ngày tính bằng giờ \((0\le t<24)\). Nhiệt độ cao nhất ở ngoài trời bằng \(a^\circ\). Hỏi giá trị \(a\) bằng mấy?`,32,R`\(\sin\left[\frac{\pi}{12}(t-9)\right]\le1\) nên \(h\le29+3=32\); dấu bằng khi \(\frac{\pi}{12}(t-9)=\frac\pi2\Leftrightarrow t=15\) (15 giờ, thuộc \([0;24)\)). Vậy \(a=32\).`);
+sa(107,R`Số giờ có ánh sáng mặt trời của một thành phố A ở vĩ độ \(40^\circ\) bắc trong ngày thứ \(t\) của một năm không nhuận được cho bởi hàm số \(d(t)=3\sin\left[\frac{\pi}{182}(t-80)\right]+12\) với \(t\in\mathbb Z\) và \(100<t\le365\). Hỏi thành phố A có đúng 12 giờ có ánh sáng mặt trời vào ngày thứ bao nhiêu trong năm?`,262,R`\(d(t)=12\Leftrightarrow\sin\left[\frac{\pi}{182}(t-80)\right]=0\Leftrightarrow\frac{\pi}{182}(t-80)=k\pi\Leftrightarrow t=80+182k\). Với \(100<t\le365\) chỉ có \(k=1\): \(t=262\).`);
+sa(108,R`Cho góc \(x\) thỏa mãn \(\sin x=\frac15\). Khi đó giá trị biểu thức \(P=\cos^22x+\cos^2x\) bằng \(\dfrac ab\). Tính \(a+b\), biết rằng phân số \(\dfrac ab\) là phân số tối giản.`,1754,R`\(\cos^2x=1-\frac1{25}=\frac{24}{25}\); \(\cos2x=1-2\sin^2x=\frac{23}{25}\Rightarrow\cos^22x=\frac{529}{625}\). \(P=\frac{529}{625}+\frac{600}{625}=\frac{1129}{625}\) (tối giản vì 1129 không chia hết cho 5). \(a+b=1754\).`);
+sa(109,R`Có bao nhiêu giá trị nguyên của tham số \(m\) để phương trình \(\cos x=m\) có nghiệm?`,3,R`\(\cos x=m\) có nghiệm \(\Leftrightarrow-1\le m\le1\): \(m\in\{-1;0;1\}\), có 3 giá trị.`);
+sa(110,R`Phương trình \(2\sin\left(x-\frac\pi6\right)+2=0\) có bao nhiêu nghiệm trên khoảng \((0;2\pi)\)?`,1,R`\(\sin\left(x-\frac\pi6\right)=-1\Leftrightarrow x-\frac\pi6=-\frac\pi2+k2\pi\Leftrightarrow x=-\frac\pi3+k2\pi\). Trên \((0;2\pi)\) chỉ có \(x=\frac{5\pi}3\): 1 nghiệm.`);
 
 // Trong công thức, dấu < và > phải đổi thành \lt, \gt để trình duyệt không hiểu nhầm là thẻ HTML
 const fixMath=t=>typeof t==='string'?t.replace(/\\\(([\s\S]*?)\\\)/g,(m,x)=>'\\('+x.replace(/</g,'\\lt ').replace(/>/g,'\\gt ')+'\\)'):t;
@@ -1166,7 +1178,7 @@ const STOPS=[
  {k:'ho-tay',n:'Hồ Tây',a:48,b:64,sub:'Chu kì, chẵn lẻ, GTLN–GTNN, đồ thị',fact:'Hồ lớn nhất nội thành, có chùa Trấn Quốc bên bờ.'},
  {k:'dong-xuan',n:'Chợ Đồng Xuân',a:65,b:80,sub:'Phương trình cơ bản, bài toán hình vẽ',fact:'Chợ lớn nhất khu phố cổ, dựng năm 1889.'},
  {k:'khue-van-cac',n:'Khuê Văn Các',a:81,b:96,sub:'Trắc nghiệm đúng – sai',fact:'Gác Sao Khuê trong Văn Miếu, biểu tượng của Thủ đô.'},
- {k:'thap-rua',n:'Tháp Rùa',a:97,b:99,sub:'Trả lời ngắn',fact:'Ngôi tháp nhỏ giữa lòng Hồ Gươm.'},
+ {k:'thap-rua',n:'Tháp Rùa',a:97,b:110,sub:'Trả lời ngắn',fact:'Ngôi tháp nhỏ giữa lòng Hồ Gươm.'},
 ];
 
 /* ---------- state ---------- */
@@ -2010,14 +2022,14 @@ function renderUser(){const el=document.getElementById('userbar');if(!me){el.inn
 
 function hanoiCardHTML(){const done=Q.filter(q=>isDone(q.id)).length,ok=Q.filter(q=>isPerfect(q.id)).length,nc=STOPS.filter(s=>certs[s.k]).length;
   return `<div class="launch hanoi"><button class="launch-main" id="hanoiCard" aria-label="Vào chặng Hà Nội"><span class="lpic hn4">${['the-huc','van-mieu','long-bien','thap-rua'].map(k=>`<span>${LM[k]()}</span>`).join('')}</span>
-   <span class="ltxt"><span class="lvtag" style="color:var(--c3)">CHẶNG 1 · LƯỢNG GIÁC</span><h3>Chặng Hà Nội</h3><span class="range">Chủ đề 1 · Hàm số lượng giác và phương trình lượng giác · Câu 1–99</span>
+   <span class="ltxt"><span class="lvtag" style="color:var(--c3)">CHẶNG 1 · LƯỢNG GIÁC</span><h3>Chặng Hà Nội</h3><span class="range">Chủ đề 1 · Hàm số lượng giác và phương trình lượng giác · Câu 1–110</span>
    <span class="fact">8 điểm dừng từ Cầu Thê Húc đến Tháp Rùa. Câu đúng được cá, xong mỗi màn nhận giấy chứng nhận và phiếu miễn bài tập.</span>
    <span class="lprog"><span class="bar"><i style="width:${ok/Q.length*100}%;--c:var(--c3)"></i></span><small>Đã làm ${done}/${Q.length} câu · Đúng hết ${ok} câu · Giấy chứng nhận ${nc}/8</small></span>
    <span class="btn warm lgo">Lên đường 🏮</span></span></button></div>`}
 function hanoiPage(){if(!me){login();return}S0=null;
   const wrong=Q.filter(q=>isDone(q.id)&&!isPerfect(q.id)).length,nc=STOPS.filter(s=>certs[s.k]).length;
   let h=`<div class="topbar"><div style="display:flex;gap:12px;align-items:center"><span class="thumb">${LM['thap-rua']()}</span><h2>Chặng Hà Nội</h2></div><div class="meta"><button class="helpbtn" id="hnHelp">? TRỢ GIÚP · LƯỢNG GIÁC</button><button class="btn ghost" id="back">Về bản đồ</button></div></div>
-  <p class="hint" style="margin-top:0">Chủ đề 1 · Hàm số lượng giác và phương trình lượng giác. 8 điểm dừng, 99 câu.</p>`;
+  <p class="hint" style="margin-top:0">Chủ đề 1 · Hàm số lượng giác và phương trình lượng giác. 8 điểm dừng, 110 câu.</p>`;
   h+='<div class="map">';
   STOPS.forEach((s,i)=>{const ids=[];for(let k=s.a;k<=s.b;k++)ids.push(k);const ok=ids.filter(isPerfect).length,c=certs[s.k];
     h+=`<div class="stop ${c?'done':''}" style="--c:var(--c${i+1})"><button class="stop-main" data-stop="${i}" aria-label="Chơi chặng ${s.n}"><span class="pic">${LM[s.k]()}</span>${c?'<span class="ribbon">Đã tham quan</span>':''}
@@ -2096,7 +2108,7 @@ function show(){
       typeset(app.querySelector('.tf'));finish(got,'Lời giải nằm ngay dưới từng ý.')};}
   if(q.t==='sa'){const inp=document.getElementById('ans'),chk=document.getElementById('check');
     const go=()=>{const v=parseFloat(inp.value.trim().replace(',','.').replace('−','-'));if(isNaN(v)){say.textContent='Gõ một con số nhé, ví dụ 8 hoặc -2.';return}
-      chk.hidden=true;inp.disabled=true;const ok=Math.abs(v-q.a)<1e-9;inp.classList.add(ok?'right':'wrong');finish(ok?1:0,`<b>Đáp số: ${q.a}.</b> ${q.ex}`)};
+      chk.hidden=true;inp.disabled=true;const ok=Math.abs(v-q.a)<1e-9;inp.classList.add(ok?'right':'wrong');finish(ok?1:0,`<b>Đáp số: ${String(q.a).replace('.',',')}.</b> ${q.ex}`)};
     chk.onclick=go;inp.onkeydown=e=>{if(e.key==='Enter'&&!inp.disabled){e.preventDefault();go()}};inp.focus();}
 }
 document.addEventListener('keydown',e=>{if(document.querySelector('.evolve'))return;const hd=document.getElementById('helpDrawer');if(hd&&!hd.hidden)return;if(!S0||!app.querySelector('.qcard'))return;const n=document.getElementById('next');

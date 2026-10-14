@@ -67,7 +67,7 @@ function doPost(e) {
     const exam = d.exam === null || d.exam === undefined || d.exam === '' ? '' : num(d.exam, 10);
     const row = [
       clean(d.id), clean(d.name), clean(d.cls),
-      num(d.fish, 147), num(d.done, 99), num(d.acc, 100),
+      num(d.fish, 200), num(d.done, 110), num(d.acc, 100),
       clean(d.certs), num(d.stars, 24),
       exam, num(d.examN, 999), num(d.geo, 61), num(d.logins, 99999),
       Date.now()
