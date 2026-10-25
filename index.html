@@ -1816,6 +1816,8 @@ gtl(176,R`Cho hình chóp \(S.ABCD\) có đáy \(ABCD\) là hình bình hành. G
 gtl(177,R`Cho hình chóp \(S.ABCD\) có đáy là hình bình hành tâm \(O\). Gọi \(M,N\) lần lượt thuộc các cạnh \(SA,SD\) sao cho \(\dfrac{SM}{SA}=\dfrac23,\ \dfrac{SN}{SD}=\dfrac12\).`,[R`Chứng minh rằng \(ON${PL}(SAB)\).`,R`Tìm giao tuyến của hai mặt phẳng \((SBC)\) và \((SAD)\).`,R`Tìm giao điểm của \(AB\) và mặt phẳng \((OMN)\). Tính tỉ số \(\dfrac{AP}{PB}\).`]);
 gtl(178,R`Cho hình chóp \(S.ABCD\) có đáy \(ABCD\) là hình bình hành. Gọi \(M,N\) lần lượt là trung điểm \(SA,BC\).`,[R`Chứng minh rằng \(MN${PL}(SCD)\).`,R`Tìm giao tuyến của hai mặt phẳng \((DMN)\) và \((SAC)\).`,R`Tìm giao điểm \(I\) của \(SB\) và mặt phẳng \((DMN)\). Tính tỉ số \(\dfrac{SI}{IB}\).`]);
 gtl(179,R`Cho hai hình bình hành \(ABCD\) và \(ABEF\) không cùng nằm trong một mặt phẳng. Gọi \(M\) là điểm thuộc đoạn thẳng \(AE\) sao cho \(AM=x\cdot AE\ (x>0)\), \(N\) là điểm thuộc đoạn thẳng \(BD\) sao cho \(BN=\frac13BD\).`,[R`Tìm giao điểm \(I\) của \(CD\) và mặt phẳng \((AMN)\).`,R`Tìm \(x\) để \(MN${PL}EI\).`]);
+/* bỏ các câu đề chưa chặt, dễ gây tranh cãi */
+const G_DROP=[134,163,171];for(let i=GQ.length-1;i>=0;i--)if(G_DROP.includes(GQ[i].id))GQ.splice(i,1);
 const GQM={};GQ.forEach(q=>GQM[q.id]=q);
 const PLANETS=[
  {k:'moon',n:'Mặt Trăng',a:119,b:126,sub:'Điểm, đường thẳng, mặt phẳng',fact:'Trạm dừng đầu tiên, cách Trái Đất khoảng 384 400 km.',c:'#C9CEE8',c2:'#7E86A8',kind:'Trắc nghiệm'},
@@ -1918,7 +1920,7 @@ const GK={
 const gAns=()=>me?LS.get('meo-sc-geo-'+me.id,{}):{};
 const gSave=a=>{if(me){LS.set('meo-sc-geo-'+me.id,a);pushScore()}};
 const gDone=(q,a)=>{const v=a[q.id];if(v==null)return false;if(q.t==='tf')return Array.isArray(v)&&v.every(x=>x===0||x===1);if(q.t==='tl')return !!(v&&v.done);return String(v).trim()!==''};
-const pIds=P=>{const r=[];for(let k=P.a;k<=P.b;k++)r.push(k);return r};
+const pIds=P=>{const r=[];for(let k=P.a;k<=P.b;k++)if(GQM[k])r.push(k);return r};
 const pStat=(P,a)=>{const ids=pIds(P);const d=ids.filter(id=>gChecked(GQM[id],a)).length;return {d,n:ids.length}};
 const figTag=q=>q.fig?`<div class="gfig"><img src="hinh/h${q.fig}.png" alt="Hình vẽ câu ${q.id}" loading="lazy"></div>`:'';
 function spaceCardHTML(){const a=gAns();let d=0,n=0;PLANETS.forEach(P=>{const s=pStat(P,a);d+=s.d;n+=s.n});const land=PLANETS.filter(P=>{const s=pStat(P,a);return s.d===s.n}).length;
