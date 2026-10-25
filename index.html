@@ -741,7 +741,7 @@ table.signs{border-collapse:collapse;width:100%;font-family:var(--f-display);tex
 .pthumb{width:52px;height:52px;display:inline-block}
 .gdots{display:flex;flex-wrap:wrap;gap:6px;margin:-6px 0 14px}
 .gdot{min-width:40px;padding:3px 6px;border-radius:6px;border:1px solid var(--line);background:#0F1532;color:var(--muted);font-family:var(--f-display);font-size:.78rem}
-.gdot.ok{border-color:#2EE6A6;color:#2EE6A6}.gdot.cur{background:var(--c5);color:#06112E;border-color:var(--c5)}
+.gdot.ok{border-color:#2EE6A6;color:#2EE6A6}.gdot.bad{border-color:var(--bad);color:var(--bad)}.tlsol{margin-top:8px;padding:10px 12px;border-radius:10px;border:1px solid #2EE6A666;background:#2EE6A614;font-size:.95rem;line-height:1.6}.gdot.cur{background:var(--c5);color:#06112E;border-color:var(--c5)}
 .gfig{margin:12px auto;max-width:440px;background:#fff;border-radius:10px;padding:8px;box-shadow:0 0 0 1px var(--line)}.gfig img{display:block;width:100%;height:auto}
 .opt.chosen{border-color:var(--c5)!important;background:color-mix(in srgb,var(--c5) 16%,#0F1532)!important;box-shadow:0 0 0 1px var(--c5),0 0 16px color-mix(in srgb,var(--c5) 35%,transparent)!important}
 .tlparts{display:grid;gap:10px;margin-top:12px}.tlp{display:grid;gap:6px}.tlq{min-width:0;overflow-x:auto}
@@ -1393,7 +1393,7 @@ const MAXFISH=Q.reduce((s,q)=>s+full(q),0);
 function statsOf(u){const pg=LS.get('meo-sc-prog-'+u.id,{}),ct=LS.get('meo-sc-cert-'+u.id,{});
   let fish=0,done=0,tried=0;for(const id in pg){const q=QM[id];if(!q)continue;fish+=pg[id];done++;tried+=full(q)}
   const ex=LS.get('meo-sc-exam-'+u.id,{hist:[]}),hist=ex.hist||[],ga=LS.get('meo-sc-geo-'+u.id,{});
-  const exam=hist.length?Math.max(...hist.map(h=>h.total)):null,geo=GQ.filter(q=>gDone(q,ga)).length;
+  const exam=hist.length?Math.max(...hist.map(h=>h.total)):null,geo=GQ.filter(q=>gChecked(q,ga)).length;
   return {id:u.id,name:u.name,cls:u.cls||'',fish,done,exam,examN:hist.length,geo,logins:u.logins||1,acc:tried?Math.round(fish/tried*100):0,certs:Object.keys(ct),stars:Object.values(ct).reduce((s,c)=>s+starsOf(c.score,c.max),0),last:u.last||u.created||0}}
 let boardBy='exam';
 const exv=r=>r.exam==null||r.exam===''?-1:+r.exam;
@@ -1850,12 +1850,76 @@ LM['space']=()=>{let st='';for(let i=0;i<40;i++){const x=(i*47)%240,y=(i*31)%140
     <path d="M-10 0 L-17 12 L-10 9Z M10 0 L17 12 L10 9Z" fill="#FF4D8D" stroke="#22244D" stroke-width="1.2"/><path class="flameR" d="M-6 9 Q0 30 6 9Z" fill="#FFB547"/><path d="M-3 9 Q0 20 3 9Z" fill="#FFF3B0"/></g>
    <path d="M30 96 Q46 76 58 62" stroke="#ffffff55" stroke-width="2" stroke-dasharray="3 5" fill="none"/></svg>`};
 
+/* ---------- ĐÁP ÁN & LỜI GIẢI · BAY VÀO KHÔNG GIAN ---------- */
+const GK={
+119:{a:2,ex:R`\(O\in AC\subset(SAC)\) nên \(O\in(SAC)\).`},
+120:{a:1,ex:R`\(IJ\) là đường trung bình của tam giác \(SBD\) nên \(IJ\parallel BD\).`},
+121:{a:1,ex:R`Hai đường thẳng cắt nhau xác định duy nhất một mặt phẳng, và mặt phẳng đó song song với \((P)\).`},
+122:{a:2,ex:R`Lăng trụ \(n\)-giác có \(3n\) cạnh; với \(n=5\) có \(15\) cạnh.`},
+123:{a:2,ex:'Hai đường thẳng cắt nhau xác định một mặt phẳng duy nhất. Ba điểm phải không thẳng hàng; điểm và đường thẳng phải là điểm không thuộc đường thẳng.'},
+124:{a:1,ex:R`Nếu \(b\parallel c\) thì \(a\parallel c\) (mâu thuẫn với \(a,c\) chéo nhau). Vậy \(b,c\) cắt nhau hoặc chéo nhau.`},
+125:{a:3,ex:R`Nếu \(MP,NQ\) đồng phẳng thì \(M,N,P,Q\) đồng phẳng, kéo theo \(AB,CD\) đồng phẳng: vô lí với tứ diện. Vậy \(MP,NQ\) chéo nhau.`},
+126:{a:1,ex:R`\(G\in BF\) nên \(EG\subset(ABF)\). Mà \((ABF)\cap(ACD)=AF\), nên giao điểm của \(EG\) với \((ACD)\) là giao điểm của \(EG\) và \(AF\).`},
+127:{a:3,ex:R`\(I\in BC\subset(BCD),(ABC)\) và \(I\in EF\subset(DEF),(AEF)\). Còn \(I\notin(ABD)\) vì \(I\) nằm trên \(BC\), khác \(B\).`},
+128:{a:1,ex:R`Ba vị trí: \(a\subset(P)\), \(a\parallel(P)\), \(a\) cắt \((P)\).`},
+129:{a:3,ex:R`\(a\parallel b\parallel(\alpha)\) nên \(a\parallel(\alpha)\) hoặc \(a\subset(\alpha)\).`},
+130:{a:2,ex:R`\(a\) và \(b\) không có điểm chung nên song song hoặc chéo nhau.`},
+131:{a:0,ex:R`Tính chất: mặt phẳng chứa \(d\parallel(\alpha)\) cắt \((\alpha)\) theo giao tuyến \(d'\parallel d\).`},
+132:{a:0,ex:R`Mọi đường thẳng trong \((\alpha)\) không có điểm chung với \((\beta)\) nên song song với \((\beta)\). Các mệnh đề còn lại sai (có thể chéo nhau, hai mặt phẳng có thể cắt nhau, …).`},
+133:{a:1,ex:R`\(a\parallel(\beta)\) hoặc \(a\subset(\beta)\): có 2 vị trí.`},
+134:{a:0,ex:R`Dấu hiệu: \(a\parallel b\), \(b\subset(P)\) (và \(a\) không nằm trong \((P)\)) thì \(a\parallel(P)\). Các phương án khác đều có thể xảy ra \(a\subset(P)\) hoặc \(a\) cắt \((P)\).`},
+135:{a:1,ex:R`\(MN\) đi qua tâm \(O\) của hình bình hành. \(S,O\) là hai điểm chung của \((SMN)\) và \((SAC)\), nên giao tuyến là \(SO\).`},
+136:{a:0,ex:R`Trong \((ABCD)\), \(I=AC\cap BM\). Hai điểm chung \(S,I\) nên giao tuyến là \(SI\).`},
+137:{a:2,ex:R`\(DM\) và \(AN\) là hai trung tuyến của tam giác \(ACD\), cắt nhau tại trọng tâm \(G\). \(B,G\) là hai điểm chung nên giao tuyến là \(BG\).`},
+138:{a:3,ex:R`\(MN\parallel BC\) nên \((MNE)\) cắt \((BCD)\) theo đường qua \(E\) song song \(BC\), cắt \(BD\) tại \(F\). Khi đó \(\frac{DF}{DB}=\frac{DE}{DC}=\frac34\), suy ra \(\frac{FD}{FB}=3\).`},
+139:{a:2,ex:R`\((MNP)\parallel(ABCD)\) nên cắt \((SAD)\) theo \(MQ\parallel AD\), \(Q\) là trung điểm \(SD\): \(\frac{SQ}{SD}=\frac12\).`},
+140:{a:1,ex:R`Trọng tâm tứ diện chia đoạn \(AA'\) theo tỉ số \(GA=3GA'\).`},
+141:{a:0,ex:R`\(AD\parallel BC\), \(S\) là điểm chung, nên giao tuyến đi qua \(S\) và song song \(BC\) (và \(AD\)).`},
+142:{a:2,ex:R`\(IJ\) là đường trung bình tam giác \(ACD\) nên \(IJ\parallel CD\). Vậy giao tuyến đi qua \(G\) và song song \(CD\).`},
+143:{a:1,ex:R`\((IBC)\) chứa \(BC\parallel AD\) nên cắt \((SAD)\) theo \(IJ\parallel AD\), \(J\) là trung điểm \(SD\): \(\frac{SJ}{JD}=1\).`},
+144:{a:1,ex:R`Ba vị trí: \(a\subset(P)\), \(a\parallel(P)\), \(a\) cắt \((P)\).`},
+145:{a:0,ex:R`Mặt phẳng chứa \(d\parallel(\alpha)\) cắt \((\alpha)\) theo giao tuyến \(d'\parallel d\).`},
+146:{a:3,ex:'Qua mỗi điểm không nằm trên hai đường thẳng đó có đúng một mặt phẳng song song với cả hai, nên có vô số mặt phẳng.'},
+147:{a:0,ex:R`\(MN\) là đường trung bình tam giác \(SAC\) nên \(MN\parallel AC\subset(ABCD)\), suy ra \(MN\parallel(ABCD)\).`},
+148:{ans:[1,0,1,1],exs:['Hai mặt phẳng trùng nhau hoặc cắt nhau theo một đường thẳng: đều có vô số điểm chung.','Sai nếu hai mặt phẳng trùng nhau.','Đúng theo tính chất thừa nhận.','Ba điểm không thẳng hàng xác định duy nhất một mặt phẳng.']},
+149:{ans:[1,1,1,0],exs:[R`Bốn mặt bên \(SAB,SBC,SCD,SDA\).`,R`\(S,O\) là hai điểm chung.`,R`\(AD,BC\) là hai cạnh bên của hình thang nên cắt nhau tại \(I\); \(S,I\) là hai điểm chung.`,R`\((SAB)\cap(SAD)=SA\).`]},
+150:{ans:[0,1,0,0],exs:['Hai đường thẳng chéo nhau không có điểm chung.','Đúng theo định nghĩa.','Hai đường thẳng cùng nằm trong một mặt phẳng có thể cắt nhau.','Chúng có thể song song hoặc cắt nhau.']},
+151:{ans:[0,1,1,0],exs:[R`\((DIC)\cap(DAB)=DI\), không phải \(DG\).`,R`\(C,I\) là hai điểm chung.`,R`\(A,G\) là hai điểm chung.`,R`Thiết diện là tam giác \(CID\) với \(CI=DI=\frac{a\sqrt3}2\), \(CD=a\). Diện tích \(\frac12\cdot a\cdot\frac{a\sqrt2}2=\frac{a^2\sqrt2}4\ne\frac{a^2\sqrt3}4\).`]},
+152:{ans:[1,1,0,1],exs:[R`\(G\in BM\) nên \((ABG)\equiv(ABM)\); \(A,M\) là hai điểm chung.`,R`\(J\in BI\subset(ABM)\) và \(J\in(ACD)\) nên \(J\in AM\).`,R`Vị trí của \(J\) phụ thuộc vào điểm \(I\) trên \(AG\), không phải luôn là trung điểm.`,R`\(D,J\) là hai điểm chung.`]},
+153:{ans:[1,1,0,0],exs:['Hai mặt phẳng có chung cạnh AB.',R`\(G\in CM\) nên \((DCG)\equiv(DCM)\); \(M,D\) là hai điểm chung.`,R`Thiết diện là tam giác \(DCM\).`,R`\(CM=DM=\sqrt3\), \(CD=2\), đường cao từ \(M\) là \(\sqrt2\). Diện tích \(=\sqrt2\ne2\).`]},
+154:{ans:[1,1,0,0],exs:[R`\(AB\parallel EF\subset(MNEF)\).`,R`\(MF\parallel NE\subset(AEHD)\) (mặt \(ENHDA\) là mặt bên trái).`,R`\(OJ\) nối một điểm trên mái với một điểm trên tường, nói chung cắt \((ABCD)\).`,R`\(AG\) không song song với đường nào của mái \((MNEF)\).`]},
+155:{ans:[1,1,0,1],exs:[R`\(MO\) là đường trung bình tam giác \(SAC\).`,R`\(AB\parallel CD\) nên giao tuyến qua \(S\) và song song \(CD\).`,R`Giao tuyến của \((SAD),(SBC)\) đi qua \(S\) (song song \(AD\)), không đi qua \(O\).`,R`\((MBC)\) chứa \(BC\parallel AD\) nên cắt \(SD\) tại \(N\) với \(MN\parallel AD\), \(N\) là trung điểm \(SD\).`]},
+156:{ans:[0,1,0,1],exs:[R`\(AB\parallel CD\) nên \(d\) đi qua \(S\) và song song \(AB\), không phải \(SO\).`,R`\(MN\parallel AB\parallel d\) nên \(MN,d\) đồng phẳng.`,R`Ba giao tuyến \(MN,CD,d\) đôi một song song, không đồng quy.`,R`\(MN\parallel AB\subset(ABCD)\) nên giao tuyến qua \(O\) song song \(MN\).`]},
+157:{ans:[0,0,1,1],exs:[R`\(MN\) là đường trung bình tam giác \(ABC\) nên \(MN\parallel AC\).`,R`\(JK\parallel NP\parallel BD\).`,R`\(IJKH\) là ảnh của hình bình hành \(MNPQ\) qua phép vị tự tâm \(S\) tỉ số \(\frac12\).`,R`\((IJKH)\parallel(ABCD)\) nên \(E\) là trung điểm \(SB\), \(EJ\parallel BN\parallel AD\).`]},
+158:{ans:[0,1,1,1],exs:[R`\(MN\) và \(SC\) chéo nhau: nếu đồng phẳng thì mặt phẳng đó chứa \(S,C,M\) nên chứa \(A\), tức là \((SAC)\); khi đó \(N\in(SAC)\cap BC=\{C\}\), vô lí.`,R`\(OM\parallel SC\), \(ON\parallel CD\) nên \((OMN)\parallel(SCD)\).`,R`\(J\) nằm trên đường trung bình qua \(O\) song song \(AD\); mặt phẳng qua \(I\) chứa đường đó có \(IO\parallel SA\) nên song song \((SAD)\). Vậy \(IJ\parallel(SAD)\).`,R`\(E,F\) là trung điểm \(BC,SD\). Gọi \(K\) là trung điểm \(SA\): \(KF\parallel=BE\) nên \(EF\parallel BK\subset(SAB)\).`]},
+159:{ans:[1,1,1,0],exs:[R`\(M,Q\) là trung điểm \(SA,SD\).`,'Đường trung bình của các tam giác SBC và SAB.',R`\(MN\parallel AB,\ MQ\parallel AD\) nên \((MNPQ)\parallel(ABCD)\).`,R`\(MNPQ\) là hình vuông cạnh \(\frac a2\) nên tỉ số diện tích là \(\frac14\).`]},
+160:{ans:[1,1,0,1],exs:['Định nghĩa hai mặt phẳng song song.',R`\(b\subset(Q)\parallel(P)\) nên \(b\parallel(P)\).`,R`\((R)\) và \((P)\) phân biệt nên \((R)\parallel(P)\), không trùng nhau.`,R`\(a,b\) không có điểm chung nên song song hoặc chéo nhau.`]},
+161:{ans:[1,0,0,1],exs:['Hai đáy của hình chóp cụt song song.',R`Hai mặt phẳng này cắt nhau theo \(AB\).`,R`Các mặt của hình chóp \(S.ABC\) đôi một cắt nhau.`,R`Định lí Thalès (hoặc phép vị tự tâm \(S\)).`]},
+162:{ans:[0,0,0,1],exs:[R`\(MN\parallel AD\parallel OP\) và \(ON\parallel SB\parallel PM\) nên \(M,N,O,P\) đồng phẳng: hai mặt phẳng trùng nhau.`,'Hai mặt phẳng này trùng nhau.',R`\(O\in BD\subset(SBD)\) nên hai mặt phẳng có điểm chung.`,R`\(MN\parallel BC\), \(ON\parallel SB\) nên \((MON)\parallel(SBC)\).`]},
+163:{ans:[1,1,0,0],exs:['Hai mặt phẳng song song không có điểm chung.',R`\(JL\subset(IJKL)\parallel(EFGH)\).`,'Chỉ có duy nhất một mặt phẳng như vậy.',R`Định lí Thalès: \(\frac{GK}{GC}=\frac{EI}{EA}\Rightarrow GK=\frac{90\cdot36}{80}=40{,}5\,cm\).`]},
+164:{a:3,ex:R`\(IJ\parallel AB\) nên \(d\) qua \(G\) song song \(AB\): \(MN=\frac23AB\). Mà \(IJ=\frac{AB+CD}2\). \(MNJI\) là hình bình hành \(\Leftrightarrow MN=IJ\Leftrightarrow\frac23AB=\frac{AB+CD}2\Leftrightarrow AB=3CD\). Vậy \(k=3\).`},
+165:{a:0.67,tol:0.006,ex:R`Trong \((ABCD)\), \(DN\) cắt \(AB\) tại \(E\) với \(B\) là trung điểm \(AE\). Trong \((SAE)\), \(EM\) cắt \(SB\) tại \(I\). \(SB,EM\) là hai trung tuyến của tam giác \(SAE\) nên \(I\) là trọng tâm: \(\frac{SI}{SB}=\frac23\approx0{,}67\).`},
+166:{a:3,ex:R`\(MN\) cắt \(AC\) tại \(E\) là trung điểm \(AO\) (\(AE=\frac14AC\)). Trong \((SAC)\), \(EG\) cắt \(SC\) tại \(H\); dùng Menelaus được \(SH=\frac14SC\), tức \(HC=3HS\), \(k=3\).`},
+167:{a:0.5,ex:R`\(IK\parallel BD\) nên \((SIK)\cap(SBD)\) là đường \(\Delta\) qua \(S\) song song \(BD\). Kéo dài \(DM\) cắt \(\Delta\) tại \(F\). Tam giác \(MSF\) và \(MBD\) bằng nhau (\(M\) là trung điểm \(SB\)) nên \(MF=MD\), suy ra \(\frac{MF}{DF}=\frac12\).`},
+168:{a:4,ex:R`\((APD)\) chứa \(AD\parallel BC\) nên \(PQ\parallel BC\), \(Q\) là trung điểm \(SC\). \(I,J\) là trọng tâm các tam giác \(SAB,SCD\) nên \(IJ=\frac23MN=\frac23\cdot\frac{7+5}2=4\).`},
+169:{a:1.5,tol:.01,ex:R`\(IJ\parallel AB\) nên \((IJK)\) cắt \((ABD)\) theo đường qua \(K\) song song \(AB\), cắt \(AD\) tại \(F\) với \(\frac{DF}{DA}=\frac{DK}{DB}=\frac13\). Vậy \(AF=\frac23AD\), \(\frac{AD}{AF}=1{,}5\).`},
+170:{a:0.5,ex:R`Gọi \(E=AB\cap CD\). Vì \(BC\parallel AD\), \(BC=\frac12AD\) nên \(C\) là trung điểm \(ED\). Trong \((SED)\), \(EM\) cắt \(SC\) tại \(N\). Menelaus cho tam giác \(SCD\): \(\frac{SN}{NC}\cdot\frac{CE}{ED}\cdot\frac{DM}{MS}=1\Rightarrow\frac{SN}{NC}\cdot\frac12\cdot2=1\), nên \(SN=NC\), \(\frac{SN}{SC}=\frac12\).`},
+171:{a:3,ex:R`\(\frac{SG}{SM}=\frac{SG'}{SN}=\frac23\) nên \(GG'\parallel MN\parallel AD\parallel BC\). Vậy \(GG'\) song song với 3 mặt phẳng \((ABCD),(SAD),(SBC)\).`},
+172:{a:0.75,tol:.001,ex:R`\(MN\parallel BD\). Gọi \(I=SO\cap MN\), \(K=AI\cap SC\). Trong \((SAC)\), đường qua \(O\) song song \(AK\) cắt \(SC\) tại \(J\). Tính được \(\frac{SK}{SC}=\frac12\), \(KJ=\frac12KC\), nên \(\frac{SJ}{SC}=\frac12+\frac14=\frac34\).`},
+173:{a:2,ex:R`Giống câu 170: \(N\) là trung điểm \(SC\), nên \(SC=2SN\), \(k=2\).`},
+174:{a:4,ex:R`\((BMC)\) chứa \(BC\parallel AD\) nên \(MQ\parallel AD\), \(Q\) là trung điểm \(SD\): \(\frac{SQ}{SD}=\frac12\), \(b+2a=2+2=4\).`},
+175:{sol:[R`Trong \((SCD)\), kéo dài \(SM\) cắt \(CD\) tại \(N\). Vì \(N\in SM\subset(SBM)\) nên \(N=CD\cap(SBM)\).`,R`\((SBM)\equiv(SBN)\). Trong \((ABCD)\), gọi \(O=AC\cap BN\). \(S,O\) là hai điểm chung nên \((SBM)\cap(SAC)=SO\).`,R`Trong \((SBN)\), \(BM\) cắt \(SO\) tại \(I\). Vì \(I\in SO\subset(SAC)\) nên \(I=BM\cap(SAC)\).`]},
+176:{sol:[R`\(MN\) là đường trung bình tam giác \(SAC\) nên \(MN\parallel AC\subset(ABCD)\), suy ra \(MN\parallel(ABCD)\).`,R`Gọi \(O=AC\cap BD\), \(H=SO\cap MN\) (\(H\) là trung điểm \(SO\)). Trong \((SBD)\), \(BH\) cắt \(SD\) tại \(K\). Menelaus cho tam giác \(SOD\) với cát tuyến \(BHK\): \(\frac{SK}{KD}\cdot\frac{DB}{BO}\cdot\frac{OH}{HS}=1\Rightarrow\frac{SK}{KD}\cdot2\cdot1=1\), nên \(\frac{SK}{SD}=\frac13\).`,R`Trong \((SAD)\), \(KM\) cắt \(AD\) tại \(E\); trong \((SCD)\), \(KN\) cắt \(CD\) tại \(F\). \(B,E,F\) đều là điểm chung của \((MNB)\) và \((ABCD)\) nên cùng nằm trên giao tuyến của hai mặt phẳng này: thẳng hàng (đường đó đi qua \(B\) và song song \(AC\)).`]},
+177:{sol:[R`\(ON\) là đường trung bình tam giác \(SBD\) nên \(ON\parallel SB\subset(SAB)\), suy ra \(ON\parallel(SAB)\).`,R`\(S\) là điểm chung và \(AD\parallel BC\), nên giao tuyến là đường thẳng qua \(S\) song song \(AD\) (và \(BC\)).`,R`Vì \(ON\parallel SB\) nên \((OMN)\) cắt \((SAB)\) theo đường qua \(M\) song song \(SB\), cắt \(AB\) tại \(P\): \(P=AB\cap(OMN)\). Theo Thalès \(\frac{AP}{AB}=\frac{AM}{AS}=\frac13\), nên \(\frac{AP}{PB}=\frac12\).`]},
+178:{sol:[R`Gọi \(K\) là trung điểm \(SD\): \(MK\parallel AD\), \(MK=\frac12AD=NC\) nên \(MKCN\) là hình bình hành, \(MN\parallel KC\subset(SCD)\). Vậy \(MN\parallel(SCD)\).`,R`Trong \((ABCD)\), gọi \(E=DN\cap AC\). \(M,E\) là hai điểm chung nên \((DMN)\cap(SAC)=ME\).`,R`Trong \((ABCD)\), \(DN\) cắt \(AB\) tại \(F\), \(B\) là trung điểm \(AF\). Trong \((SAF)\), \(MF\) cắt \(SB\) tại \(I\). \(SB,FM\) là hai trung tuyến của tam giác \(SAF\) nên \(I\) là trọng tâm: \(\frac{SI}{IB}=2\).`]},
+179:{sol:[R`Trong \((ABCD)\), \(AN\) cắt \(CD\) tại \(I\), đó là giao điểm cần tìm. Do \(AB\parallel DI\): \(\frac{DI}{AB}=\frac{ND}{NB}=2\), nên \(DI=2DC\) (\(C\) là trung điểm \(DI\)).`,R`\(\frac{AN}{NI}=\frac{NB}{ND}=\frac12\Rightarrow\frac{AN}{AI}=\frac13\). Trong tam giác \(AEI\): \(MN\parallel EI\Leftrightarrow\frac{AM}{AE}=\frac{AN}{AI}=\frac13\). Vậy \(x=\frac13\).`]},
+};
 /* ---------- giao diện Bay vào không gian ---------- */
 const gAns=()=>me?LS.get('meo-sc-geo-'+me.id,{}):{};
 const gSave=a=>{if(me){LS.set('meo-sc-geo-'+me.id,a);pushScore()}};
 const gDone=(q,a)=>{const v=a[q.id];if(v==null)return false;if(q.t==='tf')return Array.isArray(v)&&v.every(x=>x===0||x===1);if(q.t==='tl')return !!(v&&v.done);return String(v).trim()!==''};
 const pIds=P=>{const r=[];for(let k=P.a;k<=P.b;k++)r.push(k);return r};
-const pStat=(P,a)=>{const ids=pIds(P);const d=ids.filter(id=>gDone(GQM[id],a)).length;return {d,n:ids.length}};
+const pStat=(P,a)=>{const ids=pIds(P);const d=ids.filter(id=>gChecked(GQM[id],a)).length;return {d,n:ids.length}};
 const figTag=q=>q.fig?`<div class="gfig"><img src="hinh/h${q.fig}.png" alt="Hình vẽ câu ${q.id}" loading="lazy"></div>`:'';
 function spaceCardHTML(){const a=gAns();let d=0,n=0;PLANETS.forEach(P=>{const s=pStat(P,a);d+=s.d;n+=s.n});const land=PLANETS.filter(P=>{const s=pStat(P,a);return s.d===s.n}).length;
   return `<div class="launch"><button class="launch-main" id="spaceCard" aria-label="Bay vào không gian"><span class="lpic">${LM['space']()}</span>
@@ -1865,7 +1929,7 @@ function spaceCardHTML(){const a=gAns();let d=0,n=0;PLANETS.forEach(P=>{const s=
    <span class="btn primary lgo">Phóng tàu 🚀</span></span></button></div>`}
 function spacePage(){if(!me){login();return}S0=null;const a=gAns();
   app.innerHTML=`<div class="topbar"><div style="display:flex;gap:12px;align-items:center"><span class="thumb">${LM['space']()}</span><h2>Bay vào không gian</h2></div><div class="meta"><button class="helpbtn" id="spHelp">? TRỢ GIÚP · HÌNH HỌC</button><button class="btn ghost" id="back">Về Trái Đất</button></div></div>
-  <p class="hint" style="margin-top:0">Chủ đề 2 · Quan hệ song song trong không gian. Đề này chưa có đáp án, nên bài làm của bạn được <b>lưu lại</b> chứ không chấm đúng sai. Làm xong hết câu của một hành tinh là <b>hạ cánh</b> thành công.</p>
+  <p class="hint" style="margin-top:0">Chủ đề 2 · Quan hệ song song trong không gian. Mỗi câu có đáp án và lời giải: trắc nghiệm, đúng sai, trả lời ngắn được chấm ngay; tự luận có lời giải mẫu để đối chiếu. Làm xong hết câu của một hành tinh là <b>hạ cánh</b> thành công.</p>
   <div class="orbit">${PLANETS.map((P,i)=>{const s=pStat(P,a),done=s.d===s.n;return `<button class="planet ${done?'landed':''}" data-p="${i}" style="--pc:${P.c};--pc2:${P.c2}">
     <span class="pimg">${planetSVG(P,110)}${done?'<span class="flag">🚩</span>':''}</span>
     <span class="ptxt"><span class="lvtag" style="color:${P.c}">HÀNH TINH ${i+1} · ${P.kind.toUpperCase()}</span><b>${P.n}</b><small>Câu ${P.a}–${P.b} · ${P.sub}</small><em>${P.fact}</em>
@@ -1874,39 +1938,50 @@ function spacePage(){if(!me){login();return}S0=null;const a=gAns();
   app.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>gStart(+b.dataset.p));window.scrollTo({top:0})}
 let G0=null;
 function gStart(pi,from=0){S0=null;const P=PLANETS[pi];G0={pi,ids:pIds(P),i:from};gShow();window.scrollTo({top:0})}
-function gShow(){const P=PLANETS[G0.pi],q=GQM[G0.ids[G0.i]],a=gAns(),v=a[q.id];
+const gNum=s=>{s=String(s??'').trim().replace(/\s/g,'').replace(/,/g,'.').replace('−','-');const f=s.match(/^(-?\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/);if(f)return +f[1]/+f[2];return s===''?NaN:Number(s)};
+const gSaOk=(q,v)=>{const k=GK[q.id],x=gNum(v);return !isNaN(x)&&Math.abs(x-k.a)<=(k.tol||1e-9)};
+const gChecked=(q,a)=>q.t==='tf'?!!a['k'+q.id]&&gDone(q,a):gDone(q,a);
+const gPts=(q,a)=>{const v=a[q.id],k=GK[q.id];if(!gChecked(q,a))return 0;if(q.t==='mc')return v===k.a?1:0;if(q.t==='tf')return v.filter((x,i)=>x===k.ans[i]).length;if(q.t==='sa')return gSaOk(q,v)?1:0;return 0};
+const gMax=q=>q.t==='tf'?4:q.t==='tl'?0:1;
+function gShow(react){const P=PLANETS[G0.pi],q=GQM[G0.ids[G0.i]],a=gAns(),v=a[q.id],k=GK[q.id],chk=gChecked(q,a);
   const kind={mc:'Trắc nghiệm 4 lựa chọn',tf:'Đúng / Sai',sa:'Trả lời ngắn',tl:'Tự luận'}[q.t];
+  const pts=gPts(q,a),full=pts===gMax(q);
   let h=`<div class="topbar"><div style="display:flex;gap:12px;align-items:center"><span class="pthumb" style="--pc:${P.c}">${planetSVG(P,52)}</span><h2>${P.n}</h2></div>
     <div class="meta"><span>${G0.i+1}/${G0.ids.length}</span><button class="helpbtn" id="qhelp">? TRỢ GIÚP</button><button class="btn ghost" id="back">Về hệ hành tinh</button></div></div>
   <div class="prog"><i style="width:${(G0.i+1)/G0.ids.length*100}%"></i></div>
-  <div class="gdots">${G0.ids.map((id,j)=>`<button class="gdot ${gDone(GQM[id],a)?'ok':''} ${j===G0.i?'cur':''}" data-j="${j}" aria-label="Câu ${id}">${id}</button>`).join('')}</div>
+  <div class="gdots">${G0.ids.map((id,j)=>{const qq=GQM[id],c=gChecked(qq,a);const st=!c?'':qq.t==='tl'?'ok':gPts(qq,a)===gMax(qq)?'ok':'bad';return `<button class="gdot ${st} ${j===G0.i?'cur':''}" data-j="${j}" aria-label="Câu ${id}">${id}</button>`}).join('')}</div>
   <article class="qcard gq" style="--c:${P.c}"><div class="qhead"><span class="tag">Câu ${q.id}</span><span class="kind">${kind}</span></div><div class="qtext">${q.q}</div>${figTag(q)}`;
-  if(q.t==='mc')h+='<div class="opts">'+q.o.map((o,i)=>`<button class="opt ${v===i?'chosen':''}" data-i="${i}"><span class="k" data-l="${L[i]}">${L[i]}</span><span>${o}</span></button>`).join('')+'</div>';
-  if(q.t==='tf')h+='<div class="tf">'+q.items.map((it,i)=>{const cur=Array.isArray(v)?v[i]:null;return `<div class="tfrow"><span class="lab">${'abcd'[i]})</span><span class="st">${it}</span><span class="seg"><button data-r="${i}" data-v="1" class="${cur===1?'on':''}">Đúng</button><button data-r="${i}" data-v="0" class="${cur===0?'on':''}">Sai</button></span></div>`}).join('')+'</div>';
-  if(q.t==='sa')h+=`<div class="sa"><label for="gans">Đáp số của bạn:</label><input id="gans" inputmode="decimal" autocomplete="off" value="${esc(v??'')}" placeholder="vd: 2 hoặc 0,33"><button class="btn warm" id="gsave">Lưu</button></div>`;
-  if(q.t==='tl'){const vv=v||{};h+=`<div class="tlparts">${q.parts.map((p,i)=>`<div class="tlp"><div class="tlq"><b>${'abc'[i]})</b> ${p}</div><textarea id="tl${i}" rows="3" placeholder="Ghi tóm tắt cách làm (không bắt buộc)…">${esc((vv.notes||[])[i]||'')}</textarea></div>`).join('')}</div>
-    <div class="sa"><button class="btn warm" id="tldone">${vv.done?'✓ Đã làm xong · bấm để lưu ghi chú':'Đánh dấu đã làm xong'}</button></div>`}
-  h+=`<div class="guide">${catSVG(gDone(q,a)?'happy':'')}<div class="bubble"><div class="say" id="gsay">${gDone(q,a)?'Đã lưu bài làm câu này rồi! Có thể đổi lại bất cứ lúc nào.':q.t==='tl'?'Làm ra giấy nháp, ghi vài ý chính rồi bấm "Đánh dấu đã làm xong".':'Chọn câu trả lời của bạn. Mèo sẽ lưu lại, đáp án thầy cô chữa trên lớp nhé.'}</div></div></div>
-  <div class="actions"><button class="btn ghost" id="gprev" ${G0.i?'':'disabled'}>Câu trước</button><button class="btn primary" id="gnext">${G0.i+1<G0.ids.length?'Câu tiếp':'Kết thúc chuyến bay'}</button></div></article>`;
+  if(q.t==='mc')h+='<div class="opts">'+q.o.map((o,i)=>`<button class="opt ${chk&&i===k.a?'right':''} ${chk&&v===i&&i!==k.a?'wrong':''}" data-i="${i}" ${chk?'disabled':''}><span class="k" data-l="${L[i]}">${L[i]}</span><span>${o}</span></button>`).join('')+'</div>';
+  if(q.t==='tf')h+='<div class="tf">'+q.items.map((it,i)=>{const cur=Array.isArray(v)?v[i]:null;const ok=cur===k.ans[i];return `<div class="tfrow ${chk?(ok?'right':'wrong'):''}"><span class="lab">${'abcd'[i]})</span><span class="st">${it}</span><span class="seg"><button data-r="${i}" data-v="1" class="${cur===1?'on':''}" ${chk?'disabled':''}>Đúng</button><button data-r="${i}" data-v="0" class="${cur===0?'on':''}" ${chk?'disabled':''}>Sai</button></span>${chk?`<div class="tfex"><b>${k.ans[i]?'Đúng':'Sai'}.</b> ${k.exs[i]}</div>`:''}</div>`}).join('')+'</div>';
+  if(q.t==='sa')h+=`<div class="sa"><label for="gans">Đáp số của bạn:</label><input id="gans" class="${chk?(full?'right':'wrong'):''}" inputmode="decimal" autocomplete="off" value="${esc(v??'')}" placeholder="vd: 2 hoặc 0,33 hoặc 1/2" ${chk?'disabled':''}>${chk?'':'<button class="btn warm" id="gsave">Kiểm tra</button>'}</div>`;
+  if(q.t==='tl'){const vv=v||{};h+=`<div class="tlparts">${q.parts.map((p,i)=>`<div class="tlp"><div class="tlq"><b>${'abc'[i]})</b> ${p}</div><textarea id="tl${i}" rows="3" placeholder="Ghi tóm tắt cách làm của bạn trước khi xem lời giải…">${esc((vv.notes||[])[i]||'')}</textarea>${chk?`<div class="tlsol"><b>Lời giải ${'abc'[i]}).</b> ${k.sol[i]}</div>`:''}</div>`).join('')}</div>
+    <div class="sa"><button class="btn warm" id="tldone">${chk?'Lưu ghi chú':'Đã làm xong · Xem lời giải'}</button></div>`}
+  const exHTML=!chk?'':q.t==='mc'?`<b>Đáp án ${L[k.a]}.</b> ${k.ex}`:q.t==='sa'?`<b>Đáp số: ${String(k.a).replace('.',',')}.</b> ${k.ex}`:q.t==='tf'?'Lời giải nằm ngay dưới từng ý.':'Đối chiếu bài làm của bạn với lời giải dưới từng ý.';
+  const sayTxt=!chk?(q.t==='tl'?'Làm ra giấy nháp, ghi vài ý chính rồi bấm "Đã làm xong · Xem lời giải".':q.t==='tf'?'Chọn Đúng hoặc Sai cho cả 4 ý rồi bấm Kiểm tra.':q.t==='sa'?'Gõ đáp số rồi bấm Kiểm tra.':'Chọn một đáp án nhé.')
+    :q.t==='tl'?'Lời giải đây! So sánh với cách làm của bạn nhé.':full?(react?pick(['Chính xác! Tàu tăng tốc.','Đúng rồi, phi hành gia!','Tuyệt, sang câu tiếp nhé.']):'Câu này bạn làm đúng rồi.'):q.t==='tf'&&pts>0?`Được ${pts}/4 ý. Xem lại các ý đỏ:`:(react?pick(['Chưa đúng rồi, xem lời giải nhé.','Hụt một nhịp, đọc lời giải rồi làm lại nhé.']):'Câu này chưa đúng, xem lời giải bên dưới.');
+  h+=`<div class="guide">${catSVG(chk?(full||q.t==='tl'?'happy':'sad'):'')}<div class="bubble"><div class="say" id="gsay">${sayTxt}</div><div class="ex">${exHTML}</div></div></div>
+  <div class="actions"><button class="btn ghost" id="gprev" ${G0.i?'':'disabled'}>Câu trước</button><span style="display:flex;gap:10px">${q.t==='tf'&&!chk?`<button class="btn warm" id="gchk" ${gDone(q,a)?'':'disabled'}>Kiểm tra</button>`:''}${chk&&q.t!=='tl'?'<button class="btn ghost" id="gredo">Làm lại câu này</button>':''}<button class="btn primary" id="gnext">${G0.i+1<G0.ids.length?'Câu tiếp':'Kết thúc chuyến bay'}</button></span></div></article>
+  <p class="hint">Đáp án và lời giải chỉ mang tính chất tham khảo. Làm sai có thể bấm "Làm lại câu này".</p>`;
   app.innerHTML=h;typeset(app);
   document.getElementById('back').onclick=spacePage;
   document.getElementById('qhelp').onclick=()=>openHelp(HELP_FOR_G[P.k],'hh');
   app.querySelectorAll('[data-j]').forEach(b=>b.onclick=()=>{G0.i=+b.dataset.j;gShow()});
-  const said=()=>{const s=document.getElementById('gsay');s.textContent=pick(['Đã lưu! Tàu tiếp tục bay.','Ghi nhận rồi, phi hành gia!','Lưu xong, sang câu tiếp nhé.']);const c=app.querySelector('.guide .cat');c.classList.remove('happy');void c.offsetWidth;c.classList.add('happy');
-    const dot=app.querySelector('.gdot.cur');if(dot)dot.classList.toggle('ok',gDone(q,gAns()))};
-  if(q.t==='mc')app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{const A=gAns();A[q.id]=+b.dataset.i;gSave(A);app.querySelectorAll('.opt').forEach(x=>x.classList.toggle('chosen',x===b));said()});
-  if(q.t==='tf')app.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{const A=gAns();const arr=Array.isArray(A[q.id])?A[q.id]:[null,null,null,null];arr[+b.dataset.r]=+b.dataset.v;A[q.id]=arr;gSave(A);
-    b.parentNode.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));if(arr.every(x=>x===0||x===1))said()});
-  if(q.t==='sa'){const inp=document.getElementById('gans');const sv=()=>{const A=gAns();A[q.id]=inp.value.trim();gSave(A);said()};document.getElementById('gsave').onclick=sv;inp.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();sv()}}}
-  if(q.t==='tl')document.getElementById('tldone').onclick=()=>{const A=gAns();A[q.id]={done:true,notes:q.parts.map((_,i)=>document.getElementById('tl'+i).value)};gSave(A);document.getElementById('tldone').textContent='✓ Đã làm xong · bấm để lưu ghi chú';said()};
-  document.getElementById('gprev').onclick=()=>{G0.i--;gShow();window.scrollTo({top:0})};
-  document.getElementById('gnext').onclick=()=>{if(q.t==='sa'){const A=gAns();const val=document.getElementById('gans').value.trim();if(val){A[q.id]=val;gSave(A)}}
-    if(q.t==='tl'){const A=gAns();const prev=A[q.id]||{};A[q.id]={done:!!prev.done,notes:q.parts.map((_,i)=>document.getElementById('tl'+i).value)};gSave(A)}
-    if(G0.i+1<G0.ids.length){G0.i++;gShow();window.scrollTo({top:0})}else gLand()}}
-function gLand(){const P=PLANETS[G0.pi],a=gAns(),s=pStat(P,a),done=s.d===s.n;const next=PLANETS[G0.pi+1];const miss=pIds(P).filter(id=>!gDone(GQM[id],a));
+  if(react&&chk&&full&&q.t!=='tl')confetti(14);
+  if(q.t==='mc'&&!chk)app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{const A=gAns();A[q.id]=+b.dataset.i;gSave(A);gShow(true)});
+  if(q.t==='tf'&&!chk){app.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{const A=gAns();const arr=Array.isArray(A[q.id])?A[q.id]:[null,null,null,null];arr[+b.dataset.r]=+b.dataset.v;A[q.id]=arr;gSave(A);
+    b.parentNode.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));document.getElementById('gchk').disabled=!arr.every(x=>x===0||x===1)});
+    document.getElementById('gchk').onclick=()=>{const A=gAns();A['k'+q.id]=1;gSave(A);gShow(true)}}
+  if(q.t==='sa'&&!chk){const inp=document.getElementById('gans');const sv=()=>{if(isNaN(gNum(inp.value))){document.getElementById('gsay').textContent='Gõ một con số nhé, ví dụ 3, 0,5 hoặc 1/2.';return}const A=gAns();A[q.id]=inp.value.trim();gSave(A);gShow(true)};
+    document.getElementById('gsave').onclick=sv;inp.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();sv()}}}
+  if(q.t==='tl')document.getElementById('tldone').onclick=()=>{const A=gAns();A[q.id]={done:true,notes:q.parts.map((_,i)=>document.getElementById('tl'+i).value)};gSave(A);if(chk){document.getElementById('gsay').textContent='Đã lưu ghi chú!'}else gShow(true)};
+  const redo=document.getElementById('gredo');if(redo)redo.onclick=()=>{const A=gAns();delete A[q.id];delete A['k'+q.id];gSave(A);gShow()};
+  const keepTl=()=>{if(q.t==='tl'){const A=gAns();const prev=A[q.id]||{};A[q.id]={done:!!prev.done,notes:q.parts.map((_,i)=>document.getElementById('tl'+i).value)};gSave(A)}};
+  document.getElementById('gprev').onclick=()=>{keepTl();G0.i--;gShow();window.scrollTo({top:0})};
+  document.getElementById('gnext').onclick=()=>{keepTl();if(G0.i+1<G0.ids.length){G0.i++;gShow();window.scrollTo({top:0})}else gLand()}}
+function gLand(){const P=PLANETS[G0.pi],a=gAns(),s=pStat(P,a),done=s.d===s.n;const next=PLANETS[G0.pi+1];const miss=pIds(P).filter(id=>!gChecked(GQM[id],a));let gp=0,gmx=0;pIds(P).forEach(id=>{gp+=gPts(GQM[id],a);gmx+=gMax(GQM[id])});
   app.innerHTML=`<div class="sum land" style="--pc:${P.c}"><div class="landart">${planetSVG(P,150)}${done?'<span class="flag big">🚩</span>':''}</div>
-    <div><h2>${done?'Hạ cánh thành công!':'Chưa hạ cánh được'}</h2><p style="margin:6px 0 0">${done?`Phi hành gia <b>${esc(me.name)}</b> đã cắm cờ trên <b>${P.n}</b>. ${P.fact}`:`Còn ${miss.length} câu chưa làm. Làm nốt để hạ cánh xuống ${P.n} nhé.`}</p>
-    ${miss.length?`<div class="chips" style="margin-top:8px">${miss.map(id=>`<button class="chip gmiss" data-id="${id}">Câu ${id}</button>`).join('')}</div>`:''}
+    <div><h2>${done?'Hạ cánh thành công!':'Chưa hạ cánh được'}</h2><p style="margin:6px 0 0">${done?`Phi hành gia <b>${esc(me.name)}</b> đã cắm cờ trên <b>${P.n}</b>. ${P.fact}`:`Còn ${miss.length} câu chưa làm hoặc chưa bấm Kiểm tra. Làm nốt để hạ cánh xuống ${P.n} nhé.`}</p>
+    ${gmx?`<p style="margin:8px 0 0">Điểm chấm tự động: <b>${gp}/${gmx}</b> (đúng sai tính theo từng ý; tự luận tự đối chiếu lời giải).</p>`:''}${miss.length?`<div class="chips" style="margin-top:8px">${miss.map(id=>`<button class="chip gmiss" data-id="${id}">Câu ${id}</button>`).join('')}</div>`:''}
     <div class="extra" style="margin-top:14px">${next?`<button class="btn warm" id="gnextP">Bay tiếp: ${next.n}</button>`:''}<button class="btn primary" id="gmap">Về hệ hành tinh</button></div></div></div>`;
   if(done)confetti(60);
   document.getElementById('gmap').onclick=spacePage;const nb=document.getElementById('gnextP');if(nb)nb.onclick=()=>gStart(G0.pi+1);
