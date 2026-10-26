@@ -4,7 +4,7 @@ Web game ôn tập 99 câu lượng giác Toán 11 (đề cương giữa học k
 
 - `index.html`: toàn bộ trò chơi (HTML, CSS, JS trong một file; công thức hiển thị bằng MathJax từ cdnjs).
 - `hinh/`: hình vẽ cho mục Bay vào không gian: `h125…h163.png` cắt từ đề Chủ đề 2, `g-*.png` là hình minh hoạ trong sổ tay Hình học không gian.
-- `meo-hoc-bai.mp3`: nhạc nền không lời "Mèo được 10 điểm".
+- `meo-10-diem.mp3`: nhạc nền không lời sôi động "Mèo được 10 điểm".
 - `apps-script.gs`: (tuỳ chọn) máy chủ bảng xếp hạng chung cả lớp bằng Google Sheets; hướng dẫn nằm ở đầu file.
 - Tiến độ, tên người chơi và giấy chứng nhận lưu trong trình duyệt (localStorage) của từng máy.
 
